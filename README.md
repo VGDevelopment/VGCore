@@ -4,7 +4,7 @@
 
 VGCore:
 - Authentication (Data saved encrypted online on my data server)
-- Chat Filter (Records Multiple chat filter abuses and sends data to my data server)
+- Chat Filter (Records Multiple chat filter abuses and sends data to my data server) [**Done**]
 - Store System for Real Money Transfers (GUI) (Recommended to not have any in-game perks giving advantage as it violates EULA of Mojang)
 - Store System for In Game Items (UI)
 - Faction World Random Transportation
