@@ -2,3 +2,4 @@ name: VGCore
 api: [3.0.0-ALPHA9]
 main: VGCore\SystemOS
 version: 1.0.0
+author: VGDeveloper
