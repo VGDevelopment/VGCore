@@ -2,3 +2,5 @@ name: VGCore
 main: VGCore\SystemOS
 api: [3.0.0-ALPHA9]
 version: 1.0.0
+author: VirtualGalaxy
+description: Check License before commercial use.
