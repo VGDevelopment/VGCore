@@ -2,7 +2,7 @@
 
 namespace VGCore\economy\currency;
 
-class CoinsCurreency{
+class CoinsCurrency{
     private $main;
     private $player;
     private $coins = 0;
