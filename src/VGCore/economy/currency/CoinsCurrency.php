@@ -1,12 +1,12 @@
 <?php
 
-namespace VGCore\economy;
+namespace VGCore\economy\currency;
 
-class PlayerData{
+class CoinsCurreency{
     private $main;
     private $player;
-    private $money = 0;
-    public function __construct(MainClass $main, string $player){
+    private $coins = 0;
+    public function __construct(SystemOS $main, string $player){
     
         $this->main = $main;
         $this->player = $player;
@@ -22,12 +22,12 @@ class PlayerData{
     public function getPath() : string{
         // not yet done.
     }
-    public function getMoney() : int{
-        return $this->money;
+    public function getCoins() : int{
+        return $this->coins;
     }
-    public function addMoney($name, $amt){
-        $this->money += $amt;
+    public function addMCoins($name, $amt){
+        $this->coins += $amt;
     }
     public function reduceMoney($name, $amt){
-        $this->money = $this->money - $amt;
+        $this->coins = $this->coins - $amt;
 }
