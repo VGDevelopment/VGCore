@@ -62,7 +62,7 @@ class ModalWindow implements LibraryInt, \JsonSerializable {
 		return null;
 	}
 	
-	public function setElement(UIElement $element, int $index) {
+	public function setElement(Element $element, int $index) {
 	    //
 	}
     
