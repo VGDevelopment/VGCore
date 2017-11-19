@@ -191,6 +191,72 @@ class PlayerData{
 
 	/////////////////////////// CURRENCY CONVERSION ///////////////////////////
 
+	// $1 = 50 Gems = 5000 coins
+	// 1 Gem = 100 coins
+	// $1 = 5000 coins
+
+	/////////////////////////// HIGHER TO LOWER CURRENCIES ///////////////////////////
+
+	public function convertDollarsToGems($player, $dollars){
+		if($player instanceof Player){
+			$player = $player->getName();
+		}
+		$player = strtolower($player);
+		$dollars = (float) $dollars;
+		return $this->db->query("UPDATE users SET gems = gems + $dollars * 50 WHERE username='".$this->db->real_escape_string($player)."'");
+	}
+
+	public function convertDollarsToCoins($player, $dollars){
+		if($player instanceof Player){
+			$player = $player->getName();
+		}
+		$player = strtolower($player);
+		$dollars = (float) $dollars;
+		return $this->db->query("UPDATE users SET coins = coins + $dollars * 5000 WHERE username='".$this->db->real_escape_string($player)."'");
+	}
+
+	public function convertGemsToCoins($player, $gems){
+		if($player instanceof Player){
+			$player = $player->getName();
+		}
+		$player = strtolower($player);
+		$gems = (float) $gems;
+		return $this->db->query("UPDATE users SET coins = coins + $gems * 100 WHERE username='".$this->db->real_escape_string($player)."'");
+	}
+
+	/////////////////////////// LOWER TO HIGHER CURRENCIES ///////////////////////////
+
+	// $1 = 50 Gems = 5000 coins
+	// 1 Gem = 100 coins
+	// $1 = 5000 coins
+
+	public function convertGemsToDollars($player, $gems){
+		if($player instanceof Player){
+			$player = $player->getName();
+		}
+		$player = strtolower($player);
+		$gems = (float) $gems;
+		return $this->db->query("UPDATE users SET dollars = dollars + $gems / 50 WHERE username='".$this->db->real_escape_string($player)."'");
+	}
+
+	public function convertCoinsToDollars($player, $coins){
+		if($player instanceof Player){
+			$player = $player->getName();
+		}
+		$player = strtolower($player);
+		$coins = (float) $coins;
+		return $this->db->query("UPDATE users SET dollars = dollars + $coins / 5000 WHERE username='".$this->db->real_escape_string($player)."'");
+	}
+
+	public function convertCoinsToGems($player, $coins){
+		if($player instanceof Player){
+			$player = $player->getName();
+		}
+		$player = strtolower($player);
+		$coins = (float) $coins;
+		return $this->db->query("UPDATE users SET gems = gems + $coins / 100 WHERE username='".$this->db->real_escape_string($player)."'");
+	}
+
 	/////////////////////////// DATABASE CLOSE ///////////////////////////
 
 	public function close(){
