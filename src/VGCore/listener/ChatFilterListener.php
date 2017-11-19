@@ -5,6 +5,8 @@ namespace VGCore\listener;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
+// >>>
+use VGCore\chat\Filter;
 
 class ChatFilterListener implements Listener {
     

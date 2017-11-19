@@ -2,9 +2,31 @@
 
 namespace VGCore\chat;
 
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+
+use pocketmine\Player;
+
+use pocketmine\plugin\PluginBase;
+
+use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat as Chat;
+// >>>
 use VGCore\SystemOS;
 
-class Filter extends SystemOS {
+class Filter {
+    
+    private $plugin
+    private $messages;
+    private $badwords;
+    
+    public function __construct(SystemOS $plugin) {
+        $this->plugin = $plugin;
+        $this->badwords = $this->getConfig()->get("badwords");
+        if (!is_array($this->badwords)) {
+            $this->badwords = explode(',', $this->badwords);
+        }
+    }
     
     public function getBadWordsArray(): array {
         return $this->badwords;
