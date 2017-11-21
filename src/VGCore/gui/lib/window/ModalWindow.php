@@ -24,7 +24,7 @@ class ModalWindow implements LibraryInt, \JsonSerializable {
 		$this->falseButtonText = $falseButtonText;
 	}
 	
-	final public function jsonSerialize(){
+	final public function jsonSerialize() {
 		return [
 			'type' => 'modal',
 			'title' => $this->title,

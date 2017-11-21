@@ -33,7 +33,7 @@ class SimpleForm implements LibraryInt, \JsonSerializable {
 			'content' => $this->content,
 			'buttons' => []
 		];
-		foreach ($this->buttons as $button){
+		foreach ($this->buttons as $button) {
 			$data['buttons'][] = $button;
 		}
 		return $data;
