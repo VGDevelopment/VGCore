@@ -12,9 +12,9 @@ VGCore:
 - 128-bit Encryption Protocol making server nearly unhackable. 
 - USER Balancing System to ensure server being as smooth as possible.
 - Ranks System (allowing cosmetics)
-- GUI Library and Loader 
-    - Store System for Real Money Transfers (GUI) (Recommended to not have any in-game perks giving advantage as it violates EULA of Mojang)
-    - Store System for In Game Items (GUI)
-    - Staff System (done via GUI) to time ban specific users. (Data for bans and other systems collected on my data server, data is encrypted)
-    - Menu System with Tutorial
-    - Server Settings (GUI)
+- GUI Library and Loader [**Done**]
+    - Store System for Real Money Transfers (GUI) (Recommended to not have any in-game perks giving advantage as it violates EULA of Mojang) [...]
+    - Store System for In Game Items (GUI) [...]
+    - Staff System (done via GUI) to time ban specific users. (Data for bans and other systems collected on my data server, data is encrypted) [...]
+    - Menu System with Tutorial [...]
+    - Server Settings (GUI) [...]
