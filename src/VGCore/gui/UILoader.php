@@ -44,6 +44,8 @@ class UILoader {
     
     public function __construct() {
 		$this->plugin = SystemOS::getInstance();
+		$this->createUIs();
+		$this->updateUIs();
 	}
     
     public static function getInstance() {
@@ -63,7 +65,7 @@ class UILoader {
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
     }
     
-    public static function createUIs() {
+    public function createUIs() {
         // use this function to create UIs
         $ui = new CustomForm('VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
@@ -72,7 +74,7 @@ class UILoader {
         self::$uis['serverSettings'] = UIDriver::addUI($this, $ui);
     }
     
-    public static function updateUIs() {
+    public function updateUIs() {
         UIDriver::resetUIs($this); // use this function to create UIs that may need updating (such as a Player Count or money count that needs to be updated etc.)
     }
     
