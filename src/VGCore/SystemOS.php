@@ -12,6 +12,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as Chat;
 
+use pocketmine\network\mcpe\protocol\PacketPool;
 // >>>
 use VGCore\economy\PlayerData;
 
