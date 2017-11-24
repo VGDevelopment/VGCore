@@ -43,7 +43,7 @@ class UILoader {
     private $plugin;
     
     private function __construct(SystemOS $plugin) {
-        $this->plugin = $plugin
+        $this->plugin = $plugin;
     }
     
     public static function getInstance() {
