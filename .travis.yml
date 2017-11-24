@@ -25,7 +25,7 @@ before_script:
  - cp -rf /home/travis/build/CaptainDuck/VGCore/plugin.yml PocketMine-MP/plugins/VGCore/
  - cp -rf /home/travis/build/CaptainDuck/VGCore/Travis.php PocketMine-MP/plugins/VGCore/
  - cp -rf /home/travis/build/CaptainDuck/VGCore/compile.php PocketMine-MP/plugins/VGCore/
- - cp -rf /home/travis/build/CaptainDuckVGCore/LICENSE PocketMine-MP/plugins/VGCore/
+ - cp -rf /home/travis/build/CaptainDuck/VGCore/LICENSE PocketMine-MP/plugins/VGCore/
  - cp CaptainDuck/VGCore/compile.php /home/travis/build/
  - cp CaptainDuck/VGCore/Travis.php /home/travis/build/PocketMine-MP/
  - php compile.php
