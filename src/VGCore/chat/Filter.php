@@ -24,8 +24,8 @@ class Filter {
     
     private static $instance;
     
-    public function __construct() {
-        //
+    private function __construct(SystemOS $plugin) {
+        $this->plugin = $plugin
     }
     
     public static function getInstance() {

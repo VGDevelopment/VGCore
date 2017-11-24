@@ -37,10 +37,13 @@ use VGCore\listener\GUIListener;
 class UILoader {
     
     public static $uis;
+    
     private static $instance;
     
-    private function __construct() {
-        //
+    private $plugin;
+    
+    private function __construct(SystemOS $plugin) {
+        $this->plugin = $plugin
     }
     
     public static function getInstance() {
