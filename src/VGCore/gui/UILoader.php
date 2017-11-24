@@ -3,8 +3,12 @@
 namespace VGCore\gui;
 
 use pocketmine\network\mcpe\protocol\PacketPool;
+
 use pocketmine\plugin\PluginBase;
+
 use pocketmine\utils\TextFormat;
+
+use pocketmine\Server;
 // >>>
 use VGCore\SystemOS;
 
