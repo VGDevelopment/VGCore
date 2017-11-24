@@ -9,6 +9,8 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
 use pocketmine\Server;
+
+use pocketmine\plugin\Plugin;
 // >>>
 use VGCore\SystemOS;
 
