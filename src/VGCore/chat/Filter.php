@@ -20,13 +20,27 @@ class Filter {
     private $messages;
     private $badwords;
     
-    public function __construct(SystemOS $plugin) {
-        $this->plugin = $plugin;
-        $this->badwords = $this->getConfig()->get("badwords");
+    private static $instance;
+    
+    public function __construct() {
+        //
+    }
+    
+    public static function getInstance() {
+		if (is_null(self::$instance)) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+	
+	public static function loadEnable(SystemOS $plugin) {
+	    self::getInstance();
+	    Server::getInstance()->getPluginManager()->registerEvents(new ChatFilterListener(), $plugin);
+	    $this->badwords = $this->getConfig()->get("badwords");
         if (!is_array($this->badwords)) {
             $this->badwords = explode(',', $this->badwords);
         }
-    }
+	}
     
     public function getBadWordsArray(): array {
         return $this->badwords;

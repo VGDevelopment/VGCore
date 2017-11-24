@@ -33,14 +33,15 @@ class SystemOS extends PluginBase {
     // Base File for arranging everything in good order. This is how every good core should be done. 
     
     public function onEnable() {
+        $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.")
+        
+        self::$instance = $this;
+        
         $this->saveDefaultConfig();
         
-        PacketPool::registerPacket(new ModalFormRequestPacket());
-		PacketPool::registerPacket(new ModalFormResponsePacket());
-		PacketPool::registerPacket(new ServerSettingsRequestPacket());
-		PacketPool::registerPacket(new ServerSettingsResponsePacket());
-        
-        $this->getServer()->getPluginManager()->registerEvents(new ChatFilterListener($this), $this);
-        $this->getServer()->getPluginManager()->registerEvents(new GUIListener($this), $this);
+        // Filter::loadEnable($this);
+        // $this->getLogger()->info("Loading Virtual Galaxy Chat Filter...");
+        UILoader::loadEnable($this);
+        $this->getLogger()->info("Loading Virtual Galaxy Graphical User Interface System...");
     }
 }

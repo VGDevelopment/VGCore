@@ -26,13 +26,33 @@ use VGCore\gui\lib\window\SimpleForm;
 use VGCore\gui\lib\window\ModalWindow;
 use VGCore\gui\lib\window\CustomForm;
 
+use VGCore\listener\GUIListener;
+
 class UILoader {
     
     public static $uis;
-    private $plugin
+    private static $instance;
     
-    public function __construct(SystemOS $plugin) {
-        $this->plugin = $plugin
+    private function __construct() {
+        //
+    }
+    
+    public static function getInstance() {
+		if (is_null(self::$instance)) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+    
+    public static function loadEnable(SystemOS $plugin) {
+        self::getInstance();
+        Server::getInstance()->getPluginManager()->registerEvents(new GUIListener(), $plugin);
+        
+        PacketPool::registerPacket(new ModalFormRequestPacket());
+		PacketPool::registerPacket(new ModalFormResponsePacket());
+		PacketPool::registerPacket(new ServerSettingsRequestPacket());
+		PacketPool::registerPacket(new ServerSettingsResponsePacket());
+        
         $this->createUIs();
         $this->updateUIs();
     }
