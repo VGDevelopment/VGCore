@@ -21,7 +21,7 @@ interface LibraryInt {
 	
 	public function getElement(int $index);
 	
-	public function setElement(UIElement $element, int $index);
+	public function setElement(Element $element, int $index);
 	
 	public function setID(int $id);
 	
