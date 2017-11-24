@@ -25,8 +25,8 @@ class GUIListener implements Listener {
     
     public $plugin;
     
-    public function __construct(Plugin $plugin) {
-		$this->plugin = $plugin;
+    public function __construct() {
+		$this->plugin = UILoader::getInstance();
 	}
 	
 	public function onPacket(DataPacketReceiveEvent $event) {

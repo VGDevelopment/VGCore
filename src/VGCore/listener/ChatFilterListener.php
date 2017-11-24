@@ -13,8 +13,8 @@ class ChatFilterListener implements Listener {
     
     private $filter;
     
-    public function __construct(Filter $filter) {
-        $this->filter = $filter;
+    public function __construct() {
+        $this->filter = Filter::getInstance();
     }
     
     public function getFilter(): Filter {
