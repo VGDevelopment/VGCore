@@ -49,6 +49,7 @@ class UILoader {
     
     public static function loadEnable(SystemOS $plugin) {
         self::getInstance();
+        self::$instance = $this;
         Server::getInstance()->getPluginManager()->registerEvents(new GUIListener(), $plugin);
         
         PacketPool::registerPacket(new ModalFormRequestPacket());
