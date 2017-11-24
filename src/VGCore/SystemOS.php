@@ -42,7 +42,7 @@ class SystemOS extends PluginBase {
     }
     
     public function onEnable() {
-        $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.")
+        $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
         
         self::$instance = $this;
         
