@@ -12,11 +12,9 @@ use VGCore\SystemOS;
 class ChatFilterListener implements Listener {
     
     private $filter;
-    private $plugin;
     
-    public function __construct(Filter $filter, SystemOS $plugin) {
+    public function __construct(Filter $filter) {
         $this->filter = $filter;
-        $this->plugin = $plugin;
     }
     
     public function getFilter(): Filter {
