@@ -40,12 +40,6 @@ class UILoader {
     
     private static $instance;
     
-    private $plugin;
-    
-    private function __construct(SystemOS $plugin) {
-        $this->plugin = $plugin;
-    }
-    
     public static function getInstance() {
 		if (is_null(self::$instance)) {
 			self::$instance = new self();

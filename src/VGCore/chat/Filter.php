@@ -18,16 +18,11 @@ use VGCore\SystemOS;
 
 class Filter {
     
-    private $plugin;
     private $messages;
     private $badwords;
     
     private static $instance;
-    
-    private function __construct(SystemOS $plugin) {
-        $this->plugin = $plugin;
-    }
-    
+
     public static function getInstance() {
 		if (is_null(self::$instance)) {
 			self::$instance = new self();
