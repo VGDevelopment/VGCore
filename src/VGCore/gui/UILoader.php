@@ -61,9 +61,6 @@ class UILoader {
 		PacketPool::registerPacket(new ModalFormResponsePacket());
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
-        
-        $this->createUIs();
-        $this->updateUIs();
     }
     
     public function createUIs() {
