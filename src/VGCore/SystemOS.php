@@ -13,10 +13,14 @@ use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as Chat;
 
 // >>>
+use VGCore\economy\PlayerData;
+
+use VGCore\gui\UILoader;
 
 use VGCore\chat\Filter;
 
 use VGCore\listener\ChatFilterListener;
+use VGCore\listener\GUIListener;
 
 use VGCore\network\ModalFormRequestPacket;
 use VGCore\network\ModalFormResponsePacket;

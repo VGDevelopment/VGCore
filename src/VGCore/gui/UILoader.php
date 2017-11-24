@@ -4,6 +4,7 @@ namespace VGCore\gui;
 
 use pocketmine\network\mcpe\protocol\PacketPool;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\TextFormat;
 // >>>
 use VGCore\gui\lib\UIDriver;
 
@@ -38,6 +39,11 @@ class UILoader {
     
     public function createUIs() {
         // use this function to create UIs
+        $ui = new CustomForm('VirtualGalaxy Settings');
+        $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
+        $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
+        $ui->addElement($intro);
+        self::$uis['serverSettings'] = UIDriver::addUI($this, $ui);
     }
     
     public function updateUIs() {
