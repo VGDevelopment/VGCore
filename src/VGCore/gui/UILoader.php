@@ -36,9 +36,15 @@ use VGCore\listener\GUIListener;
 
 class UILoader {
     
+    public $plugin;
+    
     public static $uis;
     
     private static $instance;
+    
+    public function __construct() {
+		$this->plugin = SystemOS::getInstance();
+	}
     
     public static function getInstance() {
 		if (is_null(self::$instance)) {
@@ -49,7 +55,6 @@ class UILoader {
     
     public static function loadEnable(SystemOS $plugin) {
         self::getInstance();
-        self::$instance = $this;
         Server::getInstance()->getPluginManager()->registerEvents(new GUIListener(), $plugin);
         
         PacketPool::registerPacket(new ModalFormRequestPacket());
