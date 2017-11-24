@@ -32,6 +32,15 @@ class SystemOS extends PluginBase {
     
     // Base File for arranging everything in good order. This is how every good core should be done. 
     
+    private static $instance = null;
+    
+    public static function getInstance() {
+        if (!is_null(self::$instance)) {
+			return self::$instance;
+		}
+		return null;
+    }
+    
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.")
         

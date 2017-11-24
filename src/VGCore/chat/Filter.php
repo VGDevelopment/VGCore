@@ -16,7 +16,7 @@ use VGCore\SystemOS;
 
 class Filter {
     
-    private $plugin
+    private $plugin;
     private $messages;
     private $badwords;
     
