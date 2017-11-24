@@ -6,6 +6,8 @@ use pocketmine\network\mcpe\protocol\PacketPool;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 // >>>
+use VGCore\SystemOS;
+
 use VGCore\gui\lib\UIDriver;
 
 use VGCore\gui\lib\element\Button;
