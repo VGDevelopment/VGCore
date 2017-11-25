@@ -24,9 +24,11 @@ use VGCore\network\ServerSettingsResponsePacket;
 class GUIListener implements Listener {
     
     public $plugin;
+    public $os;
     
     public function __construct() {
 		$this->plugin = UILoader::getInstance();
+		$this->os = SystemOS::getInstance();
 	}
 	
 	public function onPacket(DataPacketReceiveEvent $event) {
@@ -55,21 +57,21 @@ class GUIListener implements Listener {
 	}
 	
 	public function handleModalFormResponse(ModalFormResponsePacket $packet, Player $player): bool {
-		$event = new UIDataReceiveEvent($this->plugin, $packet, $player);
-		if (is_null($event->getData())) $event = new UICloseEvent($this->plugin, $packet, $player);
+		$event = new UIDataReceiveEvent($this->os, $packet, $player);
+		if (is_null($event->getData())) $event = new UICloseEvent($this->os, $packet, $player);
 		Server::getInstance()->getPluginManager()->callEvent($event);
 		return true;
 	}
 	
 	public function handleServerSettingsResponsePacket(ServerSettingsResponsePacket $packet, Player $player): bool {
-		$event = new UIDataReceiveEvent($this->plugin, $packet, $player);
-		if (is_null($event->getData())) $event = new UICloseEvent($this->plugin, $packet, $player);
+		$event = new UIDataReceiveEvent($this->os, $packet, $player);
+		if (is_null($event->getData())) $event = new UICloseEvent($this->os, $packet, $player);
 		Server::getInstance()->getPluginManager()->callEvent($event);
 		return true;
 	}
 	
 	public function handleServerSettingsRequestPacket(ServerSettingsRequestPacket $packet, Player $player): bool {
-		$ui = UIDriver::getPluginUI($this->plugin, UILoader::$uis['serverSettings']);
+		$ui = UIDriver::getPluginUI($this->os, UILoader::$uis['serverSettings']);
 		$pk = new ServerSettingsResponsePacket();
 		$pk->formId = UILoader::$uis['serverSettings'];
 		$pk->formData = json_encode($ui);
@@ -78,11 +80,11 @@ class GUIListener implements Listener {
 	}
 	
 	public function onUIDataReceiveEvent(UIDataReceiveEvent $event) {
-		if ($event->getPlugin() !== $this->plugin) return; // events handled for UI only
+		if ($event->getPlugin() !== $this->os) return; // events handled for UI only
 		switch ($id = $event->getID()) {
 			case UILoader::$uis['serverSettings']: {
 				$data = $event->getData();
-				$ui = UIDriver::getPluginUI($this->plugin, $id);
+				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
 				break;
 			}
