@@ -3,4 +3,4 @@ main: VGCore\SystemOS
 api: [3.0.0-ALPHA9]
 version: 0.0.3.4
 author: VirtualGalaxy
-description: (C) Coyright 2017 of VirtualGalaxy (VG, VGPE) & Lewis Brindley. This is the VGCore Operating System (SystemOS) designed to operate the Lobby of all and any VG Servers. It's originally developed by Lewis Brindley for Virtual Galaxy and then contributed further by VG developers. It is the property of Lewis Brindley to begin with and then property of Virtual Galaxy. Licensed under a No License. 
+description: (C) Coyright 2017 of VirtualGalaxy (VG, VGPE) & Lewis Brindley. This is the VGCore Operating System (SystemOS) designed to operate the Lobby of all and any VG Servers. It's originally developed by Lewis Brindley for Virtual Galaxy and then contributed further by VG developers. It is the property of Lewis Brindley to begin with and then property of Virtual Galaxy. Licensed under a No License. Coded in PHP. 
