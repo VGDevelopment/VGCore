@@ -69,7 +69,7 @@ class GUIListener implements Listener {
 	}
 	
 	public function handleServerSettingsRequestPacket(ServerSettingsRequestPacket $packet, Player $player): bool {
-		$ui = UIDriver::getPluginUI($this->plugin, Loader::$uis['serverSettings']);
+		$ui = UIDriver::getPluginUI($this->plugin, UILoader::$uis['serverSettings']);
 		$pk = new ServerSettingsResponsePacket();
 		$pk->formId = UILoader::$uis['serverSettings'];
 		$pk->formData = json_encode($ui);
