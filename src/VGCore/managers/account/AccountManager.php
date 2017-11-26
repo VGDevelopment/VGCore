@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\account\managers;
+namespace VGCore\managers\account; // lol really? you messed up the namespace? ...
 
 use pocketmine\Player;
 use VGCore\SystemOS;
@@ -93,23 +93,23 @@ class AccountManager{
 	/////////////////////////// RANKS MANAGER ///////////////////////////
 
 	public function getRank($player){
-		if($player instanceof Player){
+		if($player instanceof Player){ // why check instance of? Just define it as Player in the method.
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
 		$ran = $this->db->query("SELECT rank FROM users WHERE username='".$this->db->real_escape_string($player)."'");
-		$rank = $ran->fetch_array()[0] ?? false;
+		$rank = $ran->fetch_array()[0] ?? false; // if you want to use this in other functions - make it a public var
 		$ran->free();
 		return $rank;
 	}
 
-	public function setRank($player, $rank){
+	public function setRank($player, $rank){ 
 		if($player instanceof Player){
 			$player = $player->getName();
 		}
 		if($this->rankExists($rank)){
 		    $player = strtolower($player);
-		    $rank = (float) $rank;
+		    $rank = (float) $rank; // rank is set float here; but in the method, rank is undefined.
 		    return $this->db->query("UPDATE users SET rank = $rank WHERE username='".$this->db->real_escape_string($player)."'");
 		}
 	}
@@ -171,7 +171,7 @@ class AccountManager{
       $player = $player->getName();
     }
     $player = strtolower($player);
-    $kills = (float) $kills;
+    $kills = (float) $kills; // what is $kills ? the function doesn't tell me and it isn't a public var so what is it?
     return $this->db->query("UPDATE users SET kills = $kills WHERE username='".$this->db->real_escape_string($player)."'");
   }
 
