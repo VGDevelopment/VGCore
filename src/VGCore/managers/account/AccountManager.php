@@ -36,11 +36,6 @@ class AccountManager{
 	/////////////////////////// RANK DETAILS ///////////////////////////
 
 	public function rankExists($rank){
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
-
 		$result = $this->db->query("SELECT * FROM users WHERE ranks='".$this->db->real_escape_string($rank)."'");
 		return $result->num_rows > 0 ? true:false;
 	}
