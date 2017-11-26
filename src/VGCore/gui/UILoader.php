@@ -46,8 +46,6 @@ class UILoader {
     
     public function __construct() {
 		$this->plugin = SystemOS::getInstance();
-		$this->createUIs();
-		$this->updateUIs();
 	}
     
     public static function getInstance() {
@@ -65,6 +63,10 @@ class UILoader {
 		PacketPool::registerPacket(new ModalFormResponsePacket());
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
+		
+		$uiloader = new UILoader();
+		$uiloader->createUIs();
+		$uiloader->updateUIs();
     }
     
     public function createUIs() {
