@@ -24,12 +24,38 @@ class AccountManager{
 		if(!$this->db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
 			rank FLOAT
+			ranks FLOAT
 			kills FLOAT
 			deaths FLOAT
 		);")){
 			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
 			return;
 		}
+	}
+	
+	/////////////////////////// RANK DETAILS ///////////////////////////
+
+	public function rankExists($rank){
+		if($player instanceof Player){
+			$player = $player->getName();
+		}
+		$player = strtolower($player);
+
+		$result = $this->db->query("SELECT * FROM users WHERE ranks='".$this->db->real_escape_string($rank)."'");
+		return $result->num_rows > 0 ? true:false;
+	}
+
+	public function createRank($rank){
+	    if(!$this->rankExists($rank)){
+			$this->db->query("INSERT INTO users (ranks) VALUES ('".$this->db->real_escape_string($rank)."'");
+			return true;
+		}
+		return false;
+	}
+
+	public function removeRank($rank){
+		if($this->db->query("DELETE FROM users WHERE ranks='".$this->db->real_escape_string($rank)."'") === true) return true;
+		return false;
 	}
 
 	/////////////////////////// PLAYER ACCOUNT DETAILS ///////////////////////////
@@ -86,9 +112,11 @@ class AccountManager{
 		if($player instanceof Player){
 			$player = $player->getName();
 		}
-		$player = strtolower($player);
-		$rank = (float) $rank;
-		return $this->db->query("UPDATE users SET rank = $rank WHERE username='".$this->db->real_escape_string($player)."'");
+		if($this->rankExists($rank)){
+		    $player = strtolower($player);
+		    $rank = (float) $rank;
+		    return $this->db->query("UPDATE users SET rank = $rank WHERE username='".$this->db->real_escape_string($player)."'");
+		}
 	}
 
 
