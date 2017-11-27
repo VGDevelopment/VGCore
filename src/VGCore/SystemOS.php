@@ -52,5 +52,6 @@ class SystemOS extends PluginBase {
         // $this->getLogger()->info("Loading Virtual Galaxy Chat Filter...");
         UILoader::loadEnable($this);
         $this->getLogger()->info("Loading Virtual Galaxy Graphical User Interface System...");
+        var_dump($uis);
     }
 }
