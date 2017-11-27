@@ -64,22 +64,23 @@ class UILoader {
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
 		
-		self::createUIs($plugin); // declare static method in static method
-		self::updateUIs($plugin); // declare static method in static method
+		$uiloader = new UILoader();
+		$uiloader->createUIs();
+		$uiloader->updateUIs();
     }
     
-    public static function createUIs(SystemOS $plugin) { // added SystemOS as $p (method wide @var) 
+    public function createUIs() {  
         // use this function to create UIs
         $ui = new CustomForm('VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
         $ui->addElement($intro);
-        self::$uis['serverSettings'] = UIDriver::addUI($plugin, $ui);
-        var_dump($uis); // checking to see if it is actually declaring the method and then filling the @var .
+        self::$uis['serverSettings'] = UIDriver::addUI($this->plugin, $ui);
+        var_dump($uis); // maybe using a nonstatic methods adds @var in to the class scope.
     }
     
-    public static function updateUIs(SystemOS $plugin) { // added SystemOS as $p (method wide @var)
-        UIDriver::resetUIs($plugin); // use this function to create UIs that may need updating (such as a Player Count or money count that needs to be updated etc.)
+    public function updateUIs() { 
+        UIDriver::resetUIs($this->plugin); // use this function to create UIs that may need updating (such as a Player Count or money count that needs to be updated etc.)
     }
     
 }
