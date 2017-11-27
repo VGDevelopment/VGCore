@@ -61,7 +61,7 @@ class SystemOS extends PluginBase {
         $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
         $this->loadUI();
         // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused.
-        $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Mojang API also Live).");
+        $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
         $this->loadFilter();
     }
     
@@ -75,8 +75,8 @@ class SystemOS extends PluginBase {
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
 		
-		$this->createUIs();
-		$this->updateUIs();
+		$this->createUIs(); // creates the forms in @var $uis [] int array. 
+		var_dump(self::$uis);
     }
     
     public function loadFilter() {
@@ -87,19 +87,23 @@ class SystemOS extends PluginBase {
         }
     }
     
+    public function loadCommand() {
+        
+    }
+    
     // >>> Section 1 - Graphical User Interface (GUI)
     
     public function createUIs() {  
+        UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields. 
         // use this function to create UIs
+        $ui = new CustomForm('VirtualGalaxy Tutorial');
+        $heading = new Label('§6Welcome to the Virtual Galaxy Server! Please read this tutorial for a better gameplay!');
+        self::$uis['tutorialUI'] = UIDriver::addUI($this, $ui);
         $ui = new CustomForm('VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
         $ui->addElement($intro);
-        self::$uis['serverSettings'] = UIDriver::addUI($this, $ui);
-    }
-    
-    public function updateUIs() { 
-        UIDriver::resetUIs($this); // use this function to create UIs that may need updating (such as a Player Count or money count that needs to be updated etc.)
+        self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 

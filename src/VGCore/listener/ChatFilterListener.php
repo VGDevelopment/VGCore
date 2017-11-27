@@ -13,10 +13,10 @@ class ChatFilterListener implements Listener {
     private $plugin;
     
     public function __construct(SystemOS $plugin) {
-        $this->filter = $plugin
+        $this->filter = $plugin;
     }
     
-    public function getFilter(): Filter {
+    public function getFilter(): SystemOS {
         return $this->filter;
     }
     

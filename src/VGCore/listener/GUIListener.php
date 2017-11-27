@@ -68,9 +68,9 @@ class GUIListener implements Listener {
 	}
 	
 	public function handleServerSettingsRequestPacket(ServerSettingsRequestPacket $packet, Player $player): bool {
-		$ui = UIDriver::getPluginUI($this->os, SystemOS::$uis['serverSettings']);
+		$ui = UIDriver::getPluginUI($this->os, SystemOS::$uis['serverSettingsUI']);
 		$pk = new ServerSettingsResponsePacket();
-		$pk->formId = SystemOS::$uis['serverSettings'];
+		$pk->formId = SystemOS::$uis['serverSettingsUI'];
 		$pk->formData = json_encode($ui);
 		$player->dataPacket($pk);
 		return true;
@@ -79,7 +79,7 @@ class GUIListener implements Listener {
 	public function onUIDataReceiveEvent(UIDataReceiveEvent $event) {
 		if ($event->getPlugin() !== $this->os) return; // events handled for UI only
 		switch ($id = $event->getID()) {
-			case SystemOS::$uis['serverSettings']: {
+			case SystemOS::$uis['serverSettingsUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
