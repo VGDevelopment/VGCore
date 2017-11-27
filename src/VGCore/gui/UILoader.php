@@ -76,7 +76,7 @@ class UILoader {
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
         $ui->addElement($intro);
         self::$uis['serverSettings'] = UIDriver::addUI($this->plugin, $ui);
-        var_dump($uis); // maybe using a nonstatic methods adds @var in to the class scope.
+        var_dump(self::$uis); // maybe using a nonstatic methods adds @var in to the class scope.
     }
     
     public function updateUIs() { 
