@@ -67,6 +67,7 @@ class UILoader {
 		$uiloader = new UILoader();
 		$uiloader->createUIs();
 		$uiloader->updateUIs();
+		var_dump(UIDriver::$UIs);
     }
     
     public function createUIs() {  
@@ -75,7 +76,7 @@ class UILoader {
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
         $ui->addElement($intro);
-        self::$uis['serverSettings'][UIDriver::addUI($this->plugin, $ui)] = $ui;
+        self::$uis['serverSettings'] = UIDriver::addUI($this->plugin, $ui);
         var_dump(self::$uis); // maybe using a nonstatic methods adds @var in to the class scope.
     }
     
