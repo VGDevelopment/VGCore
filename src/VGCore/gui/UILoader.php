@@ -40,6 +40,8 @@ class UILoader {
     
     public $plugin;
     
+    public static $p;
+    
     public static $uis;
     
     private static $instance;
