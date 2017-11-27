@@ -66,7 +66,6 @@ class UILoader {
 		
 		self::createUIs($plugin); // declare static method in static method
 		self::updateUIs($plugin); // declare static method in static method
-		var_dump($uis); // checking to see if empty array or not.
     }
     
     public static function createUIs(SystemOS $plugin) { // added SystemOS as $p (method wide @var) 
@@ -75,7 +74,8 @@ class UILoader {
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
         $ui->addElement($intro);
-        self::$uis['serverSettings'] = UIDriver::addUI($plugin, $ui); 
+        self::$uis['serverSettings'] = UIDriver::addUI($plugin, $ui);
+        var_dump($uis); // checking to see if it is actually declaring the method and then filling the @var .
     }
     
     public static function updateUIs(SystemOS $plugin) { // added SystemOS as $p (method wide @var)
