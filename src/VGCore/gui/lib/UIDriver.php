@@ -17,7 +17,6 @@ class UIDriver {
         $ui->setID(count(self::$UIs[$plugin->getName()]??[]));
 		$id = $ui->getID();
 		self::$UIs[$plugin->getName()][$id] = $ui;
-		$ui = null;
 		return $id;
     }
     
