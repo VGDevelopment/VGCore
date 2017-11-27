@@ -10,7 +10,6 @@ use pocketmine\Server;
 // >>>
 use VGCore\SystemOS;
 
-use VGCore\gui\UILoader;
 use VGCore\gui\lib\UIDriver;
 use VGCore\gui\lib\window\CustomForm;
 
@@ -24,11 +23,9 @@ use VGCore\network\ServerSettingsResponsePacket;
 class GUIListener implements Listener {
     
     public $plugin;
-    public $os;
     
-    public function __construct() {
-		$this->plugin = UILoader::getInstance();
-		$this->os = SystemOS::getInstance();
+    public function __construct(SystemOS $plugin) {
+		$this->os = $plugin;
 	}
 	
 	public function onPacket(DataPacketReceiveEvent $event) {
@@ -71,9 +68,9 @@ class GUIListener implements Listener {
 	}
 	
 	public function handleServerSettingsRequestPacket(ServerSettingsRequestPacket $packet, Player $player): bool {
-		$ui = UIDriver::getPluginUI($this->os, UILoader::$uis['serverSettings']);
+		$ui = UIDriver::getPluginUI($this->os, SystemOS::$uis['serverSettings']);
 		$pk = new ServerSettingsResponsePacket();
-		$pk->formId = UILoader::$uis['serverSettings'];
+		$pk->formId = SystemOS::$uis['serverSettings'];
 		$pk->formData = json_encode($ui);
 		$player->dataPacket($pk);
 		return true;
@@ -82,7 +79,7 @@ class GUIListener implements Listener {
 	public function onUIDataReceiveEvent(UIDataReceiveEvent $event) {
 		if ($event->getPlugin() !== $this->os) return; // events handled for UI only
 		switch ($id = $event->getID()) {
-			case UILoader::$uis['serverSettings']: {
+			case SystemOS::$uis['serverSettings']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());

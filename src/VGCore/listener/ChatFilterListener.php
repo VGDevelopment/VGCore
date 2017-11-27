@@ -6,15 +6,14 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
 // >>>
-use VGCore\chat\Filter;
 use VGCore\SystemOS;
 
 class ChatFilterListener implements Listener {
     
-    private $filter;
+    private $plugin;
     
-    public function __construct() {
-        $this->filter = Filter::getInstance();
+    public function __construct(SystemOS $plugin) {
+        $this->filter = $plugin
     }
     
     public function getFilter(): Filter {
