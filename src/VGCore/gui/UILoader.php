@@ -66,6 +66,7 @@ class UILoader {
 		
 		self::createUIs($plugin); // declare static method in static method
 		self::updateUIs($plugin); // declare static method in static method
+		var_dump($uis); // checking to see if empty array or not.
     }
     
     public static function createUIs(SystemOS $plugin) { // added SystemOS as $p (method wide @var) 
