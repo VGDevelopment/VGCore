@@ -64,23 +64,21 @@ class UILoader {
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
 		
-		$uiloader = new UILoader();
-		$uiloader->createUIs();
-		$uiloader->updateUIs();
-		// self::createUIs() - this can't be called since createUIs isn't static. 
+		self::createUIs(); // declare static method in static method
+		self::updateUIs(); // declare static method in static method
     }
     
-    public function createUIs() {
+    public static function createUIs(SystemOS $p) { // added SystemOS as $p (method wide @var) 
         // use this function to create UIs
         $ui = new CustomForm('VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
         $ui->addElement($intro);
-        self::$uis['serverSettings'] = UIDriver::addUI($this->plugin, $ui); // possibly add SystemOS as $plugin to make this static. Considering..
+        self::$uis['serverSettings'] = UIDriver::addUI($p, $ui); 
     }
     
-    public function updateUIs() {
-        UIDriver::resetUIs($this->plugin); // use this function to create UIs that may need updating (such as a Player Count or money count that needs to be updated etc.)
+    public static function updateUIs(SystemOS $p) { // added SystemOS as $p (method wide @var)
+        UIDriver::resetUIs($p); // use this function to create UIs that may need updating (such as a Player Count or money count that needs to be updated etc.)
     }
     
 }
