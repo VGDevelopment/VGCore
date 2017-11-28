@@ -64,7 +64,7 @@ class SystemOS extends PluginBase {
         // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
         // $this->loadFilter();
         // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
-        $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.")
+        $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.");
         $this->loadCommand();
     }
     
@@ -98,20 +98,20 @@ class SystemOS extends PluginBase {
     public function createUIs() {  
         UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields. 
         // use this function to create UIs
-        $ui = new CustomForm('VirtualGalaxy Tutorial');
-        $heading = new Label('§6Welcome to the Virtual Galaxy Server! Please read this tutorial for a better gameplay!');
-        $serversettingheading = new Label('§a>> Settings');
+        $ui = new SimpleForm('VirtualGalaxy Tutorial', '§aClick the correct button to load the tutorial for that category.');
+        $serversettingtutorial = new Button('§2Account Settings');
+        $ui->addButton($serversettingtutorial);
+        self::$uis['tutorialUI'] = UIDriver::addUI($this, $ui);
+        $ui = new CustomForm('§2Account Settings Tutorial');
         $serversetting = new Label('§6To manage most of your in-game account settings, please use the VirtualGalaxy Settings available to each user by following instructions for your corresponding device :');
         $serversettingios = new Label('§3FOR IOS USERS : Close this menu > Click the pause button > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
         $serversettingandroid = new Label('§3FOR ANDROID USERS : Close this menu > Tap the RETURN Button (to find out return button on your device, read the manual given with your device) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
-        $serversettingwindow = new Label('§FOR WINDOWS 10 USERS : Press the ESC button on your keyboard (usually at top left corner) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
-        $ui->addElement($heading);
-        $ui->addElement($serversettingheading);
+        $serversettingwindow = new Label('§3FOR WINDOWS 10 USERS : Press the ESC button on your keyboard (usually at top left corner) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
         $ui->addElement($serversetting);
         $ui->addElement($serversettingios);
         $ui->addElement($serversettingandroid);
         $ui->addElement($serversettingwindow);
-        self::$uis['tutorialUI'] = UIDriver::addUI($this, $ui);
+        self::$uis['serverSettingTutorialUI'] = UIDriver::addUI($this, $ui);
         $ui = new CustomForm('VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');

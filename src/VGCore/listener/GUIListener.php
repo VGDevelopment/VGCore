@@ -85,10 +85,15 @@ class GUIListener implements Listener {
 				$response = $ui->handle($data, $event->getPlayer());
 				break;
 			}
-			default: {
-				print 'Any other formId' . PHP_EOL;
-				var_dump(UIDriver::handle($event->getPlugin(), $event->getID(), $event->getData(), $event->getPlayer()));
-				break;
+			case SystemOS::$uis['tutorialUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§2Account Settings': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['serverSettingTutorialUI'], $event->getPlayer());
+					}
+				}
 			}
 		}
 	}
