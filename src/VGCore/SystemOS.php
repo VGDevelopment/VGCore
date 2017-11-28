@@ -60,9 +60,9 @@ class SystemOS extends PluginBase {
         // enables UI - make comment line to disable UI. May cause extreme failures if disabled.
         $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
         $this->loadUI();
-        // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused.
-        $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
-        $this->loadFilter();
+        // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused. # Made comment line because Mojang Chat Filter is on.
+        // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
+        // $this->loadFilter();
     }
     
     // Load Base Section
@@ -76,7 +76,6 @@ class SystemOS extends PluginBase {
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
 		
 		$this->createUIs(); // creates the forms in @var $uis [] int array. 
-		var_dump(self::$uis);
     }
     
     public function loadFilter() {
