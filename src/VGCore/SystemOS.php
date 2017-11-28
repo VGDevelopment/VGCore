@@ -40,6 +40,8 @@ use VGCore\network\ModalFormResponsePacket;
 use VGCore\network\ServerSettingsRequestPacket;
 use VGCore\network\ServerSettingsResponsePacket;
 
+use VGCore\command\Tutorial;
+
 class SystemOS extends PluginBase {
     
     // Base File for arranging everything in good order. This is how every good core should be done.
@@ -55,14 +57,15 @@ class SystemOS extends PluginBase {
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
         
-        $this->saveDefaultConfig();
-        
         // enables UI - make comment line to disable UI. May cause extreme failures if disabled.
         $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
         $this->loadUI();
         // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused. # Made comment line because Mojang Chat Filter is on.
         // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
         // $this->loadFilter();
+        // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
+        $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.")
+        $this->loadCommand();
     }
     
     // Load Base Section
@@ -87,7 +90,7 @@ class SystemOS extends PluginBase {
     }
     
     public function loadCommand() {
-        
+        $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
     }
     
     // >>> Section 1 - Graphical User Interface (GUI)
@@ -97,6 +100,17 @@ class SystemOS extends PluginBase {
         // use this function to create UIs
         $ui = new CustomForm('VirtualGalaxy Tutorial');
         $heading = new Label('§6Welcome to the Virtual Galaxy Server! Please read this tutorial for a better gameplay!');
+        $serversettingheading = new Label('§a>> Settings');
+        $serversetting = new Label('§6To manage most of your in-game account settings, please use the VirtualGalaxy Settings available to each user by following instructions for your corresponding device :');
+        $serversettingios = new Label('§3FOR IOS USERS : Close this menu > Click the pause button > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
+        $serversettingandroid = new Label('§3FOR ANDROID USERS : Close this menu > Tap the RETURN Button (to find out return button on your device, read the manual given with your device) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
+        $serversettingwindow = new Label('§FOR WINDOWS 10 USERS : Press the ESC button on your keyboard (usually at top left corner) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
+        $ui->addElement($heading);
+        $ui->addElement($serversettingheading);
+        $ui->addElement($serversetting);
+        $ui->addElement($serversettingios);
+        $ui->addElement($serversettingandroid);
+        $ui->addElement($serversettingwindow);
         self::$uis['tutorialUI'] = UIDriver::addUI($this, $ui);
         $ui = new CustomForm('VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
