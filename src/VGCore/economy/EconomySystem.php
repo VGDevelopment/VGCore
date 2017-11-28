@@ -112,7 +112,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$dbquery = $this->db->query("SELECT gems FROM users WHERE username='".$this->db->real_escape_string($playername2)."'");
-		$gem = $dol->fetch_array()[0] ?? false;
+		$gem = $dbquery->fetch_array()[0] ?? false;
 		$dbquery->free();
 		return $gem;
 	}
@@ -144,7 +144,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$dbquery = $this->db->query("SELECT coins FROM users WHERE username='".$this->db->real_escape_string($playername2)."'");
-		$coin = $dol->fetch_array()[0] ?? false;
+		$coin = $dbquery->fetch_array()[0] ?? false;
 		$dbquery->free();
 		return $coin;
 	}

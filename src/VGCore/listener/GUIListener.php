@@ -9,6 +9,8 @@ use pocketmine\plugin\Plugin;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat as Chat;
 // >>>
+use VGCore\economy\EconomySystem;
+
 use VGCore\SystemOS;
 
 use VGCore\gui\lib\UIDriver;

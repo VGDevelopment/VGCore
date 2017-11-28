@@ -124,7 +124,7 @@ class SystemOS extends PluginBase {
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
         $checkmoney = new Button('§2Check Coins');
-        $ui->addElement($checkmoney);
+        $ui->addButton($checkmoney);
         self::$uis['economyUI'] = UIDriver::addUI($this, $ui);
     }
     
