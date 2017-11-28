@@ -203,7 +203,7 @@ class PlayerData{
 		}
 		$player = strtolower($player);
 		$dollars = (float) $dollars;
-		return $this->db->query("UPDATE users SET gems = gems + $dollars * 50 WHERE username='".$this->db->real_escape_string($player)."'");
+		return $this->db->query("UPDATE users SET gems = $dollars * 50 + gems WHERE username='".$this->db->real_escape_string($player)."'");
 	}
 
 	public function convertDollarsToCoins($player, $dollars){
@@ -212,7 +212,7 @@ class PlayerData{
 		}
 		$player = strtolower($player);
 		$dollars = (float) $dollars;
-		return $this->db->query("UPDATE users SET coins = coins + $dollars * 5000 WHERE username='".$this->db->real_escape_string($player)."'");
+		return $this->db->query("UPDATE users SET coins = $dollars * 5000 + coins WHERE username='".$this->db->real_escape_string($player)."'");
 	}
 
 	public function convertGemsToCoins($player, $gems){
@@ -221,7 +221,7 @@ class PlayerData{
 		}
 		$player = strtolower($player);
 		$gems = (float) $gems;
-		return $this->db->query("UPDATE users SET coins = coins + $gems * 100 WHERE username='".$this->db->real_escape_string($player)."'");
+		return $this->db->query("UPDATE users SET coins = $gems * 100 + coins WHERE username='".$this->db->real_escape_string($player)."'");
 	}
 
 	/////////////////////////// LOWER TO HIGHER CURRENCIES ///////////////////////////
@@ -236,7 +236,7 @@ class PlayerData{
 		}
 		$player = strtolower($player);
 		$gems = (float) $gems;
-		return $this->db->query("UPDATE users SET dollars = dollars + $gems / 50 WHERE username='".$this->db->real_escape_string($player)."'");
+		return $this->db->query("UPDATE users SET dollars = $gems / 50 + dollars WHERE username='".$this->db->real_escape_string($player)."'");
 	}
 
 	public function convertCoinsToDollars($player, $coins){
@@ -245,7 +245,7 @@ class PlayerData{
 		}
 		$player = strtolower($player);
 		$coins = (float) $coins;
-		return $this->db->query("UPDATE users SET dollars = dollars + $coins / 5000 WHERE username='".$this->db->real_escape_string($player)."'");
+		return $this->db->query("UPDATE users SET dollars = $coins / 5000 + dollars WHERE username='".$this->db->real_escape_string($player)."'");
 	}
 
 	public function convertCoinsToGems($player, $coins){
@@ -254,7 +254,7 @@ class PlayerData{
 		}
 		$player = strtolower($player);
 		$coins = (float) $coins;
-		return $this->db->query("UPDATE users SET gems = gems + $coins / 100 WHERE username='".$this->db->real_escape_string($player)."'");
+		return $this->db->query("UPDATE users SET gems = $coins / 100 + gems WHERE username='".$this->db->real_escape_string($player)."'");
 	}
 
 	/////////////////////////// DATABASE CLOSE ///////////////////////////
