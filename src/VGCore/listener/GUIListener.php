@@ -7,6 +7,7 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\Server;
+use pocketmine\utils\TextFormat as Chat;
 // >>>
 use VGCore\SystemOS;
 
@@ -92,6 +93,19 @@ class GUIListener implements Listener {
 				switch ($response) {
 					case '§2Account Settings': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['serverSettingTutorialUI'], $event->getPlayer());
+					}
+				}
+			}
+			case SystemOS::$uis['economyUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§2Check Coins': {
+						$player = $event->getPlayer();
+						$economy = new EconomySystem($event->getPlugin());
+						$coin = $economy->getCoin($player);
+						$player->sendMessage(Chat::YELLOW . "Your coins are" . $coin);
 					}
 				}
 			}

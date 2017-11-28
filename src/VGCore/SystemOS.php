@@ -41,6 +41,7 @@ use VGCore\network\ServerSettingsRequestPacket;
 use VGCore\network\ServerSettingsResponsePacket;
 
 use VGCore\command\Tutorial;
+use VGCore\command\Economy;
 
 class SystemOS extends PluginBase {
     
@@ -91,17 +92,19 @@ class SystemOS extends PluginBase {
     
     public function loadCommand() {
         $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
+        $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
     }
     
     // >>> Section 1 - Graphical User Interface (GUI)
     
     public function createUIs() {  
         UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields. 
-        // use this function to create UIs
-        $ui = new SimpleForm('VirtualGalaxy Tutorial', '§aClick the correct button to load the tutorial for that category.');
+        // Tutorial MENU
+        $ui = new SimpleForm('§2VirtualGalaxy Tutorial', '§aClick the correct button to load the tutorial for that category.');
         $serversettingtutorial = new Button('§2Account Settings');
         $ui->addButton($serversettingtutorial);
         self::$uis['tutorialUI'] = UIDriver::addUI($this, $ui);
+        // Account Settings Tutorial
         $ui = new CustomForm('§2Account Settings Tutorial');
         $serversetting = new Label('§6To manage most of your in-game account settings, please use the VirtualGalaxy Settings available to each user by following instructions for your corresponding device :');
         $serversettingios = new Label('§3FOR IOS USERS : Close this menu > Click the pause button > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
@@ -112,11 +115,17 @@ class SystemOS extends PluginBase {
         $ui->addElement($serversettingandroid);
         $ui->addElement($serversettingwindow);
         self::$uis['serverSettingTutorialUI'] = UIDriver::addUI($this, $ui);
-        $ui = new CustomForm('VirtualGalaxy Settings');
+        // Server Settings
+        $ui = new CustomForm('§2VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
         $ui->addElement($intro);
         self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
+        // Economy Menu
+        $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
+        $checkmoney = new Button('§2Check Coins');
+        $ui->addElement($checkmoney);
+        self::$uis['economyUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 

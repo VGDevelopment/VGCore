@@ -15,18 +15,18 @@ class EconomySystem {
 	// conversion rates
 	public $dollartogem = 50;
 	public $gemtocoin = 100;
-	public $dollartocoin = $dollartogem * $gemtocoin; // so you don't have to go to every function to change it. 
+	public $dollartocoin = 5000; 
 	
 	public $gemtodollar = 0.02;
 	public $cointogem = 0.01;
-	public $cointodollar = $cointogem * $gemtodollar;
+	public $cointodollar = 0.0002; // can't do mathematic equations because logic is done on the right and public / private are on the left.
 
 	public function __construct(SystemOS $plugin) {
 		$this->plugin = $plugin;
 
 		/////////////////////////// DATABASE DETAILS ///////////////////////////
 
-		$this->db = mysqli_connect(" ", " ", " ");
+		$this->db = mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1"); // database has host, user, pass, and db name :)
 
 		if ($this->db->connect_error) {
 			$this->plugin->getLogger()->critical("Could not connect to MySQL server: ". $this->db->connect_error);
