@@ -27,6 +27,8 @@ class GUIListener implements Listener {
     
     public $plugin;
     
+    public static $coindata;
+    
     public function __construct(SystemOS $plugin) {
 		$this->os = $plugin;
 	}
@@ -108,7 +110,8 @@ class GUIListener implements Listener {
 						$economy = new EconomySystem($event->getPlugin());
 						$accountcheck = $economy->createAccount($player);
 						$coin = $economy->getCoin($player);
-						$player->sendMessage(Chat::YELLOW . "Your coins are" Chat::GREEN . " $" . $coin);
+						self::$coindata = $coin;
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['checkCoinMenu'], $event->getPlayer());
 					}
 				}
 			}
