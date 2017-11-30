@@ -106,8 +106,9 @@ class GUIListener implements Listener {
 					case '§2Check Coins': {
 						$player = $event->getPlayer();
 						$economy = new EconomySystem($event->getPlugin());
+						$accountcheck = $economy->createAccount($player);
 						$coin = $economy->getCoin($player);
-						$player->sendMessage(Chat::YELLOW . "Your coins are" . $coin);
+						$player->sendMessage(Chat::YELLOW . "Your coins are" Chat::GREEN . " $" . $coin);
 					}
 				}
 			}
