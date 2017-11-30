@@ -34,8 +34,8 @@ class EconomySystem {
 		}
 		if (!$this->db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
-			dollars FLOAT
-			gems FLOAT
+			dollars FLOAT,
+			gems FLOAT,
 			coins FLOAT
 			);")) {
 			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
