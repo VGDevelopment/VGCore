@@ -107,12 +107,7 @@ class GUIListener implements Listener {
 				$response = $ui->handle($data, $event->getPlayer());
 				switch ($response) {
 					case '§2Check Coins': {
-						$player = $event->getPlayer();
-						$economy = new EconomySystem($event->getPlugin());
-						$accountcheck = $economy->createAccount($player);
-						$coin = $economy->getCoin($player);
-						self::$coindata = $coin;
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['checkCoinMenu'], $event->getPlayer());
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['checkCoinWindowUI'], $event->getPlayer());
 					}
 				}
 				break;
@@ -121,11 +116,6 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				switch ($response) {
-					case '§cBack': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['economyUI'], $event->getPlayer());
-					}
-				}
 				break;
 			}
 		}

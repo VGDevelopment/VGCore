@@ -127,10 +127,9 @@ class SystemOS extends PluginBase {
         $ui->addButton($checkmoney);
         self::$uis['economyUI'] = UIDriver::addUI($this, $ui);
         // Check Coin Menu
-        $ui = new SimpleForm('§2Your §eCoins', '§aYour total §ecoins §aare §e[C]' . GUIListener::$coindata);
-        $return = new Button('§cBack');
-        $ui->addButton($return);
-        self::$uis['checkCoinMenu'] = UIDriver::addUI($this, $ui);
+        $ui = new CustomForm('§2Your §eCoins');
+        $main = new Label('§aYour total §ecoins §aare §e[C]');
+        self::$uis['checkCoinWindowUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 
