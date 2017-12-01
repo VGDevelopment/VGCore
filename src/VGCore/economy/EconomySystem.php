@@ -137,6 +137,11 @@ class EconomySystem {
 		$amount = (float) $amount;
 		return $this->db->query("UPDATE users SET gems = gems - $amount WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
+	
+	public function sendGem(Player $from, Player $to, $gems){
+	    $this->reduceGem($from, $gems);
+	    $this->addGem($to, $gems);
+	}
 
 	/////////////////////////// COINS CURRENCY ///////////////////////////
 
@@ -168,6 +173,11 @@ class EconomySystem {
 		$playername2 = strtolower($playername);
 		$amount = (float) $amount;
 		return $this->db->query("UPDATE users SET coins = coins - $amount WHERE username='".$this->db->real_escape_string($playername2)."'");
+	}
+	
+	public function sendCoin(Player $from, Player $to, $coins){
+	    $this->reduceCoin($from, $coins);
+	    $this->addCoin($to, $coins);
 	}
 
 	/////////////////////////// CURRENCY CONVERSION ///////////////////////////
