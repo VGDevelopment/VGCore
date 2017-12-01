@@ -99,6 +99,7 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['serverSettingTutorialUI'], $event->getPlayer());
 					}
 				}
+				break;
 			}
 			case SystemOS::$uis['economyUI']: {
 				$data = $event->getData();
@@ -114,6 +115,18 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['checkCoinMenu'], $event->getPlayer());
 					}
 				}
+				break;
+			}
+			case SystemOS::$uis['checkCoinMenu']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§cBack': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['economyUI'], $event->getPlayer());
+					}
+				}
+				break;
 			}
 		}
 	}

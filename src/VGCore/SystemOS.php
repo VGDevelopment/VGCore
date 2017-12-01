@@ -127,7 +127,9 @@ class SystemOS extends PluginBase {
         $ui->addButton($checkmoney);
         self::$uis['economyUI'] = UIDriver::addUI($this, $ui);
         // Check Coin Menu
-        $ui = new ModalWindow('§2Your §eCoins', '§aYour total §ecoins §aare §e[C]' . GUIListener::$coindata, '§cBack', '§aShop');
+        $ui = new SimpleForm('§2Your §eCoins', '§aYour total §ecoins §aare §e[C]' . GUIListener::$coindata);
+        $return = new Button('§cBack');
+        $ui->addButton($return);
         self::$uis['checkCoinMenu'] = UIDriver::addUI($this, $ui);
     }
     
