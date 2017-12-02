@@ -99,6 +99,7 @@ class GUIListener implements Listener {
 				switch ($response) {
 					case '§2Account Settings': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['serverSettingTutorialUI'], $event->getPlayer());
+						break;
 					}
 				}
 				break;
@@ -122,6 +123,10 @@ class GUIListener implements Listener {
     					$ui->addElement($option);
         				SystemOS::$uis['checkCoinWindowUI'] = UIDriver::addUI($this->os, $ui);
 						UIDriver::showUIbyID($p, SystemOS::$uis['checkCoinWindowUI'], $player);
+						break;
+					}
+					case '§2Send §eCoins': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['sendCoinUI'], $event->getPlayer());
 					}
 				}
 				break;
@@ -130,8 +135,39 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				var_dump($response);
+				switch ($response[1]) {
+					case '§cBack to Menu': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['economyUI'], $event->getPlayer());
+						break;
+					}
+					case '§aGo to §lSHOP': {
+						$player = $event->getPlayer();
+						$player->sendMessage(Chat::YELLOW . "This is not available yet. Stay Tuned!");
+						break;
+					}
+				}
 				break;
+			}
+			case SystemOS::$uis['sendCoinUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = $response[2];
+				$check = bool is_numeric($amount);
+				if ($check === true) {
+					$sendto = $response[3];
+					$economy = new EconomySystem($event->getPlugin());
+					$player = $event->getPlayer();
+					$sender = $player->getName();
+					$send = $economy->sendCoin($sender, $sendto, $amount);
+					if ($send === true) {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+					} else ($send === false) {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+					}
+				} else {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
 			}
 		}
 	}

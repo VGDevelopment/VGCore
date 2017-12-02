@@ -123,9 +123,26 @@ class SystemOS extends PluginBase {
         self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
-        $checkmoney = new Button('§2Check §eCoins');
-        $ui->addButton($checkmoney);
+        $checkcoin = new Button('§2Check §eCoins');
+        $sendcoin = new Button('§2Send §eCoins');
+        $ui->addButton($checkcoin);
+        $ui->addButton($sendcoin);
         self::$uis['economyUI'] = UIDriver::addUI($this, $ui);
+        // Send Coin UI
+        $ui = new CustomForm('§2Send §eCoins');
+        $intro = new Label('§ePlease enter the following details to send coins.');
+        $amount = new Input('§eHow much are you sending?', 'Integer - ex. 432, 8228, or 9182');
+        $sendto = new Input('§eWho are you sending to?', 'Please enter the exact characters of the name');
+        $ui->addElement($intro);
+        $ui->addElement($amount);
+        $ui->addElement($sendto);
+        self::$uis['sendCoinUI'] = UIDriver::addUI($this, $ui);
+        // Success Modal Window 
+        $ui = new ModalWindow('§aSuccess!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
+        self::$uis['successUI'] = UIDriver::addUI($this, $ui);
+        // ERROR Modal Window
+        $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again.', '...', '...');
+        self::$uis['errorUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 

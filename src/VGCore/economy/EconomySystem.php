@@ -138,9 +138,20 @@ class EconomySystem {
 		return $this->db->query("UPDATE users SET gems = gems - $amount WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 	
-	public function sendGem(Player $from, Player $to, $gems){
-	    $this->reduceGem($from, $gems);
-	    $this->addGem($to, $gems);
+	public function sendGem(string $from, string $to, int $amount){
+	    $sender = strtolower($from);
+	    $receiver = strtolower($to);
+	    $amount = (float) $amount;
+		$query = $this->db->query("SELECT gems FROM users WHERE username='".$this->db->real_escape_string($sender)."'");
+		$check = $query->fetch_array()[0] ?? false;
+		$query->free();
+		if ($check > $amount) {
+			$this->db->query("UPDATE users SET gems = gems - $amount WHERE username='".$this->db->real_escape_string($sender)."'");
+			$this->db->query("UPDATE users SET gems = gems + $amount WHERE username='".$this->db->real_escape_string($receiver)."'");
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/////////////////////////// COINS CURRENCY ///////////////////////////
@@ -175,9 +186,20 @@ class EconomySystem {
 		return $this->db->query("UPDATE users SET coins = coins - $amount WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 	
-	public function sendCoin(Player $from, Player $to, $coins){
-	    $this->reduceCoin($from, $coins);
-	    $this->addCoin($to, $coins);
+	public function sendCoin(string $from, string $to, int $amount) {
+	    $sender = strtolower($from);
+	    $receiver = strtolower($to);
+	    $amount = (float) $amount;
+		$query = $this->db->query("SELECT coins FROM users WHERE username='".$this->db->real_escape_string($sender)."'");
+		$check = $query->fetch_array()[0] ?? false;
+		$query->free();
+		if ($check > $amount) {
+			$this->db->query("UPDATE users SET coins = coins - $amount WHERE username='".$this->db->real_escape_string($sender)."'");
+			$this->db->query("UPDATE users SET coins = coins + $amount WHERE username='".$this->db->real_escape_string($receiver)."'");
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/////////////////////////// CURRENCY CONVERSION ///////////////////////////
