@@ -136,7 +136,6 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				var_dump($response);
 				$string = $response[1];
 				$amount = (int)$string;
 				$sendto = $response[2];
