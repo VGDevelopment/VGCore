@@ -138,7 +138,7 @@ class SystemOS extends PluginBase {
         $ui->addElement($sendto);
         self::$uis['sendCoinUI'] = UIDriver::addUI($this, $ui);
         // Success Modal Window 
-        $ui = new ModalWindow('§aSuccess!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
+        $ui = new ModalWindow('§2Success!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
         self::$uis['successUI'] = UIDriver::addUI($this, $ui);
         // ERROR Modal Window
         $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again.', '...', '...');

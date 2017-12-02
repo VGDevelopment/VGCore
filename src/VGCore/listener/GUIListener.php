@@ -85,6 +85,19 @@ class GUIListener implements Listener {
 	
 	public function onUIDataReceiveEvent(UIDataReceiveEvent $event) {
 		if ($event->getPlugin() !== $this->os) return; // events handled for UI only
+		$economy = new EconomySystem($event->getPlugin());
+		$player = $event->getPlayer();
+		$p = $event->getPlugin();
+		$accountcheck = $economy->createAccount($player);
+		$coin = $economy->getCoin($player);
+		// Run-time UI Form (checkCoinWindowUI) @var SystemOS::$uis [] int array for ID
+		$ui = new CustomForm('§2Your §eCoins');
+        $main = new Label('§aYour total §ecoins §aare §e[C]' . $coin);
+        $option = new Dropdown('§2Please pick an option to go to next or close this window.', ['§cBack to Menu', '§aGo to §lSHOP']);
+        $ui->addElement($main);
+    	$ui->addElement($option);
+        SystemOS::$uis['checkCoinWindowUI'] = UIDriver::addUI($this->os, $ui);
+        // >>> RUNTIME UI END <<<
 		switch ($id = $event->getID()) {
 			case SystemOS::$uis['serverSettingsUI']: {
 				$data = $event->getData();
@@ -110,18 +123,6 @@ class GUIListener implements Listener {
 				$response = $ui->handle($data, $event->getPlayer());
 				switch ($response) {
 					case '§2Check §eCoins': {
-						$economy = new EconomySystem($event->getPlugin());
-						$player = $event->getPlayer();
-						$p = $event->getPlugin();
-						$accountcheck = $economy->createAccount($player);
-						$coin = $economy->getCoin($player);
-						// Run-time UI Form (checkCoinWindowUI) @var SystemOS::$uis [] int array for ID
-						$ui = new CustomForm('§2Your §eCoins');
-        				$main = new Label('§aYour total §ecoins §aare §e[C]' . $coin);
-        				$option = new Dropdown('§2Please pick an option to go to next or close this window.', ['§cBack to Menu', '§aGo to §lSHOP']);
-        				$ui->addElement($main);
-    					$ui->addElement($option);
-        				SystemOS::$uis['checkCoinWindowUI'] = UIDriver::addUI($this->os, $ui);
 						UIDriver::showUIbyID($p, SystemOS::$uis['checkCoinWindowUI'], $player);
 						break;
 					}
@@ -130,6 +131,24 @@ class GUIListener implements Listener {
 					}
 				}
 				break;
+			}
+			case SystemOS::$uis['sendCoinUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				var_dump($response);
+				$string = $response[1];
+				$amount = (int)$string;
+				$sendto = $response[2];
+				$economy = new EconomySystem($event->getPlugin());
+				$player = $event->getPlayer();
+				$sender = $player->getName();
+				$send = $economy->sendCoin($sender, $sendto, $amount);
+				if ($send === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($send === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
 			}
 			case SystemOS::$uis['checkCoinWindowUI']: {
 				$data = $event->getData();
@@ -147,27 +166,6 @@ class GUIListener implements Listener {
 					}
 				}
 				break;
-			}
-			case SystemOS::$uis['sendCoinUI']: {
-				$data = $event->getData();
-				$ui = UIDriver::getPluginUI($this->os, $id);
-				$response = $ui->handle($data, $event->getPlayer());
-				$amount = $response[2];
-				$check = bool is_numeric($amount);
-				if ($check === true) {
-					$sendto = $response[3];
-					$economy = new EconomySystem($event->getPlugin());
-					$player = $event->getPlayer();
-					$sender = $player->getName();
-					$send = $economy->sendCoin($sender, $sendto, $amount);
-					if ($send === true) {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
-					} else ($send === false) {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
-					}
-				} else {
-					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
-				}
 			}
 		}
 	}
