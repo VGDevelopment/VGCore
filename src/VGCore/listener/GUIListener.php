@@ -142,12 +142,18 @@ class GUIListener implements Listener {
 				$economy = new EconomySystem($event->getPlugin());
 				$player = $event->getPlayer();
 				$sender = $player->getName();
-				$send = $economy->sendCoin($sender, $sendto, $amount);
-				if ($send === true) {
-					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
-				} else if ($send === false) {
+				$valid = $economy->accountValidate($sendto);
+				if ($valid === true) {
+					$send = $economy->sendCoin($sender, $sendto, $amount);
+					if ($send === true) {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+					} else if ($send === false) {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+					}
+				} else if ($valid === false) {
 					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
 				}
+				
 			}
 			case SystemOS::$uis['checkCoinWindowUI']: {
 				$data = $event->getData();

@@ -47,9 +47,12 @@ class EconomySystem {
 
 	public function accountExists(Player $player) {
 		$playername = $player->getName();
-		$playername2 = strtolower($playername);
-
-		$result = $this->db->query("SELECT * FROM users WHERE username='".$this->db->real_escape_string($playername2)."'");
+		$this->accountValidate($playername);
+	}
+	
+	public function accountValidate(string $name) {
+		$lowername = strtolower($name);
+		$result = $this->db->query("SELECT * FROM users WHERE username='".$this->db->real_escape_string($lowername)."'");
 		return $result->num_rows > 0 ? true:false;
 	}
 
