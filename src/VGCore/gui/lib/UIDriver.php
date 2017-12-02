@@ -9,6 +9,8 @@ use pocketmine\utils\Utils;
 // >>>
 use VGCore\network\ModalFormRequestPacket;
 
+use VGCore\SystemOS;
+
 class UIDriver {
     
     private static $UIs = []; // array of all uis so making an ID for each isn't always necessary and can be changed without changing the actual command or event of UI.
@@ -56,6 +58,10 @@ class UIDriver {
 		$pk->formData = json_encode($ui);
 		$pk->formId = $id;
 		$player->dataPacket($pk);
+	}
+	
+	public static function varDump(Plugin $plugin) {
+		var_dump(self::$UIs[$plugin->getName()][SystemOS::$uis['checkCoinWindowUI']]);
 	}
     
 }
