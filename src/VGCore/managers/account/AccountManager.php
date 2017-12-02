@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 namespace VGCore\managers\account; // lol really? you messed up the namespace? ...
 
@@ -9,6 +9,8 @@ class AccountManager{
 
 	private $db;
 	private $plugin;
+
+	public $rank;
 
 	public function __construct(SystemOS $plugin){
 		$this->plugin = $plugin;
@@ -23,9 +25,9 @@ class AccountManager{
 		}
 		if(!$this->db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
-			rank FLOAT
-			ranks FLOAT
-			kills FLOAT
+			rank FLOAT,
+			ranks FLOAT,
+			kills FLOAT,
 			deaths FLOAT
 		);")){
 			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
