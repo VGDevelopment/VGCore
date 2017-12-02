@@ -1,6 +1,6 @@
-	<?php
+<?php
 
-namespace VGCore\managers\account; // lol really? you messed up the namespace? ...
+namespace VGCore\managers\account;
 
 use pocketmine\Player;
 use VGCore\SystemOS;
@@ -57,124 +57,99 @@ class AccountManager{
 
 	/////////////////////////// PLAYER ACCOUNT DETAILS ///////////////////////////
 
-	public function accountExists($player){
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
-
-		$result = $this->db->query("SELECT * FROM users WHERE username='".$this->db->real_escape_string($player)."'");
+	public function accountExists(Player $player){
+	    $playername = $player->getName();
+		$playername2 = strtolower($playername);
+		$result = $this->db->query("SELECT * FROM users WHERE username='".$this->db->real_escape_string($playername2)."'");
 		return $result->num_rows > 0 ? true:false;
 	}
 
-	public function createAccount($player){
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
-
+	public function createAccount(Player $player){
+		$playername = $player->getName();
+		$playername2 = strtolower($playername);
 		if(!$this->accountExists($player)){
-			$this->db->query("INSERT INTO users (username, rank) VALUES ('".$this->db->real_escape_string($player)."', default);");
-			$this->db->query("INSERT INTO users (username, kills) VALUES ('".$this->db->real_escape_string($player)."', 0);");
-			$this->db->query("INSERT INTO users (username, deaths) VALUES ('".$this->db->real_escape_string($player)."', 0);");
+			$this->db->query("INSERT INTO users (username, rank) VALUES ('".$this->db->real_escape_string($playername2)."', default);");
+			$this->db->query("INSERT INTO users (username, kills) VALUES ('".$this->db->real_escape_string($playername2)."', 0);");
+			$this->db->query("INSERT INTO users (username, deaths) VALUES ('".$this->db->real_escape_string($playername2)."', 0);");
 			return true;
 		}
 		return false;
 	}
 
-	public function removeAccount($player){
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
-
-		if($this->db->query("DELETE FROM users WHERE username='".$this->db->real_escape_string($player)."'") === true) return true;
+	public function removeAccount(Player $player){
+		$playername = $player->getName();
+		$playername2 = strtolower($playername);
+		if($this->db->query("DELETE FROM users WHERE username='".$this->db->real_escape_string($playername2)."'") === true) return true;
 		return false;
 	}
 
 	/////////////////////////// RANKS MANAGER ///////////////////////////
 
-	public function getRank($player){
-		if($player instanceof Player){ // why check instance of? Just define it as Player in the method.
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
-		$ran = $this->db->query("SELECT rank FROM users WHERE username='".$this->db->real_escape_string($player)."'");
+	public function getRank(Player $player){
+		$playername = $player->getName();
+		$playername2 = strtolower($playername);
+		$ran = $this->db->query("SELECT rank FROM users WHERE username='".$this->db->real_escape_string($playername2)."'");
 		$rank = $ran->fetch_array()[0] ?? false; // if you want to use this in other functions - make it a public var
 		$ran->free();
 		return $rank;
 	}
 
-	public function setRank($player, $rank){ 
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
+	public function setRank(Player $player, $rank){ 
+		$playername = $player->getName();
+		$playername2 = strtolower($playername);
 		if($this->rankExists($rank)){
-		    $player = strtolower($player);
-		    $rank = (float) $rank; // rank is set float here; but in the method, rank is undefined.
-		    return $this->db->query("UPDATE users SET rank = $rank WHERE username='".$this->db->real_escape_string($player)."'");
+		    $rank = (float) $rank;
+		    return $this->db->query("UPDATE users SET rank = $rank WHERE username='".$this->db->real_escape_string($playername2)."'");
 		}
 	}
 
 
   /////////////////////////// DEATHS MANAGER ///////////////////////////
 
-	public function getDeaths($player){
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
-		$deat = $this->db->query("SELECT deaths FROM users WHERE username='".$this->db->real_escape_string($player)."'");
+	public function getDeaths(Player $player){
+		$playername = $player->getName();
+		$playername2 = strtolower($playername);
+		$deat = $this->db->query("SELECT deaths FROM users WHERE username='".$this->db->real_escape_string($playername2)."'");
 		$death = $deat->fetch_array()[0] ?? false;
 		$deat->free();
 		return $death;
 	}
 
-	public function addDeath($player){
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
-		return $this->db->query("UPDATE users SET deaths = deaths + 1 WHERE username='".$this->db->real_escape_string($player)."'");
+	public function addDeath(Player $player){
+		$playername = $player->getName();
+		$playername2 = strtolower($playername);
+		return $this->db->query("UPDATE users SET deaths = deaths + 1 WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 
-  public function setDeaths($player, $deaths){
-		if($player instanceof Player){
-			$player = $player->getName();
-		}
-		$player = strtolower($player);
+  public function setDeaths(Player $player, $deaths){
+		$playername = $player->getName();
+		$playername2 = strtolower($playername);
 		$deaths = (float) $deaths;
-		return $this->db->query("UPDATE users SET deaths = $deaths WHERE username='".$this->db->real_escape_string($player)."'");
+		return $this->db->query("UPDATE users SET deaths = $deaths WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 
   /////////////////////////// KILLS MANAGER ///////////////////////////
 
-  public function getKills($player){
-    if($player instanceof Player){
-      $player = $player->getName();
-    }
-    $player = strtolower($player);
-    $kill = $this->db->query("SELECT kills FROM users WHERE username='".$this->db->real_escape_string($player)."'");
+  public function getKills(Player $player){
+    $playername = $player->getName();
+	$playername2 = strtolower($playername);
+    $kill = $this->db->query("SELECT kills FROM users WHERE username='".$this->db->real_escape_string($playername2)."'");
     $kills = $kill->fetch_array()[0] ?? false;
     $kill->free();
     return $kills;
   }
 
-  public function addKill($player){
-    if($player instanceof Player){
-      $player = $player->getName();
-    }
-    $player = strtolower($player);
-    return $this->db->query("UPDATE users SET kills = kills + 1 WHERE username='".$this->db->real_escape_string($player)."'");
+  public function addKill(Player $player){
+    $playername = $player->getName();
+	$playername2 = strtolower($playername);
+    return $this->db->query("UPDATE users SET kills = kills + 1 WHERE username='".$this->db->real_escape_string($playername2)."'");
   }
 
-  public function setKills($player, $kills){
-    if($player instanceof Player){
-      $player = $player->getName();
-    }
-    $player = strtolower($player);
+  public function setKills(Player $player, $kills){
+    $playername = $player->getName();
+	$playername2 = strtolower($playername);
     $kills = (float) $kills; // what is $kills ? the function doesn't tell me and it isn't a public var so what is it?
-    return $this->db->query("UPDATE users SET kills = $kills WHERE username='".$this->db->real_escape_string($player)."'");
+    return $this->db->query("UPDATE users SET kills = $kills WHERE username='".$this->db->real_escape_string($playername2)."'");
   }
 
 	/////////////////////////// DATABASE CLOSE ///////////////////////////
