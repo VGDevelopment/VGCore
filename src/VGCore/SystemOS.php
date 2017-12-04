@@ -82,7 +82,7 @@ class SystemOS extends PluginBase {
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
 		
-		$this->createUIs(); // creates the forms in @var $uis [] int array. 
+		$this->createUIs(); // creates the forms in @var $uis [] int array.
     }
     
     public function loadFilter() {
@@ -128,8 +128,10 @@ class SystemOS extends PluginBase {
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
         $checkcoin = new Button('§2Check §eCoins');
         $sendcoin = new Button('§2Send §eCoins');
+        $shop = new Button('§a§lSHOP');
         $ui->addButton($checkcoin);
         $ui->addButton($sendcoin);
+        $ui->addButton($shop);
         self::$uis['economyUI'] = UIDriver::addUI($this, $ui);
         // Send Coin UI
         $ui = new CustomForm('§2Send §eCoins');
@@ -146,6 +148,19 @@ class SystemOS extends PluginBase {
         // ERROR Modal Window
         $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again.', '...', '...');
         self::$uis['errorUI'] = UIDriver::addUI($this, $ui);
+    }
+    
+    public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.
+        UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields.
+        // Shop Main Menu
+        $ui = new SimpleForm('§a§lSHOP', '§ePlease select a category :');
+        $itemcategory = new Button('§a§lITEMS');
+        $blockcategory = new Button('§a§lBLOCKS');
+        $itemcategory->addImage(Button::IMAGE_TYPE_URL, 'http://image.ibb.co/cfqD0G/2_Swords_Blue.png');
+        $blockcategory->addImage(Button::IMAGE_TYPE_URL, 'http://image.ibb.co/mktSSw/Block_Blue.png');
+        $ui->addButton($itemcategory);
+        $ui->addButton($blockcategory);
+        self::$uis['shopMainMenuUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 

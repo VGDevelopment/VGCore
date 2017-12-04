@@ -25,6 +25,9 @@ use VGCore\network\ModalFormResponsePacket;
 use VGCore\network\ServerSettingsRequestPacket;
 use VGCore\network\ServerSettingsResponsePacket;
 
+use VGCore\store\Store;
+use VGCore\store\ItemList as IL;
+
 class GUIListener implements Listener {
     
     public $plugin;
@@ -128,6 +131,11 @@ class GUIListener implements Listener {
 					}
 					case '§2Send §eCoins': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['sendCoinUI'], $event->getPlayer());
+						break;
+					}
+					case '§a§lSHOP': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopMainMenuUI'], $event->getPlayer());
+						break;
 					}
 				}
 				break;
@@ -153,7 +161,7 @@ class GUIListener implements Listener {
 				} else if ($valid === false) {
 					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
 				}
-				
+				break;
 			}
 			case SystemOS::$uis['checkCoinWindowUI']: {
 				$data = $event->getData();
