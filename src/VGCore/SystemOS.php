@@ -34,6 +34,7 @@ use VGCore\gui\lib\window\CustomForm;
 
 use VGCore\listener\ChatFilterListener;
 use VGCore\listener\GUIListener;
+use VGCore\listener\StoreListener;
 
 use VGCore\network\ModalFormRequestPacket;
 use VGCore\network\ModalFormResponsePacket;
@@ -61,9 +62,11 @@ class SystemOS extends PluginBase {
         // enables UI - make comment line to disable UI. May cause extreme failures if disabled.
         $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
         $this->loadUI();
+        
         // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused. # Made comment line because Mojang Chat Filter is on.
         // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
         // $this->loadFilter();
+        
         // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
         $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.");
         $this->loadCommand();
