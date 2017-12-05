@@ -211,7 +211,15 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				var_dump($response);
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$woodsword;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
 				break;
 			}
 		}

@@ -2,8 +2,8 @@
 
 namespace VGCore\store;
 
-use pocketmine/Player;
-use pocketmine/item/Item;
+use pocketmine\Player;
+use pocketmine\item\Item;
 // >>>
 use VGCore\SystemOS;
 use VGCore\economy\EconomySystem;

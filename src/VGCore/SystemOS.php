@@ -155,7 +155,6 @@ class SystemOS extends PluginBase {
     }
     
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.
-        UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields.
         // Shop Main Menu
         $ui = new SimpleForm('§a§lSHOP', '§ePlease select a category :');
         $itemcategory = new Button('§a§lITEMS');
