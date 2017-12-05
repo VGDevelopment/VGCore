@@ -18,9 +18,10 @@ class Store {
         $this->economy = $economy;
     }
     
-    public function buyItem(Player $player, int $amount, int $price, array $info) {
+    public function buyItem(Player $player, int $amount, array $info) {
         $name = $player->getName();
         $check = $this->economy->accountValidate($name);
+        $price = $info[2];
         $finalprice = $price * $amount;
         if ($check === true) {
             $coin = $this->economy->getCoin($player);

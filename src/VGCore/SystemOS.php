@@ -44,6 +44,9 @@ use VGCore\network\ServerSettingsResponsePacket;
 use VGCore\command\Tutorial;
 use VGCore\command\Economy;
 
+use VGCore\store\Store;
+use VGCore\store\ItemList as IL;
+
 class SystemOS extends PluginBase {
     
     // Base File for arranging everything in good order. This is how every good core should be done.
@@ -83,6 +86,7 @@ class SystemOS extends PluginBase {
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
 		
 		$this->createUIs(); // creates the forms in @var $uis [] int array.
+		$this->createShopUI(); // creates the forms in @var $uis [] int array.
     }
     
     public function loadFilter() {
@@ -161,6 +165,17 @@ class SystemOS extends PluginBase {
         $ui->addButton($itemcategory);
         $ui->addButton($blockcategory);
         self::$uis['shopMainMenuUI'] = UIDriver::addUI($this, $ui);
+        // Shop Item Menu
+        $ui = new SimpleForm('§a§lITEMS', '§ePlease select an item to buy :');
+        $woodensword = new Button('§c§lWooden Sword');
+        $ui->addButton($woodensword);
+        self::$uis['shopItemMenuUI'] = UIDriver::addUI($this, $ui);
+        // WoodenSword Buy Menu
+        $ui = new CustomForm('§c§lWooden Sword');
+        $price = IL::$woodsword[2];
+        $amount = new Slider('§ePlease select how many you want. Each costs [C]' . $price, 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopWSwordUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 

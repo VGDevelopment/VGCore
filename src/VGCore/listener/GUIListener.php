@@ -173,11 +173,45 @@ class GUIListener implements Listener {
 						break;
 					}
 					case '§aGo to §lSHOP': {
-						$player = $event->getPlayer();
-						$player->sendMessage(Chat::YELLOW . "This is not available yet. Stay Tuned!");
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopMainMenuUI'], $event->getPlayer());
 						break;
 					}
 				}
+				break;
+			}
+			case SystemOS::$uis['shopMainMenuUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§a§lITEMS': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopItemMenuUI'], $event->getPlayer());
+						break;
+					}
+					case '§a§lBLOCKS': {
+						//
+						break;
+					}
+				}
+				break;
+			}
+			case SystemOS::$uis['shopItemMenuUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§c§lWooden Sword': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopWSwordUI'], $event->getPlayer());
+						break;
+					}
+				}
+				break;
+			}
+			case SystemOS::$uis['shopWSwordUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				var_dump($response);
 				break;
 			}
 		}
