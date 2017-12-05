@@ -47,6 +47,8 @@ use VGCore\command\Economy;
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
 
+use VGCore\enchantment\VanillaEnchantment;
+
 class SystemOS extends PluginBase {
     
     // Base File for arranging everything in good order. This is how every good core should be done.
@@ -73,6 +75,10 @@ class SystemOS extends PluginBase {
         // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
         $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.");
         $this->loadCommand();
+        
+        // Enables Vanilla Enchants
+        $this->getLogger()->info("Enabling the Virtual Galaxy VANILLA Enchants.");
+        $this->loadVanillaEnchants();
     }
     
     // Load Base Section
@@ -100,6 +106,11 @@ class SystemOS extends PluginBase {
     public function loadCommand() {
         $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
+    }
+    
+    public function loadVanillaEnchants() {
+        $system = new VanillaEnchantment($this);
+        $system->registerEnchant();
     }
     
     // >>> Section 1 - Graphical User Interface (GUI)
