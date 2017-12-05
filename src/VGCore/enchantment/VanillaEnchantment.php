@@ -2,11 +2,11 @@
 
 namespace VGCore\enchantment;
 
-use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\enchantment\Enchantment as EM;
 // >>>
 use VGCore\SystemOS;
 
-class VanillaEnchantment extends Enchantment {
+class VanillaEnchantment extends EM {
     
     public $plugin;
     
@@ -15,28 +15,28 @@ class VanillaEnchantment extends Enchantment {
     }
     
     public function registerEnchant() {
-        $this->registerEnchantment(BLAST_PROTECTION, "%enchantment.protect.explosion", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_ARMOR);
-		$this->registerEnchantment(PROJECTILE_PROTECTION, "%enchantment.protect.projectile", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_ARMOR);
-		$this->registerEnchantment(THORNS, "%enchantment.protect.thorns", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_SWORD);
-		$this->registerEnchantment(RESPIRATION, "%enchantment.protect.waterbrething", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_FEET);
-		$this->registerEnchantment(DEPTH_STRIDER, "%enchantment.waterspeed", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_FEET);
-		$this->registerEnchantment(AQUA_AFFINITY, "%enchantment.protect.wateraffinity", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_FEET);
-		$this->registerEnchantment(SHARPNESS, "%enchantment.weapon.sharpness", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_SWORD);
-		$this->registerEnchantment(SMITE, "%enchantment.weapon.smite", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_SWORD);
-		$this->registerEnchantment(BANE_OF_ARTHROPODS, "%enchantment.weapon.arthropods", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_SWORD);
-		$this->registerEnchantment(KNOCKBACK, "%enchantment.weapon.knockback", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_SWORD);
-		$this->registerEnchantment(FIRE_ASPECT, "%enchantment.weapon.fireaspect", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_SWORD);
-		$this->registerEnchantment(LOOTING, "%enchantment.weapon.looting", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_SWORD);
-		$this->registerEnchantment(EFFICIENCY, "%enchantment.mining.efficiency", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_TOOL);
-		$this->registerEnchantment(SILK_TOUCH, "%enchantment.mining.silktouch", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_TOOL);
-		$this->registerEnchantment(UNBREAKING, "%enchantment.mining.durability", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_TOOL);
-		$this->registerEnchantment(FORTUNE, "%enchantment.mining.fortune", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_TOOL);
-		$this->registerEnchantment(POWER, "%enchantment.bow.power", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_BOW);
-		$this->registerEnchantment(PUNCH, "%enchantment.bow.knockback", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_BOW);
-		$this->registerEnchantment(FLAME, "%enchantment.bow.flame", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_BOW);
-		$this->registerEnchantment(INFINITY, "%enchantment.bow.infinity", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_BOW);
-		$this->registerEnchantment(LUCK_OF_THE_SEA, "%enchantment.fishing.fortune", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_FISHING_ROD);
-		$this->registerEnchantment(LURE, "%enchantment.fishing.lure", RARITY_UNCOMMON, ACTIVATION_EQUIP, SLOT_FISHING_ROD);
+        $this->registerEnchantment(EM::BLAST_PROTECTION, "%enchantment.protect.explosion", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_ARMOR);
+		$this->registerEnchantment(EM::PROJECTILE_PROTECTION, "%enchantment.protect.projectile", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_ARMOR);
+		$this->registerEnchantment(EM::THORNS, "%enchantment.protect.thorns", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_SWORD);
+		$this->registerEnchantment(EM::RESPIRATION, "%enchantment.protect.waterbrething", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_FEET);
+		$this->registerEnchantment(EM::DEPTH_STRIDER, "%enchantment.waterspeed", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_FEET);
+		$this->registerEnchantment(EM::AQUA_AFFINITY, "%enchantment.protect.wateraffinity", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_FEET);
+		$this->registerEnchantment(EM::SHARPNESS, "%enchantment.weapon.sharpness", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_SWORD);
+		$this->registerEnchantment(EM::SMITE, "%enchantment.weapon.smite", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_SWORD);
+		$this->registerEnchantment(EM::BANE_OF_ARTHROPODS, "%enchantment.weapon.arthropods", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_SWORD);
+		$this->registerEnchantment(EM::KNOCKBACK, "%enchantment.weapon.knockback", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_SWORD);
+		$this->registerEnchantment(EM::FIRE_ASPECT, "%enchantment.weapon.fireaspect", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_SWORD);
+		$this->registerEnchantment(EM::LOOTING, "%enchantment.weapon.looting", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_SWORD);
+		$this->registerEnchantment(EM::EFFICIENCY, "%enchantment.mining.efficiency", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_TOOL);
+		$this->registerEnchantment(EM::SILK_TOUCH, "%enchantment.mining.silktouch", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_TOOL);
+		$this->registerEnchantment(EM::UNBREAKING, "%enchantment.mining.durability", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_TOOL);
+		$this->registerEnchantment(EM::FORTUNE, "%enchantment.mining.fortune", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_TOOL);
+		$this->registerEnchantment(EM::POWER, "%enchantment.bow.power", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_BOW);
+		$this->registerEnchantment(EM::PUNCH, "%enchantment.bow.knockback", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_BOW);
+		$this->registerEnchantment(EM::FLAME, "%enchantment.bow.flame", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_BOW);
+		$this->registerEnchantment(EM::INFINITY, "%enchantment.bow.infinity", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_BOW);
+		$this->registerEnchantment(EM::LUCK_OF_THE_SEA, "%enchantment.fishing.fortune", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_FISHING_ROD);
+		$this->registerEnchantment(EM::LURE, "%enchantment.fishing.lure", EM::RARITY_UNCOMMON, EM::ACTIVATION_EQUIP, EM::SLOT_FISHING_ROD);
     }
     
 }
