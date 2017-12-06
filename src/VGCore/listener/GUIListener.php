@@ -190,6 +190,14 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopWAxeUI'], $event->getPlayer());
 						break;
 					}
+					case '§c§lWooden Pickaxe': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopWPickaxeUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lWooden Shovel': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopWShovelUI'], $event->getPlayer());
+						break;
+					}
 				}
 				break;
 			}
@@ -215,6 +223,36 @@ class GUIListener implements Listener {
 				$amount = (int)$response[0];
 				$store = new Store($event->getPlugin(), $economy);
 				$product = IL::$woodaxe;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopWPickaxeUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$woodpickaxe;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopWShovelUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$woodshovel;
 				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
 				if ($buy === true) {
 					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());

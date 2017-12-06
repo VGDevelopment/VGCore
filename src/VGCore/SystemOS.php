@@ -179,8 +179,12 @@ class SystemOS extends PluginBase {
         $ui = new SimpleForm('§c§lITEMS', '§ePlease select an item to buy :');
         $woodensword = new Button('§c§lWooden Sword');
         $woodenaxe = new Button('§c§lWooden Axe');
+        $woodenpickaxe = new Button('§c§lWooden Pickaxe');
+        $woodenshovel = new Button('§c§lWooden Shovel');
         $ui->addButton($woodensword);
         $ui->addButton($woodenaxe);
+        $ui->addButton($woodenpickaxe);
+        $ui->addButton($woodenshovel);
         self::$uis['shopItemMenuUI'] = UIDriver::addUI($this, $ui);
         // WoodenSword Buy Menu
         $ui = new CustomForm('§c§lWooden Sword');
@@ -194,6 +198,18 @@ class SystemOS extends PluginBase {
         $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         self::$uis['shopWAxeUI'] = UIDriver::addUI($this, $ui);
+        // WoodenPickaxe Buy Menu
+        $ui = new CustomForm('§c§lWooden Pickaxe');
+        $price = IL::$woodpickaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopWPickaxeUI'] = UIDriver::addUI($this, $ui);
+        // WoodenShovel Buy Menu
+        $ui = new CustomForm('§c§lWooden Shovel');
+        $price = IL::$woodshovel[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopWShovelUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 
