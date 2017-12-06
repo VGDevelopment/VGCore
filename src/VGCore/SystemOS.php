@@ -142,7 +142,7 @@ class SystemOS extends PluginBase {
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
         $checkcoin = new Button('§2Check §6Coins');
-        $sendcoin = new Button('§2Check §6Coins');
+        $sendcoin = new Button('§2Send §6Coins');
         $shop = new Button('§6§lSHOP');
         $ui->addButton($checkcoin);
         $ui->addButton($sendcoin);

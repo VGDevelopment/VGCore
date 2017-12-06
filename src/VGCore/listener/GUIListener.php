@@ -127,7 +127,7 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($p, SystemOS::$uis['checkCoinWindowUI'], $player);
 						break;
 					}
-					case '§2Check §6Coins': {
+					case '§2Send §6Coins': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['sendCoinUI'], $event->getPlayer());
 						break;
 					}
