@@ -124,10 +124,10 @@ class SystemOS extends PluginBase {
         self::$uis['tutorialUI'] = UIDriver::addUI($this, $ui);
         // Account Settings Tutorial
         $ui = new CustomForm('§2Account Settings Tutorial');
-        $serversetting = new Label('§6To manage most of your in-game account settings, please use the VirtualGalaxy Settings available to each user by following instructions for your corresponding device :');
-        $serversettingios = new Label('§3FOR IOS USERS : Close this menu > Click the pause button > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
-        $serversettingandroid = new Label('§3FOR ANDROID USERS : Close this menu > Tap the RETURN Button (to find out return button on your device, read the manual given with your device) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
-        $serversettingwindow = new Label('§3FOR WINDOWS 10 USERS : Press the ESC button on your keyboard (usually at top left corner) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
+        $serversetting = new Label('§eTo manage most of your in-game account settings, please use the VirtualGalaxy Settings available to each user by following instructions for your corresponding device :');
+        $serversettingios = new Label('§eFOR IOS USERS : Close this menu > Click the pause button > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
+        $serversettingandroid = new Label('§eFOR ANDROID USERS : Close this menu > Tap the RETURN Button (to find out return button on your device, read the manual given with your device) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
+        $serversettingwindow = new Label('§eFOR WINDOWS 10 USERS : Press the ESC button on your keyboard (usually at top left corner) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
         $ui->addElement($serversetting);
         $ui->addElement($serversettingios);
         $ui->addElement($serversettingandroid);
@@ -141,9 +141,9 @@ class SystemOS extends PluginBase {
         self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
-        $checkcoin = new Button('§2Check §eCoins');
-        $sendcoin = new Button('§2Send §eCoins');
-        $shop = new Button('§a§lSHOP');
+        $checkcoin = new Button('§2Check §6Coins');
+        $sendcoin = new Button('§2Check §6Coins');
+        $shop = new Button('§6§lSHOP');
         $ui->addButton($checkcoin);
         $ui->addButton($sendcoin);
         $ui->addButton($shop);
@@ -161,31 +161,39 @@ class SystemOS extends PluginBase {
         $ui = new ModalWindow('§2Success!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
         self::$uis['successUI'] = UIDriver::addUI($this, $ui);
         // ERROR Modal Window
-        $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again.', '...', '...');
+        $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again. For further assistance, read the Tutorial or contact our support team : §esupport@vgpe.me§a.', '...', '...');
         self::$uis['errorUI'] = UIDriver::addUI($this, $ui);
     }
     
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.
         // Shop Main Menu
         $ui = new SimpleForm('§a§lSHOP', '§ePlease select a category :');
-        $itemcategory = new Button('§a§lITEMS');
-        $blockcategory = new Button('§a§lBLOCKS');
+        $itemcategory = new Button('§c§lITEMS');
+        $blockcategory = new Button('§c§lBLOCKS');
         $itemcategory->addImage(Button::IMAGE_TYPE_URL, 'http://image.ibb.co/cfqD0G/2_Swords_Blue.png');
         $blockcategory->addImage(Button::IMAGE_TYPE_URL, 'http://image.ibb.co/mktSSw/Block_Blue.png');
         $ui->addButton($itemcategory);
         $ui->addButton($blockcategory);
         self::$uis['shopMainMenuUI'] = UIDriver::addUI($this, $ui);
         // Shop Item Menu
-        $ui = new SimpleForm('§a§lITEMS', '§ePlease select an item to buy :');
+        $ui = new SimpleForm('§c§lITEMS', '§ePlease select an item to buy :');
         $woodensword = new Button('§c§lWooden Sword');
+        $woodenaxe = new Button('§c§lWooden Axe');
         $ui->addButton($woodensword);
+        $ui->addButton($woodenaxe);
         self::$uis['shopItemMenuUI'] = UIDriver::addUI($this, $ui);
         // WoodenSword Buy Menu
         $ui = new CustomForm('§c§lWooden Sword');
         $price = IL::$woodsword[2];
-        $amount = new Slider('§ePlease select how many you want. Each costs [C]' . $price, 1, 100, 1);
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         self::$uis['shopWSwordUI'] = UIDriver::addUI($this, $ui);
+        // WoodenAxe Buy Menu
+        $ui = new CustomForm('§c§lWooden Axe');
+        $price = IL::$woodaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopWAxeUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 

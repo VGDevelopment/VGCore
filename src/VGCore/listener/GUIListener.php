@@ -94,11 +94,9 @@ class GUIListener implements Listener {
 		$accountcheck = $economy->createAccount($player);
 		$coin = $economy->getCoin($player);
 		// Run-time UI Form (checkCoinWindowUI) @var SystemOS::$uis [] int array for ID
-		$ui = new CustomForm('§2Your §eCoins');
+		$ui = new CustomForm('§2Your §6Coins');
         $main = new Label('§aYour total §ecoins §aare §e[C]' . $coin);
-        $option = new Dropdown('§2Please pick an option to go to next or close this window.', ['§cBack to Menu', '§aGo to §lSHOP']);
         $ui->addElement($main);
-    	$ui->addElement($option);
         SystemOS::$uis['checkCoinWindowUI'] = UIDriver::addUI($this->os, $ui);
         // >>> RUNTIME UI END <<<
 		switch ($id = $event->getID()) {
@@ -125,15 +123,15 @@ class GUIListener implements Listener {
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
 				switch ($response) {
-					case '§2Check §eCoins': {
+					case '§2Check §6Coins': {
 						UIDriver::showUIbyID($p, SystemOS::$uis['checkCoinWindowUI'], $player);
 						break;
 					}
-					case '§2Send §eCoins': {
+					case '§2Check §6Coins': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['sendCoinUI'], $event->getPlayer());
 						break;
 					}
-					case '§a§lSHOP': {
+					case '§6§lSHOP': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopMainMenuUI'], $event->getPlayer());
 						break;
 					}
@@ -163,32 +161,16 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
-			case SystemOS::$uis['checkCoinWindowUI']: {
-				$data = $event->getData();
-				$ui = UIDriver::getPluginUI($this->os, $id);
-				$response = $ui->handle($data, $event->getPlayer());
-				switch ($response[1]) {
-					case '§cBack to Menu': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['economyUI'], $event->getPlayer());
-						break;
-					}
-					case '§aGo to §lSHOP': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopMainMenuUI'], $event->getPlayer());
-						break;
-					}
-				}
-				break;
-			}
 			case SystemOS::$uis['shopMainMenuUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
 				switch ($response) {
-					case '§a§lITEMS': {
+					case '§c§lITEMS': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopItemMenuUI'], $event->getPlayer());
 						break;
 					}
-					case '§a§lBLOCKS': {
+					case '§c§lBLOCKS': {
 						//
 						break;
 					}
@@ -202,6 +184,10 @@ class GUIListener implements Listener {
 				switch ($response) {
 					case '§c§lWooden Sword': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopWSwordUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lWooden Axe': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopWAxeUI'], $event->getPlayer());
 						break;
 					}
 				}
@@ -222,8 +208,22 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
+			case SystemOS::$uis['shopWAxeUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$woodaxe;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
 		}
 	}
-
     
 }
