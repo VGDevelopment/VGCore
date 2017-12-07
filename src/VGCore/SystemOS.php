@@ -185,6 +185,10 @@ class SystemOS extends PluginBase {
         $stoneaxe = new Button('§c§lStone Axe');
         $stonepickaxe = new Button('§c§lStone Pickaxe');
         $stoneshovel = new Button('§c§lStone Shovel');
+        $ironsword = new Button('§c§lIron Sword');
+        $ironaxe = new Button('§c§lIron Axe');
+        $ironpickaxe = new Button('§c§lIron Pickaxe');
+        $ironshovel = new Button('§c§lIron Shovel');
         $ui->addButton($woodensword);
         $ui->addButton($woodenaxe);
         $ui->addButton($woodenpickaxe);
@@ -193,6 +197,10 @@ class SystemOS extends PluginBase {
         $ui->addButton($stoneaxe);
         $ui->addButton($stonepickaxe);
         $ui->addButton($stoneshovel);
+        $ui->addButton($ironsword);
+        $ui->addButton($ironaxe);
+        $ui->addButton($ironpickaxe);
+        $ui->addButton($ironshovel);
         self::$uis['shopItemMenuUI'] = UIDriver::addUI($this, $ui);
         // WoodenSword Buy Menu
         $ui = new CustomForm('§c§lWooden Sword');
@@ -242,6 +250,30 @@ class SystemOS extends PluginBase {
         $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         self::$uis['shopSShovelUI'] = UIDriver::addUI($this, $ui);
+        // IronSword Buy Menu
+        $ui = new CustomForm('§c§lIron Sword');
+        $price = IL::$ironsword[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopISwordUI'] = UIDriver::addUI($this, $ui);
+        // IronAxe Buy Menu
+        $ui = new CustomForm('§c§lIron Axe');
+        $price = IL::$ironaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopIAxeUI'] = UIDriver::addUI($this, $ui);
+        // IronPickaxe Buy Menu
+        $ui = new CustomForm('§c§lIron Pickaxe');
+        $price = IL::$ironpickaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopIPickaxeUI'] = UIDriver::addUI($this, $ui);
+        // IronShovel Buy Menu
+        $ui = new CustomForm('§c§lIron Shovel');
+        $price = IL::$ironshovel[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopIShovelUI'] = UIDriver::addUI($this, $ui);
     }
     
     // >>> Section 2 - Chat Filter 
