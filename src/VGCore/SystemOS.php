@@ -226,7 +226,7 @@ class SystemOS extends PluginBase {
         self::$uis['shopSSwordUI'] = UIDriver::addUI($this, $ui);
         // StoneAxe Buy Menu
         $ui = new CustomForm('§c§lStone Axe');
-        $price = IL::$woodaxe[2];
+        $price = IL::$stoneaxe[2];
         $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         self::$uis['shopSAxeUI'] = UIDriver::addUI($this, $ui);
