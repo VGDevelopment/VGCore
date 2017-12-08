@@ -10,10 +10,37 @@ class AccountManager{
 	private $db;
 	private $plugin;
 
+	public $lobby = [
+    "checkCoin"
+    ];
+	public $faction = [
+    "sendCoin",
+    "openShop"
+    ];
+	public $actions = [$lobby, $faction];
+
 	public $rank;
 
 	public function __construct(SystemOS $plugin){
 		$this->plugin = $plugin;
+
+		/////////////////////////// ACTIONS MANAGER ///////////////////////////
+
+		public function allowAction(Player $player, String $action, String $server){
+			if($server == "factions"){
+				if(in_array($action, $actions[1])){
+					return true;
+				}else{
+					return false;
+				}
+			}elseif($server == "lobby"){
+				if(in_array($action, $actions[0])){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
 
 		/////////////////////////// DATABASE DETAILS ///////////////////////////
 
@@ -34,7 +61,7 @@ class AccountManager{
 			return;
 		}
 	}
-	
+
 	/////////////////////////// RANK DETAILS ///////////////////////////
 
 	public function rankExists($rank){
@@ -94,7 +121,7 @@ class AccountManager{
 		return $rank;
 	}
 
-	public function setRank(Player $player, $rank){ 
+	public function setRank(Player $player, $rank){
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		if($this->rankExists($rank)){
