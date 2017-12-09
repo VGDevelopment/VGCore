@@ -16,6 +16,9 @@ use pocketmine\utils\TextFormat as Chat;
 use pocketmine\network\mcpe\protocol\PacketPool;
 
 use pocketmine\Server;
+
+use pocketmine\item\Item;
+use pocketmine\item\enchantment\Enchantment;
 // >>>
 use VGCore\economy\PlayerData;
 
@@ -48,10 +51,20 @@ use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
 
 use VGCore\enchantment\VanillaEnchantment;
+use VGCore\enchantment\CustomEnchantment;
 
 class SystemOS extends PluginBase {
     
     // Base File for arranging everything in good order. This is how every good core should be done.
+    
+    // @const max level
+    const MAX_LEVEL = 0;
+    // @const not compatible
+    const NOT_COMPATIBLE = 1;
+    // @const not work with other enchant
+    const NOT_WORK_WITH_OTHER_ENCHANT = 2;
+    // @const more than one
+    const MORE_THAN_ONE = 3;
     
     // @var integer [] array
     public static $uis;
@@ -60,6 +73,23 @@ class SystemOS extends PluginBase {
     private $messages;
     // @var string [] array
     private $badwords;
+    
+    // @var customenchantment
+    public $enchantment = [
+        CustomEnchantment::MECHANIC => ["Mechanic", "Damageable", "Damage", "Rare", 2, "Automatically repairs your item when you use it."],
+        CustomEnchantment::ABSORB => ["Absorb", "Sword", "Damage", "Uncommon", 3, "20% chance to absorb some health from your opponent."],
+        CustomEnchantment::DISABLE => ["Disable", "Sword", "Damage", "Legendary", 1, "10% chance to make the opponent drop his weapon."],
+        CustomEnchantment::VOLLEY => ["Volley", "Sword", "Damage", "Common", 4, "30% chance to knock the opponent in the air."],
+        CustomEnchantment::TRUEMINER => ["True Miner", "Pickaxe", "Break", "Legendary", 1, "5% chance that whatever block you mine, turns into a diamond."],
+        CustomEnchantment::WARAXE => ["War Axe", "Axe", "Damage", "Common", 4, "1level% chance to do 5 hearts of damage in a single hit."],
+        CustomEnchantment::TRUEAXE => ["True Axe", "Axe", "Break", "Legendary", 1, "40% chance to chop down all logs connected with this one."],
+        CustomEnchantment::NULLIFY => ["Nullify", "Armor", "Damage", "Rare", 2, "15% to nullify all damage and effects you have on opponent's hit."],
+        CustomEnchantment::MINIBLACKHOLE => ["Mini Black Hole", "Armor", "Damage", "Legendary", 1, "5% chance to explode and kill all near opponents."],
+        CustomEnchantment::LASTCHANCE => ["Last Chance", "Armor", "Damage", "Uncommon", 3, "50+level% chance to nullify all damage done on hit and regenerate 5 hearts."],
+        CustomEnchantment::BOUNCEBACK => ["Bounce Back", "Chestplate", "Damage", "Uncommon", 3, "50+level% chance to make an incomming deflect off your armor."],
+        CustomEnchantment::ICEARROW => ["Ice Arror", "Bow", "Damage", "Rare", 2, "10level% chance to freeze the enemy on hit."],
+        CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 2, "10level% chance to give the opponent a 5s Poison Effect."]
+        ];
     
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
@@ -111,6 +141,14 @@ class SystemOS extends PluginBase {
     public function loadVanillaEnchants() {
         $system = new VanillaEnchantment($this);
         $system->registerEnchant();
+    }
+    
+    public function loadCustomEnchants() {
+        CustomEnchantment::init(); // only way to construct a static class / initialise a static class
+        if ($enchantment = $id => $info) {
+            $setinfo = $this->setInfo($id, $info);
+            CustomEnchantment::createEnchant($id, $setinfo);
+        }
     }
     
     // >>> Section 1 - Graphical User Interface (GUI)
@@ -313,6 +351,231 @@ class SystemOS extends PluginBase {
             }
         }
         return true;
+    }
+    
+    // >>> CustomEnchantment
+    
+    public function setInfo($id, $info) {
+        $slot = CustomEnchantment::SLOT_NONE;
+        switch ($info[1]) {
+            case "All":
+                $slot = CustomEnchantment::SLOT_ALL;
+                break;
+            case 'Sword':
+                $slot = CustomEnchantment::SLOT_SWORD;
+                break;
+            case 'Bow':
+                $slot = CustomEnchantment::SLOT_BOW;
+                break;
+            case 'Tool':
+                $slot = CustomEnchantment::SLOT_TOOL;
+                break;
+            case 'Axe': 
+                $slot = CustomEnchantment::SLOT_AXE;
+                break;
+            case 'Pickaxe':
+                $slot = CustomEnchantment::SLOT_PICKAXE;
+                break;
+            case 'Armor':
+                $slot = CustomEnchantment::SLOT_ARMOR;
+                break;
+            case 'Chestplate':
+                $slot = CustomEnchantment::SLOT_TORSO;
+                break;
+        }
+        $rarity = CustomEnchantment::RARITY_COMMON;
+        switch ($info[3]) {
+            case 'Common':
+                $rarity = CustomEnchantment::RARITY_COMMON;
+                break;
+            case 'Uncommon':
+                $rarity = CustomEnchantment::RARITY_UNCOMMON;
+                break;
+            case 'Rare':
+                $rarity = CustomEnchantment::RARITY_RARE;
+                break;
+            case 'Legendary':
+                $rarity = CustomEnchantment::RARITY_MYTHIC;
+                break;
+        }
+        $activation = CustomEnchantment::ACTIVATION_SELF;
+        $customenchantment = new CustomEnchantment($id, $info[0], $rarity, $activation, $slot);
+        return $customenchantment;
+    }
+    
+    public function createEnchant($id, $name, $type, $trigger, $rarity, $maxlevel) {
+        $info = [$name, $type, $trigger, $rarity, $maxlevel];
+        $enchantment[$id] = $info;
+        $setinfo = $this->setInfo($id, $data);
+        CustomEnchantment::createEnchant($id, $setinfo);
+    }
+    
+    public function getEnchantment(Item $item, $id) {
+        if (!$item->hasEnchantments()) {
+            return null;
+        }
+        $tagentry = $item->getNamedTag()->ench;
+        if ($tagentry["id"] === $id) {
+            $tagid = $tagentry["id"];
+            $taglevel = $tagentry["lvl"];
+            $enchant = CustomEnchantment::getEnchantmentByID($tagid);
+            $enchant->setLevel($taglevel);
+            return $enchant;
+        }
+        return null;
+    }
+    
+    public function setEnchantment(Item $item, CustomEnchantment $enchantment, $level, $check = true, CommandSender $sender = null) {
+        if (!is_array($enchantment)) { 
+            $enchantment = [$enchantment];
+        }
+        if (!is_array($level)) {
+            $level = [$level];
+        }
+        if (count($enchantment) > count($level)) {
+            for ($i = 0; $i <= count($enchantment) - count($level); $i++) {
+                $level[] = 1;
+            }
+        }
+        $combined = array_combine($enchantment, $level);
+        $level = $combined[$enchantment];
+        if (is_numeric($enchantment)) {
+            $enchantment = CustomEnchants::getEnchantmentByID((int)$enchant);
+        } else {
+            $enchantment = CustomEnchants::getEnchantmentByName($enchant);
+        }
+        if ($enchantment == null) {
+            if ($sender !== null) {
+                return false;
+            }
+            continue;
+        }
+        $result = $this->canBeEnchanted($item, $enchantment, $level);
+        if ($result === true || $check !== true) {
+            $enchantment->setLevel($level);
+            if (!$item->hasCompoundTag()) {
+                $tag = new CompoundTag("", []);
+            } else {
+                $tag = $item->getNamedTag();
+            }
+            if (!isset($tag->ench)) {
+                $tag->ench = new ListTag("ench", []);
+                $tag->ench->setTagType(NBT::TAG_Compound);
+            }
+            $found = false; // declares @var as false
+            foreach ($tag->ench as $k => $tagentry) {
+                if ($tagentry["id"] === $enchantment->getId()) {
+                    $tag->ench->$k = new CompoundTag("", [
+                        "id" => new ShortTag("id", $enchantment->getId())
+                        "lvl" => new ShortTag("lvl", $enchantment->getLevel())
+                    ]);
+                    $item->setNamedTag($tag);
+                    $raritycolor = $this->getRarityColor($enchantment->getRarity());
+                    $enchantname = $enchantment->getName();
+                    $romannumber = $this->getRomanNumber($tagentry["lvl"]);
+                    $replace = str_replace($raritycolor . $enchantname . " " . $romannumber, $raritycolor . $enchantname . " " . $romannumber, $item->getName());
+                    $item->setCustomName($replace);
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $tag->ench->{count($tag->ench->getValue()) + 1} = new CompoundTag($enchantment->getName(), [
+                    "id" => new ShortTag("id", $enchantment->getId()),
+                    "lvl" => new ShortTag("lvl", $enchantment->getLevel())
+                ]);
+                $romannumber = $this->getRomanNumber($enchantment->getLevel());
+                $item->setNamedTag($tag);
+                $itemname = ($item->getName();
+                $raritycolor = $this->getRarityColor($enchantment->getRarity())
+                $enchantname = $enchant->getName();
+                $item->setCustomName($itemname . "\n" . $raritycolor . $enchantname . " " . $level);
+            }
+            if ($sender !== null) {
+                return true;
+            }
+            continue;
+        }
+        if ($sender !== null) {
+            if ($result == self::NOT_COMPATIBLE) {
+                return false
+            } else if ($result == self::NOT_WORK_WITH_OTHER_ENCHANT) {
+                return false;
+            } else if ($result == self::MAX_LEVEL) {
+                return false;
+            } else if ($result == self::MORE_THAN_ONE) {
+                return false;
+            }
+        }
+        continue;
+        return true;
+    }
+    
+    public function unSetEnchant(Item $item, CustomEnchantment $enchant, $level = -1) {
+        if (!$item->hasEnchantments()) {
+            return false;
+        }
+        $tag = $item->getNamedTag();
+        $itemid = $item->getId();
+        $itemdamage = $item->getDamage();
+        $itemcount = $item->getCount();
+        $item = Item::get($itemid, $itemdamage, $itemcount);
+        foreach ($tag->ench as $k => $enchantment1) {
+            $enchantid = $enchantment->getId();
+            if (($enchantment1["id"] == $enchantid && ($enchantment1["lvl"] == $level || $level == -1)) !== true) {
+                $item = $this->setEnchantment($item, $enchantment["id"], $enchantment["lvl"], true);
+            }
+        }
+        return $item;
+    }
+    
+    public function getET(CustomEnchantment $enchantment1) {
+        foreach ($enchantment as $id => $info) {
+            if ($enchantment1->getId() == $id) {
+                return $info[1];
+            }
+        }
+        return "Unknown";
+    }
+    
+    public function getER(CustomEnchantment $enchantment1) {
+        foreach ($enchantment as $id => $info) {
+            if ($enchantment1->getId() == $id) {
+                return $info[3];
+            }
+        }
+        return "Common";
+    }
+    
+    public function getEML(CustomEnchantment $enchantment1) {
+        foreach ($enchantment as $id => $info) {
+            if ($enchantment1->getId() == $ud) {
+                return $info[4];
+            }
+        }
+        return 1;
+    }
+    
+    public function getED(CustomEnchantment $enchantment1) {
+        foreach ($enchantment as $id => $info) {
+            if ($enchantment1->getId() == $id) {
+                return $info[5];
+            }
+        }
+        return "ERROR";
+    }
+    
+    public function sortEnchants() {
+        $sorted = [];
+        foreach ($enchantment as $id => $info) {
+            $type = $info[1];
+            if (!isset($sorted[$type])) {
+                $sorted[$type] = [$info[0]];
+            } else {
+                array_push($sorted[$type], $info[0]);
+            }
+        }
+        return $sorted;
     }
     
 }
