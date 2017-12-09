@@ -54,8 +54,9 @@ use VGCore\enchantment\VanillaEnchantment;
 use VGCore\enchantment\CustomEnchantment;
 
 class SystemOS extends PluginBase {
-    
+
     // Base File for arranging everything in good order. This is how every good core should be done.
+<<<<<<< HEAD
     
     // @const max level
     const MAX_LEVEL = 0;
@@ -66,13 +67,17 @@ class SystemOS extends PluginBase {
     // @const more than one
     const MORE_THAN_ONE = 3;
     
+=======
+
+>>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
     // @var integer [] array
     public static $uis;
-    
+
     // @var string
     private $messages;
     // @var string [] array
     private $badwords;
+<<<<<<< HEAD
     
     // @var customenchantment
     public $enchantment = [
@@ -91,40 +96,43 @@ class SystemOS extends PluginBase {
         CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 2, "10level% chance to give the opponent a 5s Poison Effect."]
         ];
     
+=======
+
+>>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
-        
+
         // enables UI - make comment line to disable UI. May cause extreme failures if disabled.
         $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
         $this->loadUI();
-        
+
         // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused. # Made comment line because Mojang Chat Filter is on.
         // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
         // $this->loadFilter();
-        
+
         // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
         $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.");
         $this->loadCommand();
-        
+
         // Enables Vanilla Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy VANILLA Enchants.");
         $this->loadVanillaEnchants();
     }
-    
+
     // Load Base Section
-    
+
     public function loadUI() {
         $this->getServer()->getPluginManager()->registerEvents(new GUIListener($this), $this);
-        
+
         PacketPool::registerPacket(new ModalFormRequestPacket());
 		PacketPool::registerPacket(new ModalFormResponsePacket());
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
-		
+
 		$this->createUIs(); // creates the forms in @var $uis [] int array.
 		$this->createShopUI(); // creates the forms in @var $uis [] int array.
     }
-    
+
     public function loadFilter() {
         $this->getServer()->getPluginManager()->registerEvents(new ChatFilterListener($this), $this);
         $this->badwords = $this->getConfig()->get("badwords");
@@ -132,16 +140,17 @@ class SystemOS extends PluginBase {
             $this->badwords = explode(',', $this->badwords);
         }
     }
-    
+
     public function loadCommand() {
         $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
     }
-    
+
     public function loadVanillaEnchants() {
         $system = new VanillaEnchantment($this);
         $system->registerEnchant();
     }
+<<<<<<< HEAD
     
     public function loadCustomEnchants() {
         CustomEnchantment::init(); // only way to construct a static class / initialise a static class
@@ -151,10 +160,13 @@ class SystemOS extends PluginBase {
         }
     }
     
+=======
+
+>>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
     // >>> Section 1 - Graphical User Interface (GUI)
-    
-    public function createUIs() {  
-        UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields. 
+
+    public function createUIs() {
+        UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields.
         // Tutorial MENU
         $ui = new SimpleForm('§2VirtualGalaxy Tutorial', '§aClick the correct button to load the tutorial for that category.');
         $serversettingtutorial = new Button('§2Account Settings');
@@ -195,14 +207,14 @@ class SystemOS extends PluginBase {
         $ui->addElement($amount);
         $ui->addElement($sendto);
         self::$uis['sendCoinUI'] = UIDriver::addUI($this, $ui);
-        // Success Modal Window 
+        // Success Modal Window
         $ui = new ModalWindow('§2Success!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
         self::$uis['successUI'] = UIDriver::addUI($this, $ui);
         // ERROR Modal Window
         $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again. For further assistance, read the Tutorial or contact our support team : §esupport@vgpe.me§a.', '...', '...');
         self::$uis['errorUI'] = UIDriver::addUI($this, $ui);
     }
-    
+
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.
         // Shop Main Menu
         $ui = new SimpleForm('§a§lSHOP', '§ePlease select a category :');
@@ -227,6 +239,14 @@ class SystemOS extends PluginBase {
         $ironaxe = new Button('§c§lIron Axe');
         $ironpickaxe = new Button('§c§lIron Pickaxe');
         $ironshovel = new Button('§c§lIron Shovel');
+        $goldsword = new Button('§c§lGold Sword');
+        $goldaxe = new Button('§c§lGold Axe');
+        $goldpickaxe = new Button('§c§lGold Pickaxe');
+        $goldshovel = new Button('§c§lGold Shovel');
+        $diamondsword = new Button('§c§lDiamond Sword');
+        $diamondaxe = new Button('§c§lDiamond Axe');
+        $diamondpickaxe = new Button('§c§lDiamond Pickaxe');
+        $diamondshovel = new Button('§c§lDiamond Shovel');
         $ui->addButton($woodensword);
         $ui->addButton($woodenaxe);
         $ui->addButton($woodenpickaxe);
@@ -239,6 +259,14 @@ class SystemOS extends PluginBase {
         $ui->addButton($ironaxe);
         $ui->addButton($ironpickaxe);
         $ui->addButton($ironshovel);
+        $ui->addButton($goldsword);
+        $ui->addButton($goldaxe);
+        $ui->addButton($goldpickaxe);
+        $ui->addButton($goldshovel);
+        $ui->addButton($diamondsword);
+        $ui->addButton($diamondaxe);
+        $ui->addButton($diamondpickaxe);
+        $ui->addButton($diamondshovel);
         self::$uis['shopItemMenuUI'] = UIDriver::addUI($this, $ui);
         // WoodenSword Buy Menu
         $ui = new CustomForm('§c§lWooden Sword');
@@ -313,23 +341,73 @@ class SystemOS extends PluginBase {
         $ui->addElement($amount);
         self::$uis['shopIShovelUI'] = UIDriver::addUI($this, $ui);
     }
-    
-    // >>> Section 2 - Chat Filter 
-    
+        // GoldSword Buy Menu
+        $ui = new CustomForm('§c§lGold Sword');
+        $price = IL::$goldsword[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGSwordUI'] = UIDriver::addUI($this, $ui);
+        // GoldAxe Buy Menu
+        $ui = new CustomForm('§c§lGold Axe');
+        $price = IL::$goldaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGAxeUI'] = UIDriver::addUI($this, $ui);
+        // GoldPickaxe Buy Menu
+        $ui = new CustomForm('§c§lGold Pickaxe');
+        $price = IL::$goldpickaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGPickaxeUI'] = UIDriver::addUI($this, $ui);
+        // GoldShovel Buy Menu
+        $ui = new CustomForm('§c§lGold Shovel');
+        $price = IL::$goldshovel[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGShovelUI'] = UIDriver::addUI($this, $ui);
+    }
+        // DiamondSword Buy Menu
+        $ui = new CustomForm('§c§lDiamond Sword');
+        $price = IL::$diamondsword[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDSwordUI'] = UIDriver::addUI($this, $ui);
+        // DiamondAxe Buy Menu
+        $ui = new CustomForm('§c§lDiamond Axe');
+        $price = IL::$diamondaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDAxeUI'] = UIDriver::addUI($this, $ui);
+        // DiamondPickaxe Buy Menu
+        $ui = new CustomForm('§c§lDiamond Pickaxe');
+        $price = IL::$diamondpickaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDPickaxeUI'] = UIDriver::addUI($this, $ui);
+        // DiamondShovel Buy Menu
+        $ui = new CustomForm('§c§lDiamond Shovel');
+        $price = IL::$diamondshovel[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDShovelUI'] = UIDriver::addUI($this, $ui);
+    }
+
+    // >>> Section 2 - Chat Filter
+
     public function getBadWordsArray(): array {
         return $this->badwords;
     }
-    
+
     public function getMessages(): Config {
         return $this->messages;
     }
-    
+
     public function checkText($string, array $found): bool {
         if (strpos(strtolower($string), $found) !== false) {
             return true;
         }
     }
-    
+
     public function checkUserMessage(Player $player, string $message): bool {
         $player->lastMessage = $message;
         $player->timeofmessage = new \DateTime();
@@ -352,6 +430,7 @@ class SystemOS extends PluginBase {
         }
         return true;
     }
+<<<<<<< HEAD
     
     // >>> CustomEnchantment
     
@@ -579,3 +658,7 @@ class SystemOS extends PluginBase {
     }
     
 }
+=======
+
+}
+>>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
