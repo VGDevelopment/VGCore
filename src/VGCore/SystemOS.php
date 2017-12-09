@@ -65,7 +65,7 @@ class SystemOS extends PluginBase {
     const NOT_WORK_WITH_OTHER_ENCHANT = 2;
     // @const more than one
     const MORE_THAN_ONE = 3;
-    
+
     // @var integer [] array
     public static $uis;
 
@@ -328,6 +328,54 @@ class SystemOS extends PluginBase {
         $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         self::$uis['shopIShovelUI'] = UIDriver::addUI($this, $ui);
+        // GoldSword Buy Menu
+        $ui = new CustomForm('§c§lGold Sword');
+        $price = IL::$goldsword[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGSwordUI'] = UIDriver::addUI($this, $ui);
+        // GoldAxe Buy Menu
+        $ui = new CustomForm('§c§lGold Axe');
+        $price = IL::$goldaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGAxeUI'] = UIDriver::addUI($this, $ui);
+        // GoldPickaxe Buy Menu
+        $ui = new CustomForm('§c§lGold Pickaxe');
+        $price = IL::$goldpickaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGPickaxeUI'] = UIDriver::addUI($this, $ui);
+        // GoldShovel Buy Menu
+        $ui = new CustomForm('§c§lGold Shovel');
+        $price = IL::$goldshovel[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGShovelUI'] = UIDriver::addUI($this, $ui);
+        // DiamondSword Buy Menu
+        $ui = new CustomForm('§c§lDiamond Sword');
+        $price = IL::$diamondsword[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDSwordUI'] = UIDriver::addUI($this, $ui);
+        // DiamondAxe Buy Menu
+        $ui = new CustomForm('§c§lDiamond Axe');
+        $price = IL::$diamondaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDAxeUI'] = UIDriver::addUI($this, $ui);
+        // DiamondPickaxe Buy Menu
+        $ui = new CustomForm('§c§lDiamond Pickaxe');
+        $price = IL::$diamondpickaxe[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDPickaxeUI'] = UIDriver::addUI($this, $ui);
+        // DiamondShovel Buy Menu
+        $ui = new CustomForm('§c§lDiamond Shovel');
+        $price = IL::$diamondshovel[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDShovelUI'] = UIDriver::addUI($this, $ui);
         // GoldSword Buy Menu
         $ui = new CustomForm('§c§lGold Sword');
         $price = IL::$goldsword[2];
@@ -643,3 +691,7 @@ class SystemOS extends PluginBase {
     }
     
 }
+=======
+
+}
+>>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
