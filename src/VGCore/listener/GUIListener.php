@@ -29,15 +29,15 @@ use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
 
 class GUIListener implements Listener {
-    
+
     public $plugin;
-    
+
     public static $coindata;
-    
+
     public function __construct(SystemOS $plugin) {
 		$this->os = $plugin;
 	}
-	
+
 	public function onPacket(DataPacketReceiveEvent $event) {
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
@@ -62,21 +62,21 @@ class GUIListener implements Listener {
 			}
 		}
 	}
-	
+
 	public function handleModalFormResponse(ModalFormResponsePacket $packet, Player $player): bool {
 		$event = new UIDataReceiveEvent($this->os, $packet, $player);
 		if (is_null($event->getData())) $event = new UICloseEvent($this->os, $packet, $player);
 		Server::getInstance()->getPluginManager()->callEvent($event);
 		return true;
 	}
-	
+
 	public function handleServerSettingsResponsePacket(ServerSettingsResponsePacket $packet, Player $player): bool {
 		$event = new UIDataReceiveEvent($this->os, $packet, $player);
 		if (is_null($event->getData())) $event = new UICloseEvent($this->os, $packet, $player);
 		Server::getInstance()->getPluginManager()->callEvent($event);
 		return true;
 	}
-	
+
 	public function handleServerSettingsRequestPacket(ServerSettingsRequestPacket $packet, Player $player): bool {
 		$ui = UIDriver::getPluginUI($this->os, SystemOS::$uis['serverSettingsUI']);
 		$pk = new ServerSettingsResponsePacket();
@@ -85,7 +85,7 @@ class GUIListener implements Listener {
 		$player->dataPacket($pk);
 		return true;
 	}
-	
+
 	public function onUIDataReceiveEvent(UIDataReceiveEvent $event) {
 		if ($event->getPlugin() !== $this->os) return; // events handled for UI only
 		$economy = new EconomySystem($event->getPlugin());
@@ -228,6 +228,38 @@ class GUIListener implements Listener {
 					}
 					case '§c§lIron Shovel': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopIShovelUI'], $event->getPlayer());
+						break;
+					}
+          case '§c§lGold Sword': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGSwordUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lGold Axe': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGAxeUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lGold Pickaxe': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGPickaxeUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lGold Shovel': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGShovelUI'], $event->getPlayer());
+						break;
+					}
+          case '§c§lDiamond Sword': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDSwordUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lDiamond Axe': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDAxeUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lDiamond Pickaxe': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDPickaxeUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lDiamond Shovel': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDShovelUI'], $event->getPlayer());
 						break;
 					}
 				}
@@ -413,7 +445,127 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
+      case SystemOS::$uis['shopGSwordUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$goldsword;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopGAxeUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$goldaxe;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopGPickaxeUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$goldpickaxe;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopGShovelUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$goldshovel;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+      case SystemOS::$uis['shopDSwordUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$diamondsword;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopDAxeUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$diamondaxe;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopDPickaxeUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$diamondpickaxe;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopDShovelUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$diamondshovel;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
 		}
 	}
-    
+
 }
