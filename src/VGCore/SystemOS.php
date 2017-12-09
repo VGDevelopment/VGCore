@@ -56,7 +56,6 @@ use VGCore\enchantment\CustomEnchantment;
 class SystemOS extends PluginBase {
 
     // Base File for arranging everything in good order. This is how every good core should be done.
-<<<<<<< HEAD
     
     // @const max level
     const MAX_LEVEL = 0;
@@ -67,9 +66,6 @@ class SystemOS extends PluginBase {
     // @const more than one
     const MORE_THAN_ONE = 3;
     
-=======
-
->>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
     // @var integer [] array
     public static $uis;
 
@@ -77,7 +73,6 @@ class SystemOS extends PluginBase {
     private $messages;
     // @var string [] array
     private $badwords;
-<<<<<<< HEAD
     
     // @var customenchantment
     public $enchantment = [
@@ -96,9 +91,6 @@ class SystemOS extends PluginBase {
         CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 2, "10level% chance to give the opponent a 5s Poison Effect."]
         ];
     
-=======
-
->>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
 
@@ -150,7 +142,6 @@ class SystemOS extends PluginBase {
         $system = new VanillaEnchantment($this);
         $system->registerEnchant();
     }
-<<<<<<< HEAD
     
     public function loadCustomEnchants() {
         CustomEnchantment::init(); // only way to construct a static class / initialise a static class
@@ -160,9 +151,6 @@ class SystemOS extends PluginBase {
         }
     }
     
-=======
-
->>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87
     // >>> Section 1 - Graphical User Interface (GUI)
 
     public function createUIs() {
@@ -340,7 +328,6 @@ class SystemOS extends PluginBase {
         $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         self::$uis['shopIShovelUI'] = UIDriver::addUI($this, $ui);
-    }
         // GoldSword Buy Menu
         $ui = new CustomForm('§c§lGold Sword');
         $price = IL::$goldsword[2];
@@ -365,7 +352,6 @@ class SystemOS extends PluginBase {
         $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         self::$uis['shopGShovelUI'] = UIDriver::addUI($this, $ui);
-    }
         // DiamondSword Buy Menu
         $ui = new CustomForm('§c§lDiamond Sword');
         $price = IL::$diamondsword[2];
@@ -430,7 +416,6 @@ class SystemOS extends PluginBase {
         }
         return true;
     }
-<<<<<<< HEAD
     
     // >>> CustomEnchantment
     
@@ -658,7 +643,3 @@ class SystemOS extends PluginBase {
     }
     
 }
-=======
-
-}
->>>>>>> 4381fbd6dd8cd451bae544217ede4eccc8231e87

@@ -230,7 +230,7 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopIShovelUI'], $event->getPlayer());
 						break;
 					}
-          case '§c§lGold Sword': {
+            		case '§c§lGold Sword': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGSwordUI'], $event->getPlayer());
 						break;
 					}
@@ -246,7 +246,7 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGShovelUI'], $event->getPlayer());
 						break;
 					}
-          case '§c§lDiamond Sword': {
+            		case '§c§lDiamond Sword': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDSwordUI'], $event->getPlayer());
 						break;
 					}
@@ -445,7 +445,7 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
-      case SystemOS::$uis['shopGSwordUI']: {
+        	case SystemOS::$uis['shopGSwordUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
@@ -505,7 +505,7 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
-      case SystemOS::$uis['shopDSwordUI']: {
+        	case SystemOS::$uis['shopDSwordUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
