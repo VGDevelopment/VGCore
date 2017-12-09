@@ -161,7 +161,7 @@ class SystemOS extends PluginBase {
     
     public function loadCustomEnchants() {
         CustomEnchantment::init(); // only way to construct a static class / initialise a static class
-        if ($enchantment = $id => $info) {
+        foreach ($enchantment as $id => $info) {
             $setinfo = $this->setInfo($id, $info);
             CustomEnchantment::createEnchant($id, $setinfo);
         }
@@ -553,89 +553,91 @@ class SystemOS extends PluginBase {
         return null;
     }
     
-    public function setEnchantment(Item $item, CustomEnchantment $enchantment, $level, $check = true, CommandSender $sender = null) {
-        if (!is_array($enchantment)) { 
-            $enchantment = [$enchantment];
+    public function setEnchantment(Item $item, CustomEnchantment $enchantments, $level, $check = true, CommandSender $sender = null) {
+        if (!is_array($enchantments)) { 
+            $enchantments = [$enchantments];
         }
         if (!is_array($level)) {
             $level = [$level];
         }
-        if (count($enchantment) > count($level)) {
-            for ($i = 0; $i <= count($enchantment) - count($level); $i++) {
+        if (count($enchantments) > count($level)) {
+            for ($i = 0; $i <= count($enchantments) - count($level); $i++) {
                 $level[] = 1;
             }
         }
-        $combined = array_combine($enchantment, $level);
-        $level = $combined[$enchantment];
-        if (is_numeric($enchantment)) {
-            $enchantment = CustomEnchants::getEnchantmentByID((int)$enchant);
-        } else {
-            $enchantment = CustomEnchants::getEnchantmentByName($enchant);
-        }
-        if ($enchantment == null) {
-            if ($sender !== null) {
-                return false;
-            }
-            continue;
-        }
-        $result = $this->canBeEnchanted($item, $enchantment, $level);
-        if ($result === true || $check !== true) {
-            $enchantment->setLevel($level);
-            if (!$item->hasCompoundTag()) {
-                $tag = new CompoundTag("", []);
+        $combined = array_combine($enchantments, $level);
+        foreach ($enchantments as $enchantment) {
+            $level = $combined[$enchantment];
+            if (is_numeric($enchantment)) {
+                $enchantment = CustomEnchants::getEnchantmentByID((int)$enchant);
             } else {
-                $tag = $item->getNamedTag();
+                $enchantment = CustomEnchants::getEnchantmentByName($enchant);
             }
-            if (!isset($tag->ench)) {
-                $tag->ench = new ListTag("ench", []);
-                $tag->ench->setTagType(NBT::TAG_Compound);
+            if ($enchantment == null) {
+                if ($sender !== null) {
+                    return false;
+                }
+                continue;
             }
-            $found = false; // declares @var as false
-            foreach ($tag->ench as $k => $tagentry) {
-                if ($tagentry["id"] === $enchantment->getId()) {
-                    $tag->ench->$k = new CompoundTag("", [
-                        "id" => new ShortTag("id", $enchantment->getId())
+            $result = $this->canBeEnchanted($item, $enchantment, $level);
+            if ($result === true || $check !== true) {
+                $enchantment->setLevel($level);
+                if (!$item->hasCompoundTag()) {
+                    $tag = new CompoundTag("", []);
+                } else {
+                    $tag = $item->getNamedTag();
+                }
+                if (!isset($tag->ench)) {
+                    $tag->ench = new ListTag("ench", []);
+                    $tag->ench->setTagType(NBT::TAG_Compound);
+                }
+                $found = false; // declares @var as false
+                foreach ($tag->ench as $k => $tagentry) {
+                    if ($tagentry["id"] === $enchantment->getId()) {
+                        $tag->ench->$k = new CompoundTag("", [
+                            "id" => new ShortTag("id", $enchantment->getId()),
+                            "lvl" => new ShortTag("lvl", $enchantment->getLevel())
+                        ]);
+                        $item->setNamedTag($tag);
+                        $raritycolor = $this->getRarityColor($enchantment->getRarity());
+                        $enchantname = $enchantment->getName();
+                        $romannumber = $this->getRomanNumber($tagentry["lvl"]);
+                        $replace = str_replace($raritycolor . $enchantname . " " . $romannumber, $raritycolor . $enchantname . " " . $romannumber, $item->getName());
+                        $item->setCustomName($replace);
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    $tag->ench->{count($tag->ench->getValue()) + 1} = new CompoundTag($enchantment->getName(), [
+                        "id" => new ShortTag("id", $enchantment->getId()),
                         "lvl" => new ShortTag("lvl", $enchantment->getLevel())
                     ]);
+                    $romannumber = $this->getRomanNumber($enchantment->getLevel());
                     $item->setNamedTag($tag);
+                    $itemname = $item->getName();
                     $raritycolor = $this->getRarityColor($enchantment->getRarity());
-                    $enchantname = $enchantment->getName();
-                    $romannumber = $this->getRomanNumber($tagentry["lvl"]);
-                    $replace = str_replace($raritycolor . $enchantname . " " . $romannumber, $raritycolor . $enchantname . " " . $romannumber, $item->getName());
-                    $item->setCustomName($replace);
-                    $found = true;
-                    break;
+                    $enchantname = $enchant->getName();
+                    $item->setCustomName($itemname . "\n" . $raritycolor . $enchantname . " " . $level);
                 }
-            }
-            if (!$found) {
-                $tag->ench->{count($tag->ench->getValue()) + 1} = new CompoundTag($enchantment->getName(), [
-                    "id" => new ShortTag("id", $enchantment->getId()),
-                    "lvl" => new ShortTag("lvl", $enchantment->getLevel())
-                ]);
-                $romannumber = $this->getRomanNumber($enchantment->getLevel());
-                $item->setNamedTag($tag);
-                $itemname = ($item->getName();
-                $raritycolor = $this->getRarityColor($enchantment->getRarity())
-                $enchantname = $enchant->getName();
-                $item->setCustomName($itemname . "\n" . $raritycolor . $enchantname . " " . $level);
+                if ($sender !== null) {
+                    return true;
+                }
+                continue;
             }
             if ($sender !== null) {
-                return true;
+                if ($result == self::NOT_COMPATIBLE) {
+                    return false;
+                } else if ($result == self::NOT_WORK_WITH_OTHER_ENCHANT) {
+                    return false;
+                } else if ($result == self::MAX_LEVEL) {
+                    return false;
+                } else if ($result == self::MORE_THAN_ONE) {
+                    return false;
+                }
             }
             continue;
         }
-        if ($sender !== null) {
-            if ($result == self::NOT_COMPATIBLE) {
-                return false
-            } else if ($result == self::NOT_WORK_WITH_OTHER_ENCHANT) {
-                return false;
-            } else if ($result == self::MAX_LEVEL) {
-                return false;
-            } else if ($result == self::MORE_THAN_ONE) {
-                return false;
-            }
-        }
-        continue;
         return true;
     }
     
