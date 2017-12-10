@@ -19,6 +19,12 @@ use pocketmine\Server;
 
 use pocketmine\item\Item;
 use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\Armor;
+use pocketmine\level\Position;
+use pocketmine\nbt\NBT;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\ListTag;
+use pocketmine\nbt\tag\ShortTag;
 // >>>
 use VGCore\economy\PlayerData;
 
@@ -37,7 +43,7 @@ use VGCore\gui\lib\window\CustomForm;
 
 use VGCore\listener\ChatFilterListener;
 use VGCore\listener\GUIListener;
-use VGCore\listener\StoreListener;
+use VGCore\listener\CustomEnchantmentListener;
 
 use VGCore\network\ModalFormRequestPacket;
 use VGCore\network\ModalFormResponsePacket;
@@ -46,6 +52,7 @@ use VGCore\network\ServerSettingsResponsePacket;
 
 use VGCore\command\Tutorial;
 use VGCore\command\Economy;
+use VGCore\command\VGEnchant;
 
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
@@ -65,6 +72,8 @@ class SystemOS extends PluginBase {
     const NOT_WORK_WITH_OTHER_ENCHANT = 2;
     // @const more than one
     const MORE_THAN_ONE = 3;
+    
+    
     // @const Roman Number Table (idea taken from PiggyCustomEnchants) - Thanks @captainduck for showing me that, Roman numbers for levels is good idea!
     const ROMAN_CONVERSION_TABLE = [
         'M' => 1000,
@@ -81,6 +90,7 @@ class SystemOS extends PluginBase {
         'IV' => 4,
         'I' => 1
     ];
+    
 
     // @var integer [] array
     public static $uis;
@@ -92,19 +102,19 @@ class SystemOS extends PluginBase {
     
     // @var customenchantment
     public $enchantment = [
-        CustomEnchantment::MECHANIC => ["Mechanic", "Damageable", "Damage", "Rare", 2, "Automatically repairs your item when you use it."],
-        CustomEnchantment::ABSORB => ["Absorb", "Sword", "Damage", "Uncommon", 3, "20% chance to absorb some health from your opponent."],
+        CustomEnchantment::MECHANIC => ["Mechanic", "Damageable", "Damage", "Rare", 1, "Automatically repairs your item when you use it."],
+        CustomEnchantment::ABSORB => ["Absorb", "Sword", "Damage", "Uncommon", 1, "20% chance to absorb some health from your opponent."],
         CustomEnchantment::DISABLE => ["Disable", "Sword", "Damage", "Legendary", 1, "10% chance to make the opponent drop his weapon."],
-        CustomEnchantment::VOLLEY => ["Volley", "Sword", "Damage", "Common", 4, "30% chance to knock the opponent in the air."],
+        CustomEnchantment::VOLLEY => ["Volley", "Sword", "Damage", "Common", 1, "30% chance to knock the opponent in the air."],
         CustomEnchantment::TRUEMINER => ["True Miner", "Pickaxe", "Break", "Legendary", 1, "5% chance that whatever block you mine, turns into a diamond."],
-        CustomEnchantment::WARAXE => ["War Axe", "Axe", "Damage", "Common", 4, "1level% chance to do 5 hearts of damage in a single hit."],
+        CustomEnchantment::WARAXE => ["War Axe", "Axe", "Damage", "Common", 1, "5% chance to do 5 hearts of damage in a single hit."],
         CustomEnchantment::TRUEAXE => ["True Axe", "Axe", "Break", "Legendary", 1, "40% chance to chop down all logs connected with this one."],
-        CustomEnchantment::NULLIFY => ["Nullify", "Armor", "Damage", "Rare", 2, "15% to nullify all damage and effects you have on opponent's hit."],
+        CustomEnchantment::NULLIFY => ["Nullify", "Armor", "Damage", "Rare", 1, "15% to nullify all damage and effects you have on opponent's hit."],
         CustomEnchantment::MINIBLACKHOLE => ["Mini Black Hole", "Armor", "Damage", "Legendary", 1, "5% chance to explode and kill all near opponents."],
-        CustomEnchantment::LASTCHANCE => ["Last Chance", "Armor", "Damage", "Uncommon", 3, "50+level% chance to nullify all damage done on hit and regenerate 5 hearts."],
-        CustomEnchantment::BOUNCEBACK => ["Bounce Back", "Chestplate", "Damage", "Uncommon", 3, "50+level% chance to make an incomming deflect off your armor."],
-        CustomEnchantment::ICEARROW => ["Ice Arror", "Bow", "Damage", "Rare", 2, "10level% chance to freeze the enemy on hit."],
-        CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 2, "10level% chance to give the opponent a 5s Poison Effect."]
+        CustomEnchantment::LASTCHANCE => ["Last Chance", "Armor", "Damage", "Uncommon", 1, "50% chance to nullify all damage done on hit and regenerate 5 hearts."],
+        CustomEnchantment::BOUNCEBACK => ["Bounce Back", "Chestplate", "Damage", "Uncommon", 1, "50% chance to make an incomming deflect off your armor."],
+        CustomEnchantment::ICEARROW => ["Ice Arror", "Bow", "Damage", "Rare", 1, "10% chance to freeze the enemy on hit."],
+        CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 1, "10% chance to give the opponent a 5s Poison Effect."]
         ];
     
     public function onEnable() {
@@ -152,6 +162,7 @@ class SystemOS extends PluginBase {
     public function loadCommand() {
         $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
+        $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
     }
 
     public function loadVanillaEnchants() {
@@ -165,6 +176,7 @@ class SystemOS extends PluginBase {
             $setinfo = $this->setInfo($id, $info);
             CustomEnchantment::createEnchant($id, $setinfo);
         }
+        $this->getServer()->getPluginManager()->registerEvents(new CustomEnchantmentListener($this), $this);
     }
     
     // >>> Section 1 - Graphical User Interface (GUI)
@@ -211,6 +223,11 @@ class SystemOS extends PluginBase {
         $ui->addElement($amount);
         $ui->addElement($sendto);
         self::$uis['sendCoinUI'] = UIDriver::addUI($this, $ui);
+        // CustomEnchantment UI
+        $ui = new CustomForm('§CustomEnchantment');
+        $input = new Input('§eWhat enchantment should we enchant the item with?', 'ID (int)');
+        $ui->addElement($input);
+        self::$uis['customEnchantUI'] = UIDriver::addUI($this, $ui);
         // Success Modal Window
         $ui = new ModalWindow('§2Success!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
         self::$uis['successUI'] = UIDriver::addUI($this, $ui);
@@ -569,9 +586,9 @@ class SystemOS extends PluginBase {
         foreach ($enchantments as $enchantment) {
             $level = $combined[$enchantment];
             if (is_numeric($enchantment)) {
-                $enchantment = CustomEnchants::getEnchantmentByID((int)$enchant);
+                $enchantment = CustomEnchants::getEnchantmentByID((int)$enchantment);
             } else {
-                $enchantment = CustomEnchants::getEnchantmentByName($enchant);
+                $enchantment = CustomEnchants::getEnchantmentByName($enchantment);
             }
             if ($enchantment == null) {
                 if ($sender !== null) {
@@ -579,7 +596,7 @@ class SystemOS extends PluginBase {
                 }
                 continue;
             }
-            $result = $this->canBeEnchanted($item, $enchantment, $level);
+            $result = $this->verifyEnchant($item, $enchantment, $level);
             if ($result === true || $check !== true) {
                 $enchantment->setLevel($level);
                 if (!$item->hasCompoundTag()) {
@@ -599,9 +616,9 @@ class SystemOS extends PluginBase {
                             "lvl" => new ShortTag("lvl", $enchantment->getLevel())
                         ]);
                         $item->setNamedTag($tag);
-                        $raritycolor = $this->getRarityColor($enchantment->getRarity());
+                        $raritycolor = $this->getRC($enchantment->getRarity());
                         $enchantname = $enchantment->getName();
-                        $romannumber = $this->getRomanNumber($tagentry["lvl"]);
+                        $romannumber = $this->getRN($tagentry["lvl"]);
                         $replace = str_replace($raritycolor . $enchantname . " " . $romannumber, $raritycolor . $enchantname . " " . $romannumber, $item->getName());
                         $item->setCustomName($replace);
                         $found = true;
@@ -613,11 +630,11 @@ class SystemOS extends PluginBase {
                         "id" => new ShortTag("id", $enchantment->getId()),
                         "lvl" => new ShortTag("lvl", $enchantment->getLevel())
                     ]);
-                    $romannumber = $this->getRomanNumber($enchantment->getLevel());
+                    $romannumber = $this->getRN($enchantment->getLevel());
                     $item->setNamedTag($tag);
                     $itemname = $item->getName();
-                    $raritycolor = $this->getRarityColor($enchantment->getRarity());
-                    $enchantname = $enchant->getName();
+                    $raritycolor = $this->getRC($enchantment->getRarity());
+                    $enchantname = $enchantment->getName();
                     $item->setCustomName($itemname . "\n" . $raritycolor . $enchantname . " " . $level);
                 }
                 if ($sender !== null) {
@@ -706,6 +723,102 @@ class SystemOS extends PluginBase {
             }
         }
         return $sorted;
+    }
+    
+    public function getRN($int) {
+        $romanstring = "";
+        while ($int > 0) {
+            foreach (self::ROMAN_CONVERSION_TABLE as $rom => $arb) {
+                if ($int >= $arb) {
+                    $int -= $arb;
+                    $romanstring .= $rom;
+                    break;
+                }
+            }
+        }
+        return $romanstring;
+    }
+    
+    public function getRC($rarity) {
+        switch ($rarity) {
+            case CustomEnchantment::RARITY_COMMON:
+                return Chat::GREEN;
+            case CustomEnchantment::RARITY_UNCOMMON:
+                return Chat::BLUE;
+            case CustomEnchantment::RARITY_RARE:
+                return Chat::LIGHT_PURPLE;
+            case CustomEnchantment::RARITY_MYTHIC:
+                return Chat::YELLOW;
+            default:
+                return Chat::GREEN;
+        }
+    }
+    
+    public function verifyEnchant(Item $item, CustomEnchantment $enchantment, $level) {
+        $type = $this->getET($enchantment);
+        if ($this->getEML($enchant) < $level) {
+            return self::MAX_LEVEL;
+        }
+        if ($item->getCount() > 1) {
+            return self::MORE_THAN_ONE;
+        }
+        switch ($type) {
+            case "All":
+                return true;
+            case "Damageable":
+                if ($item->getMaxDurability() !== 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+                break;
+            case "Sword":
+                if ($item->isSword() !== false) {
+                    return true;
+                } else {
+                    return false;
+                }
+                break;
+            case "Bow":
+                if ($item->getId() == Item::BOW) {
+                    return true;
+                } else {
+                    return false;
+                }
+                break;
+            case "Pickaxe": 
+                if ($item->isPickaxe()) {
+                    return true;
+                } else {
+                    return false;
+                }
+                break;
+            case "Axe":
+                if ($item->isAxe()) {
+                    return true;
+                } else {
+                    return false;
+                }
+                break;
+            case "Armor":
+                if ($item instanceof Armor) {
+                    return true;
+                } else {
+                    return false;
+                }
+                break;
+            case "Chestplate":
+                switch ($item->getId()) {
+                    case Item::LEATHER_TUNIC:
+                    case Item::CHAIN_CHESTPLATE;
+                    case Item::IRON_CHESTPLATE:
+                    case Item::GOLD_CHESTPLATE:
+                    case Item::DIAMOND_CHESTPLATE:
+                        return true;
+                }
+                break;
+        }
+        return self::NOT_COMPATIBLE;
     }
 
 }

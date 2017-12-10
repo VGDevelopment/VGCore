@@ -161,6 +161,18 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
+			case SystemOS::$uis['customEnchanntUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$string = $response[1];
+				$id = (int)$string;
+				$player = $event->getPlayer();
+				$playerinv = $player->getInventory();
+				$playeritemhand = $playerinv->getItemInHand();
+				$enchantment = $plugin->setEnchantment($playeritemhand, $id, 1, true, $player);
+				$playerinv->setItemInHand($enchantment);
+			}
 			case SystemOS::$uis['shopMainMenuUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);

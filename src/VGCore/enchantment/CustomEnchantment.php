@@ -20,7 +20,7 @@ class CustomEnchantment extends Enchantment {
     const TRUEMINER = 104; // 5% chance to occur
     
     // axe
-    const WARAXE = 105; // 1% chance to do 5 hearts damage
+    const WARAXE = 105; // 5% chance to do 5 hearts damage
     const TRUEAXE = 111; // 40% chance to chop down the whole tree
     
     // armor
