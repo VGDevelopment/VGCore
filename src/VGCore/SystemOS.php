@@ -134,7 +134,11 @@ class SystemOS extends PluginBase {
 
         // Enables Vanilla Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy VANILLA Enchants.");
-        $this->loadVanillaEnchants();
+        $this->loadVanillaEnchant();
+        
+        // Enables Custom Enchants
+        $this->getLogger()->info("Enabling the Virtual Galaxy CUSTOM Enchants.");
+        $this->loadCustomEnchant();
     }
 
     // Load Base Section
@@ -165,13 +169,14 @@ class SystemOS extends PluginBase {
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
     }
 
-    public function loadVanillaEnchants() {
+    public function loadVanillaEnchant() {
         $system = new VanillaEnchantment($this);
         $system->registerEnchant();
     }
     
-    public function loadCustomEnchants() {
+    public function loadCustomEnchant() {
         CustomEnchantment::init(); // only way to construct a static class / initialise a static class
+        $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             $setinfo = $this->setInfo($id, $info);
             CustomEnchantment::createEnchant($id, $setinfo);
@@ -224,7 +229,7 @@ class SystemOS extends PluginBase {
         $ui->addElement($sendto);
         self::$uis['sendCoinUI'] = UIDriver::addUI($this, $ui);
         // CustomEnchantment UI
-        $ui = new CustomForm('§CustomEnchantment');
+        $ui = new CustomForm('§2CustomEnchantment');
         $input = new Input('§eWhat enchantment should we enchant the item with?', 'ID (int)');
         $ui->addElement($input);
         self::$uis['customEnchantUI'] = UIDriver::addUI($this, $ui);
@@ -570,35 +575,37 @@ class SystemOS extends PluginBase {
         return null;
     }
     
-    public function setEnchantment(Item $item, CustomEnchantment $enchantments, $level, $check = true, CommandSender $sender = null) {
-        if (!is_array($enchantments)) { 
-            $enchantments = [$enchantments];
+    public function setEnchantment(Item $item, $enchants, $levels, $check = true, $sender = null) {
+        if (!is_array($enchants)) {
+            $enchants = [$enchants];
         }
-        if (!is_array($level)) {
-            $level = [$level];
+        if (!is_array($levels)) {
+            $levels = [$levels];
         }
-        if (count($enchantments) > count($level)) {
-            for ($i = 0; $i <= count($enchantments) - count($level); $i++) {
-                $level[] = 1;
+        if (count($enchants) > count($levels)) {
+            for ($i = 0; $i <= count($enchants) - count($levels); $i++) {
+                $levels[] = 1;
             }
         }
-        $combined = array_combine($enchantments, $level);
-        foreach ($enchantments as $enchantment) {
-            $level = $combined[$enchantment];
-            if (is_numeric($enchantment)) {
-                $enchantment = CustomEnchants::getEnchantmentByID((int)$enchantment);
-            } else {
-                $enchantment = CustomEnchants::getEnchantmentByName($enchantment);
+        $combined = array_combine($enchants, $levels);
+        foreach ($enchants as $enchant) {
+            $level = $combined[$enchant];
+            if (!$enchant instanceof CustomEnchantment) {
+                if (is_numeric($enchant)) {
+                    $enchant = CustomEnchantment::getEnchantmentByID((int)$enchant);
+                } else {
+                    $enchant = CustomEnchantment::getEnchantmentByName($enchant);
+                }
             }
-            if ($enchantment == null) {
+            if ($enchant == null) {
                 if ($sender !== null) {
                     return false;
                 }
                 continue;
             }
-            $result = $this->verifyEnchant($item, $enchantment, $level);
+            $result = $this->verifyEnchant($item, $enchant, $level);
             if ($result === true || $check !== true) {
-                $enchantment->setLevel($level);
+                $enchant->setLevel($level);
                 if (!$item->hasCompoundTag()) {
                     $tag = new CompoundTag("", []);
                 } else {
@@ -608,75 +615,51 @@ class SystemOS extends PluginBase {
                     $tag->ench = new ListTag("ench", []);
                     $tag->ench->setTagType(NBT::TAG_Compound);
                 }
-                $found = false; // declares @var as false
-                foreach ($tag->ench as $k => $tagentry) {
-                    if ($tagentry["id"] === $enchantment->getId()) {
-                        $tag->ench->$k = new CompoundTag("", [
-                            "id" => new ShortTag("id", $enchantment->getId()),
-                            "lvl" => new ShortTag("lvl", $enchantment->getLevel())
+                $found = false;
+                foreach ($tag->ench as $k => $entry) {
+                    if ($entry["id"] === $enchant->getId()) {
+                        $tag->ench->{$k} = new CompoundTag("", [
+                            "id" => new ShortTag("id", $enchant->getId()),
+                            "lvl" => new ShortTag("lvl", $enchant->getLevel())
                         ]);
                         $item->setNamedTag($tag);
-                        $raritycolor = $this->getRC($enchantment->getRarity());
-                        $enchantname = $enchantment->getName();
-                        $romannumber = $this->getRN($tagentry["lvl"]);
-                        $replace = str_replace($raritycolor . $enchantname . " " . $romannumber, $raritycolor . $enchantname . " " . $romannumber, $item->getName());
-                        $item->setCustomName($replace);
+                        $item->setCustomName(str_replace($this->getRC($enchant->getRarity()) . $enchant->getName() . " " . $this->getRN($entry["lvl"]), $this->getRC($enchant->getRarity()) . $enchant->getName() . " " . $this->getRN($enchant->getLevel()), $item->getName()));
                         $found = true;
                         break;
                     }
                 }
                 if (!$found) {
-                    $tag->ench->{count($tag->ench->getValue()) + 1} = new CompoundTag($enchantment->getName(), [
-                        "id" => new ShortTag("id", $enchantment->getId()),
-                        "lvl" => new ShortTag("lvl", $enchantment->getLevel())
+                    $tag->ench->{count($tag->ench->getValue()) + 1} = new CompoundTag($enchant->getName(), [
+                        "id" => new ShortTag("id", $enchant->getId()),
+                        "lvl" => new ShortTag("lvl", $enchant->getLevel())
                     ]);
-                    $romannumber = $this->getRN($enchantment->getLevel());
+                    $level = $this->getRN($enchant->getLevel());
                     $item->setNamedTag($tag);
-                    $itemname = $item->getName();
-                    $raritycolor = $this->getRC($enchantment->getRarity());
-                    $enchantname = $enchantment->getName();
-                    $item->setCustomName($itemname . "\n" . $raritycolor . $enchantname . " " . $level);
-                }
-                if ($sender !== null) {
-                    return true;
+                    $item->setCustomName($item->getName() . "\n" . $this->getRC($enchant->getRarity()) . $enchant->getName() . " " . $level);
                 }
                 continue;
             }
             if ($sender !== null) {
                 if ($result == self::NOT_COMPATIBLE) {
                     return false;
-                } else if ($result == self::NOT_WORK_WITH_OTHER_ENCHANT) {
+                }
+                if ($result == self::NOT_WORK_WITH_OTHER_ENCHANT) {
                     return false;
-                } else if ($result == self::MAX_LEVEL) {
+                }
+                if ($result == self::MAX_LEVEL) {
                     return false;
-                } else if ($result == self::MORE_THAN_ONE) {
+                }
+                if ($result == self::MORE_THAN_ONE) {
                     return false;
                 }
             }
             continue;
         }
-        return true;
-    }
-    
-    public function unSetEnchant(Item $item, CustomEnchantment $enchant, $level = -1) {
-        if (!$item->hasEnchantments()) {
-            return false;
-        }
-        $tag = $item->getNamedTag();
-        $itemid = $item->getId();
-        $itemdamage = $item->getDamage();
-        $itemcount = $item->getCount();
-        $item = Item::get($itemid, $itemdamage, $itemcount);
-        foreach ($tag->ench as $k => $enchantment1) {
-            $enchantid = $enchantment->getId();
-            if (($enchantment1["id"] == $enchantid && ($enchantment1["lvl"] == $level || $level == -1)) !== true) {
-                $item = $this->setEnchantment($item, $enchantment["id"], $enchantment["lvl"], true);
-            }
-        }
         return $item;
     }
     
     public function getET(CustomEnchantment $enchantment1) {
+        $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             if ($enchantment1->getId() == $id) {
                 return $info[1];
@@ -686,6 +669,7 @@ class SystemOS extends PluginBase {
     }
     
     public function getER(CustomEnchantment $enchantment1) {
+        $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             if ($enchantment1->getId() == $id) {
                 return $info[3];
@@ -695,8 +679,9 @@ class SystemOS extends PluginBase {
     }
     
     public function getEML(CustomEnchantment $enchantment1) {
+        $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
-            if ($enchantment1->getId() == $ud) {
+            if ($enchantment1->getId() == $id) {
                 return $info[4];
             }
         }
@@ -704,6 +689,7 @@ class SystemOS extends PluginBase {
     }
     
     public function getED(CustomEnchantment $enchantment1) {
+        $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             if ($enchantment1->getId() == $id) {
                 return $info[5];
@@ -713,6 +699,7 @@ class SystemOS extends PluginBase {
     }
     
     public function sortEnchants() {
+        $enchantment = $this->enchantment;
         $sorted = [];
         foreach ($enchantment as $id => $info) {
             $type = $info[1];
@@ -756,7 +743,7 @@ class SystemOS extends PluginBase {
     
     public function verifyEnchant(Item $item, CustomEnchantment $enchantment, $level) {
         $type = $this->getET($enchantment);
-        if ($this->getEML($enchant) < $level) {
+        if ($this->getEML($enchantment) < $level) {
             return self::MAX_LEVEL;
         }
         if ($item->getCount() > 1) {

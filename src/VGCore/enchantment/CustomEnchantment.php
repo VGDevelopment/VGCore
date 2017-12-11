@@ -35,7 +35,7 @@ class CustomEnchantment extends Enchantment {
     const ICEARROW = 109; // 10% chance to freeze the enemy player upon hit of arrow
     const POISONARROW = 110; // 10% chance to make enemy get poisen
     
-    public static $customenchantment = array();
+    public static $customenchantment;
     
     public static function createEnchant($id, CustomEnchantment $enchant) {
         self::$customenchantment[$id] = $enchant;
@@ -50,7 +50,7 @@ class CustomEnchantment extends Enchantment {
     
     public static function getEnchantmentByName(string $name) {
         if (defined(CustomEnchantment::class . "::" . strtoupper($name))) {
-            return self::getEnchantmentByID(constant(CustomEnchants::class . "::" . strtoupper($name)));
+            return self::getEnchantmentByID(constant(CustomEnchantment::class . "::" . strtoupper($name)));
         }
         return null;
     }

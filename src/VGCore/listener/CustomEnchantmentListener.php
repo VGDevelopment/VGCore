@@ -48,6 +48,7 @@ use pocketmine\utils\TextFormat as Chat;
 use pocketmine\utils\Random;
 // >>>
 use VGCore\SystemOS;
+use VGCore\CustomEnchantment;
 
 class CustomEnchantmentListener implements Listener {
     
