@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\listener;
+namespace VGCore\enchantment\handler;
 
 use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
@@ -48,35 +48,35 @@ use pocketmine\utils\TextFormat as Chat;
 use pocketmine\utils\Random;
 // >>>
 use VGCore\SystemOS;
+use VGCore\listener\CustomEnchantmentListener;
 
-use VGCore\enchantment\CustomEnchantment;
-use VGCore\enchantment\handler\Handler;
-
-class CustomEnchantmentListener implements Listener {
+class Handler {
     
     public $plugin;
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
-        $this->handler = new Handler
     }
     
-    public function onBB(BlockBreakEvent $event) {
-        $player = $event->getPlayer();
+    public function cutTree(Player $player, Block $block, Block $oldblock = null) {
         $item = $player->getInventory()->getItemInHand();
-        $block = $event->getBlock();
-        $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::TRUEAXE);
-        if ($enchantment !== null) {
-            $chance = mt_rand(1, 10); // no need of doing mt_rand(1, 100) as ratio is same and a decimal value isn't required.
-            if ($chance >= 6) {
-                if ($block->getId() == Block::WOOD || $block->getId() == Block::WOOD2) {
-                    if (!isset($this->plugin->using[$player->getLowerCaseName()]) || $this->plugin->using[$player->getLowerCaseName()] < time()) {
-                        $this->plugin->mined[$player->getLowerCaseName()] = 0;
-                        $this->handler->cutTree($player, $block);
-                    }
+        for ($i = 0; $i <= 5; $i++) {
+            if ($this->plugin->mined[$player->getLowerCaseName()] > 800) {
+                break;
+            }
+            $this->plugin->using[$player->getLowerCaseName()] = time() + 1;
+            $side = $block->getSide($i);
+            if ($oldblock !== null) {
+                if ($side->equals($oldblock)) {
+                    continue;
                 }
             }
-            $event->setInstaBreak(true); 
+            if ($side->getId() !== Block::WOOD && $side->getId() !== Block::WOOD2) {
+                continue;
+            }
+            $player->getLevel()->useBreakOn($side, $item, $player);
+            $this->plugin->mined[$player->getLowerCaseName()]++;
+            $this->breakTree($side, $player, $block);
         }
     }
     
