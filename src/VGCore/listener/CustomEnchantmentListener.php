@@ -58,7 +58,7 @@ class CustomEnchantmentListener implements Listener {
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
-        $this->handler = new Handler
+        $this->handler = new Handler($this->plugin);
     }
     
     public function onBB(BlockBreakEvent $event) {
