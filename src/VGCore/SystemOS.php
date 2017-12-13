@@ -564,13 +564,12 @@ class SystemOS extends PluginBase {
         if (!$item->hasEnchantments()) {
             return null;
         }
-        $tagentry = $item->getNamedTag()->ench;
-        if ($tagentry["id"] === $id) {
-            $tagid = $tagentry["id"];
-            $taglevel = $tagentry["lvl"];
-            $enchant = CustomEnchantment::getEnchantmentByID($tagid);
-            $enchant->setLevel($taglevel);
-            return $enchant;
+        foreach ($item->getNamedTag()->ench as $entry) {
+            if ($entry["id"] === $id) {
+                $enchant = CustomEnchantment::getEnchantmentByID($entry["id"]);
+                $enchant->setLevel($entry["lvl"]);
+                return $enchant;
+            }
         }
         return null;
     }
