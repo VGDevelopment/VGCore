@@ -107,4 +107,10 @@ class Handler {
         
     }
     
+    public function warAxe($entity) {
+        $entityhealth = $entity->getHealth();
+        $healthcalc = $entityhealth - 10;
+        $entity->setHealth($healthcalc);
+    }
+    
 }

@@ -84,4 +84,21 @@ class CustomEnchantmentListener implements Listener {
         }
     }
     
+    public function onEDE(EntityDamageEvent $event) {
+        if ($event instanceof EntityDamageByEntityEvent) {
+            $damager = $event->getDamager();
+            $entity = $event->getEntity();
+            if ($damager instanceof Player) {
+                $item = $damager->getInventory()->getItemInHand();
+                $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::WARAXE);
+                if ($enchantment !== null) {
+                    $chance = mt_rand(1, 100);
+                    if ($chance > 95) {
+                        $this->handler->warAxe($entity);
+                    }
+                }
+            }
+        }
+    }
+    
 }
