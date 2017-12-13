@@ -46,6 +46,10 @@ use pocketmine\Player;
 
 use pocketmine\utils\TextFormat as Chat;
 use pocketmine\utils\Random;
+
+use pocketmine\block\Block;
+use pocketmine\block\Wood;
+use pocketmine\block\Wood2;
 // >>>
 use VGCore\SystemOS;
 use VGCore\listener\CustomEnchantmentListener;
@@ -58,26 +62,49 @@ class Handler {
         $this->plugin = $plugin;
     }
     
-    public function cutTree(Player $player, Block $block, Block $oldblock = null) {
-        $item = $player->getInventory()->getItemInHand();
-        for ($i = 0; $i <= 5; $i++) {
-            if ($this->plugin->mined[$player->getLowerCaseName()] > 800) {
-                break;
-            }
-            $this->plugin->using[$player->getLowerCaseName()] = time() + 1;
-            $side = $block->getSide($i);
-            if ($oldblock !== null) {
-                if ($side->equals($oldblock)) {
+    public function cutTree(Player $player, $block, Block $oldblock = null) {
+        if ($block instanceof Wood) {
+            $item = $player->getInventory()->getItemInHand();
+            for ($i = 0; $i <= 5; $i++) {
+                if ($this->plugin->mined[$player->getLowerCaseName()] > 800) {
+                    break;
+                }
+                $this->plugin->using[$player->getLowerCaseName()] = time() + 1;
+                $side = $block->getSide($i);
+                if ($oldblock !== null) {
+                    if ($side->equals($oldblock)) {
+                        continue;
+                    }
+                }
+                if ($side->getId() !== Block::WOOD && $side->getId() !== Block::WOOD2) {
                     continue;
                 }
+                $player->getLevel()->useBreakOn($side, $item, $player);
+                $this->plugin->mined[$player->getLowerCaseName()]++;
+                $this->cutTree($player, $side, $block);
             }
-            if ($side->getId() !== Block::WOOD && $side->getId() !== Block::WOOD2) {
-                continue;
+        } else if ($block instanceof Wood2) {
+            $item = $player->getInventory()->getItemInHand();
+            for ($i = 0; $i <= 5; $i++) {
+                if ($this->plugin->mined[$player->getLowerCaseName()] > 800) {
+                    break;
+                }
+                $this->plugin->using[$player->getLowerCaseName()] = time() + 1;
+                $side = $block->getSide($i);
+                if ($oldblock !== null) {
+                    if ($side->equals($oldblock)) {
+                        continue;
+                    }
+                }
+                if ($side->getId() !== Block::WOOD && $side->getId() !== Block::WOOD2) {
+                    continue;
+                }
+                $player->getLevel()->useBreakOn($side, $item, $player);
+                $this->plugin->mined[$player->getLowerCaseName()]++;
+                $this->cutTree($player, $side, $block);
             }
-            $player->getLevel()->useBreakOn($side, $item, $player);
-            $this->plugin->mined[$player->getLowerCaseName()]++;
-            $this->breakTree($side, $player, $block);
         }
+        
     }
     
 }

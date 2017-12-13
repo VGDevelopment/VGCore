@@ -46,6 +46,10 @@ use pocketmine\Player;
 
 use pocketmine\utils\TextFormat as Chat;
 use pocketmine\utils\Random;
+
+use pocketmine\block\Block;
+use pocketmine\block\Wood;
+use pocketmine\block\Wood2;
 // >>>
 use VGCore\SystemOS;
 
@@ -68,8 +72,7 @@ class CustomEnchantmentListener implements Listener {
         $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::TRUEAXE);
         if ($enchantment !== null) {
             $chance = mt_rand(1, 10); // no need of doing mt_rand(1, 100) as ratio is same and a decimal value isn't required.
-            var_dump($chance);
-            if ($chance >= 6) {
+            if ($chance > 6) { // should be > 6 as that would be 7, 8, 9, and 10. 4 different numbers.
                 if ($block->getId() == Block::WOOD || $block->getId() == Block::WOOD2) {
                     if (!isset($this->plugin->using[$player->getLowerCaseName()]) || $this->plugin->using[$player->getLowerCaseName()] < time()) {
                         $this->plugin->mined[$player->getLowerCaseName()] = 0;
