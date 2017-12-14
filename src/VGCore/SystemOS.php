@@ -63,7 +63,7 @@ use VGCore\enchantment\CustomEnchantment;
 class SystemOS extends PluginBase {
 
     // Base File for arranging everything in good order. This is how every good core should be done.
-    
+
     // @const max level
     const MAX_LEVEL = 0;
     // @const not compatible
@@ -72,8 +72,8 @@ class SystemOS extends PluginBase {
     const NOT_WORK_WITH_OTHER_ENCHANT = 2;
     // @const more than one
     const MORE_THAN_ONE = 3;
-    
-    
+
+
     // @const Roman Number Table (idea taken from PiggyCustomEnchants) - Thanks @captainduck for showing me that, Roman numbers for levels is good idea!
     const ROMAN_CONVERSION_TABLE = [
         'M' => 1000,
@@ -90,7 +90,7 @@ class SystemOS extends PluginBase {
         'IV' => 4,
         'I' => 1
     ];
-    
+
 
     // @var integer [] array
     public static $uis;
@@ -99,7 +99,7 @@ class SystemOS extends PluginBase {
     private $messages;
     // @var string [] array
     private $badwords;
-    
+
     // @var customenchantment
     public $enchantment = [
         CustomEnchantment::MECHANIC => ["Mechanic", "Damageable", "Damage", "Rare", 1, "Automatically repairs your item when you use it."],
@@ -116,7 +116,7 @@ class SystemOS extends PluginBase {
         CustomEnchantment::ICEARROW => ["Ice Arror", "Bow", "Damage", "Rare", 1, "10% chance to freeze the enemy on hit."],
         CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 1, "10% chance to give the opponent a 5s Poison Effect."]
         ];
-    
+
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
 
@@ -135,7 +135,7 @@ class SystemOS extends PluginBase {
         // Enables Vanilla Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy VANILLA Enchants.");
         $this->loadVanillaEnchant();
-        
+
         // Enables Custom Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy CUSTOM Enchants.");
         $this->loadCustomEnchant();
@@ -173,7 +173,7 @@ class SystemOS extends PluginBase {
         $system = new VanillaEnchantment($this);
         $system->registerEnchant();
     }
-    
+
     public function loadCustomEnchant() {
         CustomEnchantment::init(); // only way to construct a static class / initialise a static class
         $enchantment = $this->enchantment;
@@ -183,7 +183,7 @@ class SystemOS extends PluginBase {
         }
         $this->getServer()->getPluginManager()->registerEvents(new CustomEnchantmentListener($this), $this);
     }
-    
+
     // >>> Section 1 - Graphical User Interface (GUI)
 
     public function createUIs() {
@@ -253,6 +253,17 @@ class SystemOS extends PluginBase {
         self::$uis['shopMainMenuUI'] = UIDriver::addUI($this, $ui);
         // Shop Item Menu
         $ui = new SimpleForm('§c§lITEMS', '§ePlease select an item to buy :');
+        $dirt = new Button('§c§lDirt');
+        $cobblestone = new Button('§c§lCobblestone');
+        $normalwood = new Button('§c§lOak Wood');
+        $ironore = new Button('§c§lIron Ore');
+        $goldore = new Button('§c§lGold Ore');
+        $diamondore = new Button('§c§lDiamond Ore');
+        $coalore = new Button('§c§lCoal Ore');
+        $glass = new Button('§c§lGlass');
+        $chest = new Button('§c§lChest');
+        $craftingtable = new Button('§c§lCrafting Table');
+        $furnace = new Button('§c§lFurnace');
         $woodensword = new Button('§c§lWooden Sword');
         $woodenaxe = new Button('§c§lWooden Axe');
         $woodenpickaxe = new Button('§c§lWooden Pickaxe');
@@ -273,6 +284,17 @@ class SystemOS extends PluginBase {
         $diamondaxe = new Button('§c§lDiamond Axe');
         $diamondpickaxe = new Button('§c§lDiamond Pickaxe');
         $diamondshovel = new Button('§c§lDiamond Shovel');
+        $ui->addButton($dirt);
+        $ui->addButton($cobblestone);
+        $ui->addButton($normalwood);
+        $ui->addButton($ironore);
+        $ui->addButton($goldore);
+        $ui->addButton($diamondore);
+        $ui->addButton($coalore);
+        $ui->addButton($glass);
+        $ui->addButton($chest);
+        $ui->addButton($craftingtable);
+        $ui->addButton($furnace);
         $ui->addButton($woodensword);
         $ui->addButton($woodenaxe);
         $ui->addButton($woodenpickaxe);
@@ -294,6 +316,72 @@ class SystemOS extends PluginBase {
         $ui->addButton($diamondpickaxe);
         $ui->addButton($diamondshovel);
         self::$uis['shopItemMenuUI'] = UIDriver::addUI($this, $ui);
+        // Dirt Buy Menu
+        $ui = new CustomForm('§c§lDirt');
+        $price = IL::$dirt[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDirtUI'] = UIDriver::addUI($this, $ui);
+        // Cobblestone Buy Menu
+        $ui = new CustomForm('§c§lCobblestone');
+        $price = IL::$cobblestone[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopCobblestoneUI'] = UIDriver::addUI($this, $ui);
+        // Oak Wood Buy Menu
+        $ui = new CustomForm('§c§lOak Wood');
+        $price = IL::$normalwood[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopNormalWoodUI'] = UIDriver::addUI($this, $ui);
+        // IronOre Buy Menu
+        $ui = new CustomForm('§c§lIron Ore');
+        $price = IL::$ironore[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopIOreUI'] = UIDriver::addUI($this, $ui);
+        // GoldOre Buy Menu
+        $ui = new CustomForm('§c§lGold Ore');
+        $price = IL::$goldore[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGOreUI'] = UIDriver::addUI($this, $ui);
+        // DiamondOre Buy Menu
+        $ui = new CustomForm('§c§lDiamond Ore');
+        $price = IL::$diamondore[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopDOreUI'] = UIDriver::addUI($this, $ui);
+        // CoalOre Buy Menu
+        $ui = new CustomForm('§c§lCoal Ore');
+        $price = IL::$coalore[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopCOreUI'] = UIDriver::addUI($this, $ui);
+        // Glass Buy Menu
+        $ui = new CustomForm('§c§lGlass');
+        $price = IL::$glass[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopGlassUI'] = UIDriver::addUI($this, $ui);
+        // Chest Buy Menu
+        $ui = new CustomForm('§c§lChest');
+        $price = IL::$chest[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopChestUI'] = UIDriver::addUI($this, $ui);
+        // CrafingTable Buy Menu
+        $ui = new CustomForm('§c§lCrafting Table');
+        $price = IL::$craftingtable[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopCraftingTableUI'] = UIDriver::addUI($this, $ui);
+        // Furnace Buy Menu
+        $ui = new CustomForm('§c§lFurnace');
+        $price = IL::$furnace[2];
+        $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        self::$uis['shopFurnaceUI'] = UIDriver::addUI($this, $ui);
         // WoodenSword Buy Menu
         $ui = new CustomForm('§c§lWooden Sword');
         $price = IL::$woodsword[2];
@@ -502,9 +590,9 @@ class SystemOS extends PluginBase {
         }
         return true;
     }
-    
+
     // >>> CustomEnchantment
-    
+
     public function setInfo($id, $info) {
         $slot = CustomEnchantment::SLOT_NONE;
         switch ($info[1]) {
@@ -520,7 +608,7 @@ class SystemOS extends PluginBase {
             case 'Tool':
                 $slot = CustomEnchantment::SLOT_TOOL;
                 break;
-            case 'Axe': 
+            case 'Axe':
                 $slot = CustomEnchantment::SLOT_AXE;
                 break;
             case 'Pickaxe':
@@ -552,14 +640,14 @@ class SystemOS extends PluginBase {
         $customenchantment = new CustomEnchantment($id, $info[0], $rarity, $activation, $slot);
         return $customenchantment;
     }
-    
+
     public function createEnchant($id, $name, $type, $trigger, $rarity, $maxlevel) {
         $info = [$name, $type, $trigger, $rarity, $maxlevel];
         $enchantment[$id] = $info;
         $setinfo = $this->setInfo($id, $data);
         CustomEnchantment::createEnchant($id, $setinfo);
     }
-    
+
     public function getEnchantment(Item $item, $id) {
         if (!$item->hasEnchantments()) {
             return null;
@@ -573,7 +661,7 @@ class SystemOS extends PluginBase {
         }
         return null;
     }
-    
+
     public function setEnchantment(Item $item, $enchants, $levels, $check = true, $sender = null) {
         if (!is_array($enchants)) {
             $enchants = [$enchants];
@@ -656,7 +744,7 @@ class SystemOS extends PluginBase {
         }
         return $item;
     }
-    
+
     public function getET(CustomEnchantment $enchantment1) {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
@@ -666,7 +754,7 @@ class SystemOS extends PluginBase {
         }
         return "Unknown";
     }
-    
+
     public function getER(CustomEnchantment $enchantment1) {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
@@ -676,7 +764,7 @@ class SystemOS extends PluginBase {
         }
         return "Common";
     }
-    
+
     public function getEML(CustomEnchantment $enchantment1) {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
@@ -686,7 +774,7 @@ class SystemOS extends PluginBase {
         }
         return 1;
     }
-    
+
     public function getED(CustomEnchantment $enchantment1) {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
@@ -696,7 +784,7 @@ class SystemOS extends PluginBase {
         }
         return "ERROR";
     }
-    
+
     public function sortEnchants() {
         $enchantment = $this->enchantment;
         $sorted = [];
@@ -710,7 +798,7 @@ class SystemOS extends PluginBase {
         }
         return $sorted;
     }
-    
+
     public function getRN($int) {
         $romanstring = "";
         while ($int > 0) {
@@ -724,7 +812,7 @@ class SystemOS extends PluginBase {
         }
         return $romanstring;
     }
-    
+
     public function getRC($rarity) {
         switch ($rarity) {
             case CustomEnchantment::RARITY_COMMON:
@@ -739,7 +827,7 @@ class SystemOS extends PluginBase {
                 return Chat::GREEN;
         }
     }
-    
+
     public function verifyEnchant(Item $item, CustomEnchantment $enchantment, $level) {
         $type = $this->getET($enchantment);
         if ($this->getEML($enchantment) < $level) {
@@ -772,7 +860,7 @@ class SystemOS extends PluginBase {
                     return false;
                 }
                 break;
-            case "Pickaxe": 
+            case "Pickaxe":
                 if ($item->isPickaxe()) {
                     return true;
                 } else {
