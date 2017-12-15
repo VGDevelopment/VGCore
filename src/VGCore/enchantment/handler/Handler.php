@@ -30,6 +30,7 @@ use pocketmine\item\Armor;
 use pocketmine\item\Item;
 
 use pocketmine\level\Position;
+use pocketmine\level\Level;
 
 use pocketmine\math\Vector3;
 
@@ -52,7 +53,10 @@ use pocketmine\block\Wood;
 use pocketmine\block\Wood2;
 // >>>
 use VGCore\SystemOS;
+
 use VGCore\listener\CustomEnchantmentListener;
+
+use VGCore\store\ItemList as IL;
 
 class Handler {
     
@@ -62,7 +66,7 @@ class Handler {
         $this->plugin = $plugin;
     }
     
-    public function cutTree(Player $player, $block, Block $oldblock = null) {
+    public function trueAxe(Player $player, $block, Block $oldblock = null) {
         if ($block instanceof Wood) {
             $item = $player->getInventory()->getItemInHand();
             for ($i = 0; $i <= 5; $i++) {
@@ -107,10 +111,43 @@ class Handler {
         
     }
     
-    public function warAxe($entity) {
+    public function warAxe(Entity $entity) {
         $entityhealth = $entity->getHealth();
         $healthcalc = $entityhealth - 10;
         $entity->setHealth($healthcalc);
+    }
+    
+    public function disable(Entity $entity, $item) {
+        $entity->getInventory()->removeItem($item);
+        $motion = $entity->getDirectionVector()->multiply(0.4);
+        $entity->getLevel()->dropItem($entity->add(0, 1.3, 0), $item, $motion, 40);
+    }
+    
+    public function volley(Entity $entity, Level $level) {
+        $entitymotionx = $entity->getMotion()->x;
+        $levelproduct = 3 * $level * 0.05;
+        $entitymotiony = $levelproduct + 0.75;
+        $entitymotionz = $entity->getMotion()->z;
+        $newmotion = new Vector3($entitymotionx, $entitymotiony, $entitymotionz);
+        $entity->setMotion($newmotion);
+    }
+    
+    public function lastChance(Entity $entity, $event) {
+        $event->setCancelled(true);
+        $entityhealth = $entity->getHealth(true);
+        if ($entity >= 16) {
+            $entitymaxhealth = $entity->getMaxHealth();
+            $entity->setHealth($entitymaxhealth);
+        } else if ($entity < 16) {
+            $healthcalc = $entityhealth + 4;
+            $entity->setMaxHealth($healthcalc);
+        }
+    }
+    
+    public function trueMiner($event) {
+        $diamond = Item::get(IL::$diamondore[0], IL::$diamondore[1], 1);
+        $newdrop = [$diamond];
+        $event->setDrops($newdrop);
     }
     
 }

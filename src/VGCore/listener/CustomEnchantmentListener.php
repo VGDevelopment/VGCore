@@ -76,11 +76,19 @@ class CustomEnchantmentListener implements Listener {
                 if ($block->getId() == Block::WOOD || $block->getId() == Block::WOOD2) {
                     if (!isset($this->plugin->using[$player->getLowerCaseName()]) || $this->plugin->using[$player->getLowerCaseName()] < time()) {
                         $this->plugin->mined[$player->getLowerCaseName()] = 0;
-                        $this->handler->cutTree($player, $block);
+                        $this->handler->trueAxe($player, $block);
                     }
                 }
             }
             $event->setInstaBreak(true); 
+        }
+        $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::TRUEMINER);
+        if ($enchantment !== null) {
+            $chance = mt_rand(1, 100) {
+                if ($chance > 95) {
+                    $this->handler->trueMiner($event);
+                }
+            }
         }
     }
     
@@ -89,12 +97,37 @@ class CustomEnchantmentListener implements Listener {
             $damager = $event->getDamager();
             $entity = $event->getEntity();
             if ($damager instanceof Player) {
-                $item = $damager->getInventory()->getItemInHand();
-                $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::WARAXE);
+                $damageritem = $damager->getInventory()->getItemInHand();
+                $entityitem = $entity->getInventory()->getItemInHand();
+                $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::WARAXE);
                 if ($enchantment !== null) {
                     $chance = mt_rand(1, 100);
                     if ($chance > 95) {
                         $this->handler->warAxe($entity);
+                    }
+                }
+                $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::DISABLE);
+                if ($enchantment !== null) {
+                    $chance = mt_rand(1, 10);
+                    if ($chance > 9) {
+                        $this->handler->disable($entity, $entityitem);
+                    }
+                }
+                $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::VOLLEY);
+                if ($enchantment !== null) {
+                    $chance = mt_rand(1, 10);
+                    if ($chance > 7) {
+                        $level = $enchantment->getLevel();
+                        $this->handler->volley($entity, $level);
+                    }
+                }
+                foreach ($entity->getInventory()->getArmorContents() as $slot => $armor) {
+                    $enchantment = $this->plugin->getEnchantment($armor, CustomEnchantment::LASTCHANCE);
+                    if ($enchantment !== null) {
+                        $chance = mt_rand(1, 10);
+                        if ($chance > 5) {
+                            $this->handler->lastChance($entity, $event);
+                        }
                     }
                 }
             }

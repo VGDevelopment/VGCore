@@ -59,6 +59,7 @@ use VGCore\store\ItemList as IL;
 
 use VGCore\enchantment\VanillaEnchantment;
 use VGCore\enchantment\CustomEnchantment;
+use VGCore\enchantment\handler\Handler;
 
 class SystemOS extends PluginBase {
 
@@ -72,7 +73,6 @@ class SystemOS extends PluginBase {
     const NOT_WORK_WITH_OTHER_ENCHANT = 2;
     // @const more than one
     const MORE_THAN_ONE = 3;
-    
     
     // @const Roman Number Table (idea taken from PiggyCustomEnchants) - Thanks @captainduck for showing me that, Roman numbers for levels is good idea!
     const ROMAN_CONVERSION_TABLE = [
@@ -91,7 +91,6 @@ class SystemOS extends PluginBase {
         'I' => 1
     ];
     
-
     // @var integer [] array
     public static $uis;
 
@@ -102,19 +101,20 @@ class SystemOS extends PluginBase {
     
     // @var customenchantment
     public $enchantment = [
-        CustomEnchantment::MECHANIC => ["Mechanic", "Damageable", "Damage", "Rare", 1, "Automatically repairs your item when you use it."],
-        CustomEnchantment::ABSORB => ["Absorb", "Sword", "Damage", "Uncommon", 1, "20% chance to absorb some health from your opponent."],
-        CustomEnchantment::DISABLE => ["Disable", "Sword", "Damage", "Legendary", 1, "10% chance to make the opponent drop his weapon."],
-        CustomEnchantment::VOLLEY => ["Volley", "Sword", "Damage", "Common", 1, "30% chance to knock the opponent in the air."],
-        CustomEnchantment::TRUEMINER => ["True Miner", "Pickaxe", "Break", "Legendary", 1, "5% chance that whatever block you mine, turns into a diamond."],
         CustomEnchantment::WARAXE => ["War Axe", "Axe", "Damage", "Common", 1, "5% chance to do 5 hearts of damage in a single hit."],
-        CustomEnchantment::TRUEAXE => ["True Axe", "Axe", "Break", "Legendary", 1, "40% chance to chop down all logs connected with this one."],
-        CustomEnchantment::NULLIFY => ["Nullify", "Armor", "Damage", "Rare", 1, "15% to nullify all damage and effects you have on opponent's hit."],
-        CustomEnchantment::MINIBLACKHOLE => ["Mini Black Hole", "Armor", "Damage", "Legendary", 1, "5% chance to explode and kill all near opponents."],
-        CustomEnchantment::LASTCHANCE => ["Last Chance", "Armor", "Damage", "Uncommon", 1, "50% chance to nullify all damage done on hit and regenerate 5 hearts."],
-        CustomEnchantment::BOUNCEBACK => ["Bounce Back", "Chestplate", "Damage", "Uncommon", 1, "50% chance to make an incomming deflect off your armor."],
+        CustomEnchantment::VOLLEY => ["Volley", "Sword", "Damage", "Common", 1, "30% chance to knock the opponent in the air."],
+        CustomEnchantment::BOUNCEBACK => ["Bounce Back", "Chestplate", "Damage", "Uncommon", 1, "50% chance to make an incomming arrow deflect off your armor."],
+        CustomEnchantment::ABSORB => ["Absorb", "Sword", "Damage", "Uncommon", 1, "20% chance to absorb some health from your opponent."],
+        CustomEnchantment::LASTCHANCE => ["Last Chance", "Armor", "Damage", "Rare", 1, "50% chance to nullify all damage done on hit and regenerate 2 hearts."],
+        CustomEnchantment::MECHANIC => ["Mechanic", "Damageable", "Damage", "Rare", 1, "Automatically repairs your item when you use it."],
         CustomEnchantment::ICEARROW => ["Ice Arror", "Bow", "Damage", "Rare", 1, "10% chance to freeze the enemy on hit."],
-        CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 1, "10% chance to give the opponent a 5s Poison Effect."]
+        CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 1, "10% chance to give the opponent a 5s Poison Effect."],
+        CustomEnchantment::NULLIFY => ["Nullify", "Armor", "Damage", "Rare", 1, "15% to nullify all damage and effects you have on opponent's hit."],
+        CustomEnchantment::DISABLE => ["Disable", "Sword", "Damage", "Legendary", 1, "10% chance to make the opponent drop his weapon."],
+        CustomEnchantment::TRUEMINER => ["True Miner", "Pickaxe", "Break", "Legendary", 1, "5% chance that whatever block you mine, turns into a diamond."],
+        CustomEnchantment::TRUEAXE => ["True Axe", "Axe", "Break", "Legendary", 1, "40% chance to chop down all logs connected with this one."],
+        CustomEnchantment::MINIBLACKHOLE => ["Mini Black Hole", "Armor", "Damage", "Legendary", 1, "5% chance to explode and kill all near opponents."]
+        
         ];
     
     public function onEnable() {
