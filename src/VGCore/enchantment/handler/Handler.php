@@ -91,7 +91,7 @@ class Handler {
                 }
                 $player->getLevel()->useBreakOn($side, $item, $player);
                 $this->plugin->mined[$player->getLowerCaseName()]++;
-                $this->cutTree($player, $side, $block);
+                $this->trueAxe($player, $side, $block);
             }
         } else if ($block instanceof Wood2) {
             $item = $player->getInventory()->getItemInHand();
