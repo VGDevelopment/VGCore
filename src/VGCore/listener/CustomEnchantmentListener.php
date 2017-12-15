@@ -86,7 +86,7 @@ class CustomEnchantmentListener implements Listener {
         if ($enchantment !== null) {
             $chance = mt_rand(1, 100) {
                 if ($chance > 95) {
-                    $this->handler->trueMiner($event);
+                    $this->handler->trueMiner($event, $player);
                 }
             }
         }
@@ -103,14 +103,14 @@ class CustomEnchantmentListener implements Listener {
                 if ($enchantment !== null) {
                     $chance = mt_rand(1, 100);
                     if ($chance > 95) {
-                        $this->handler->warAxe($entity);
+                        $this->handler->warAxe($entity, $damager);
                     }
                 }
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::DISABLE);
                 if ($enchantment !== null) {
                     $chance = mt_rand(1, 10);
                     if ($chance > 9) {
-                        $this->handler->disable($entity, $entityitem);
+                        $this->handler->disable($entity, $entityitem, $damager);
                     }
                 }
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::VOLLEY);
@@ -118,7 +118,7 @@ class CustomEnchantmentListener implements Listener {
                     $chance = mt_rand(1, 10);
                     if ($chance > 7) {
                         $level = $enchantment->getLevel();
-                        $this->handler->volley($entity, $level);
+                        $this->handler->volley($entity, $level, $damager);
                     }
                 }
                 foreach ($entity->getInventory()->getArmorContents() as $slot => $armor) {
@@ -126,7 +126,7 @@ class CustomEnchantmentListener implements Listener {
                     if ($enchantment !== null) {
                         $chance = mt_rand(1, 10);
                         if ($chance > 5) {
-                            $this->handler->lastChance($entity, $event);
+                            $this->handler->lastChance($entity, $event, $damager);
                         }
                     }
                 }

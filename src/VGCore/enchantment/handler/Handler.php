@@ -31,6 +31,7 @@ use pocketmine\item\Item;
 
 use pocketmine\level\Position;
 use pocketmine\level\Level;
+use pocketmine\level\sound\GenericSound;
 
 use pocketmine\math\Vector3;
 
@@ -64,9 +65,11 @@ class Handler {
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
+        $this->sound = new Sound($this->plugin);
     }
     
-    public function trueAxe(Player $player, $block, Block $oldblock = null) {
+    public function trueAxe(Entity $player, $block, Block $oldblock = null) {
+        $this->sound->playAnvilUse($player);
         if ($block instanceof Wood) {
             $item = $player->getInventory()->getItemInHand();
             for ($i = 0; $i <= 5; $i++) {
@@ -111,19 +114,31 @@ class Handler {
         
     }
     
-    public function warAxe(Entity $entity) {
+    public function warAxe(Entity $entity, Entity $damager) {
+        $allentity = [$entity, $damager];
+        foreach ($allentity as $e) {
+            $this->sound->playThunder($e);
+        }
         $entityhealth = $entity->getHealth();
         $healthcalc = $entityhealth - 10;
         $entity->setHealth($healthcalc);
     }
     
-    public function disable(Entity $entity, $item) {
+    public function disable(Entity $entity, $item, Entity $damager) {
+        $allentity = [$entity, $damager];
+        foreach ($allentity as $e) {
+            $this->sound->playAnvilFall($e);
+        }
         $entity->getInventory()->removeItem($item);
         $motion = $entity->getDirectionVector()->multiply(0.4);
         $entity->getLevel()->dropItem($entity->add(0, 1.3, 0), $item, $motion, 40);
     }
     
-    public function volley(Entity $entity, Level $level) {
+    public function volley(Entity $entity, Level $level, Entity $damager) {
+        $allentity = [$entity, $damager];
+        foreach ($allentity as $e) {
+            $this->sound->playAnvilFall($e);
+        }
         $entitymotionx = $entity->getMotion()->x;
         $levelproduct = 3 * $level * 0.05;
         $entitymotiony = $levelproduct + 0.75;
@@ -132,7 +147,11 @@ class Handler {
         $entity->setMotion($newmotion);
     }
     
-    public function lastChance(Entity $entity, $event) {
+    public function lastChance(Entity $entity, $event, Entity $damager) {
+        $allentity = [$entity, $damager];
+        foreach ($allentity as $e) {
+            $this->sound->playGuardian($e);
+        }
         $event->setCancelled(true);
         $entityhealth = $entity->getHealth(true);
         if ($entity >= 16) {
@@ -144,7 +163,8 @@ class Handler {
         }
     }
     
-    public function trueMiner($event) {
+    public function trueMiner($event, Entity $player) {
+        $this->sound->playOrb($player);
         $diamond = Item::get(IL::$diamondore[0], IL::$diamondore[1], 1);
         $newdrop = [$diamond];
         $event->setDrops($newdrop);
