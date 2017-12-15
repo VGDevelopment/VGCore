@@ -71,7 +71,8 @@ class Handler {
     
     public function trueAxe(Entity $player, $block, Block $oldblock = null) {
         $sound = "AnvilUse";
-        S::playSound($player, $sound);
+        $allentity = [$player];
+        S::playSound($allentity, $sound);
         if ($block instanceof Wood) {
             $item = $player->getInventory()->getItemInHand();
             for ($i = 0; $i <= 5; $i++) {
@@ -117,33 +118,27 @@ class Handler {
     }
     
     public function warAxe(Entity $entity, Entity $damager) {
-        $allentity = [$entity, $damager];
-        foreach ($allentity as $e) {
-            $sound = "Thunder";
-            S::playSound($e, $sound);
-        }
+        $e = [$entity, $damager];
+        $sound = "Thunder";
+        S::playSound($e, $sound);
         $entityhealth = $entity->getHealth();
         $healthcalc = $entityhealth - 10;
         $entity->setHealth($healthcalc);
     }
     
     public function disable(Entity $entity, $item, Entity $damager) {
-        $allentity = [$entity, $damager];
-        foreach ($allentity as $e) {
-            $sound = "AnvilFall";
-            S::playSound($e, $sound);
-        }
+        $e = [$entity, $damager];
+        $sound = "AnvilFall";
+        S::playSound($e, $sound);
         $entity->getInventory()->removeItem($item);
         $motion = $entity->getDirectionVector()->multiply(0.4);
         $entity->getLevel()->dropItem($entity->add(0, 1.3, 0), $item, $motion, 40);
     }
     
     public function volley(Entity $entity, Level $level, Entity $damager) {
-        $allentity = [$entity, $damager];
-        foreach ($allentity as $e) {
-            $sound = "Pop";
-            S::playSound($e, $sound);
-        }
+        $e = [$entity, $damager];
+        $sound = "Pop";
+        S::playSound($e, $sound);
         $entitymotionx = $entity->getMotion()->x;
         $levelproduct = 3 * $level * 0.05;
         $entitymotiony = $levelproduct + 0.75;
@@ -153,11 +148,9 @@ class Handler {
     }
     
     public function lastChance(Entity $entity, $event, Entity $damager) {
-        $allentity = [$entity, $damager];
-        foreach ($allentity as $e) {
-            $sound = "Guardian";
-            S::playSound($e, $sound);
-        }
+        $e = [$entity, $damager];
+        $sound = "Guardian";
+        S::playSound($e, $sound);
         $event->setCancelled(true);
         $entityhealth = $entity->getHealth(true);
         if ($entity >= 16) {
@@ -170,8 +163,9 @@ class Handler {
     }
     
     public function trueMiner($event, Entity $player) {
+        $e = [$player];
         $sound = "Orb";
-        S::playSound($player, $sound);
+        S::playSound($e, $sound);
         $diamond = Item::get(IL::$diamondore[0], IL::$diamondore[1], 1);
         $newdrop = [$diamond];
         $event->setDrops($newdrop);

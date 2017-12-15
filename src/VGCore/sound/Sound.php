@@ -10,97 +10,97 @@ use VGCore\SystemOS;
 
 class Sound {
 	
-	public static function playSound($player, string $soundstring) {
+	public static function playSound(array $entity, string $soundstring) {
 	    switch ($soundstring) {
 	        case "Click":
-	            $sound = new GenericSound($player, 1000, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1000, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
             case "Shoot":
-	            $sound = new GenericSound($player, 1002, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1002, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Door":
-	            $sound = new GenericSound($player, 1003, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1003, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Fizz":
-	            $sound = new GenericSound($player, 1004, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1004, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Ignite":
-	            $sound = new GenericSound($player, 1005, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1005, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Ghast":
-	            $sound = new GenericSound($player, 1007, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1007, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "EnderTP":
-	            $sound = new GenericSound($player, 1018, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1018, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "AnvilBreak":
-	            $sound = new GenericSound($player, 1020, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1020, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "AnvilUse":
-	            $sound = new GenericSound($player, 1021, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1021, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "AnvilFall":
-	            $sound = new GenericSound($player, 1022, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1022, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Pop":
-	            $sound = new GenericSound($player, 1030, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1030, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Portal":
-	            $sound = new GenericSound($player, 1032, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1032, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Camera":
-	            $sound = new GenericSound($player, 1050, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1050, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Orb":
-	            $sound = new GenericSound($player, 1051, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1051, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Guardian":
-	            $sound = new GenericSound($player, 2006, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 2006, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Rain":
-	            $sound = new GenericSound($player, 3001, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 3001, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        case "Thunder":
-	            $sound = new GenericSound($player, 3002, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 3002, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	        default:
-	            $sound = new GenericSound($player, 1000, 0);
-	            $level = $player->getLevel();
-	            $level->addSound($sound, $player);
+	            $sound = new GenericSound($entity[0], 1000, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
 	            break;
 	    }
 	    
