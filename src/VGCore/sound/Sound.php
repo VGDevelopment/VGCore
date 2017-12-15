@@ -9,132 +9,101 @@ use pocketmine\level\sound\GenericSound;
 use VGCore\SystemOS;
 
 class Sound {
-    
-    // sounds
-    public $click = 1000;
-	public $shoot = 1002;
-	public $door = 1003;
-	public $fizz = 1004;
-	public $ignite = 1005;
-	public $ghast = 1007;
-	public $endertp = 1018;
-	public $anvilbreak = 1020;
-	public $anviluse = 1021;
-	public $anvilfall = 1022;
-	public $pop = 1030;
-	public $portal = 1032;
-	public $camera = 1050;
-	public $orb = 1051;
-	public $guardian = 2006;
-	public $rain = 3001;
-	public $thunder = 3002;
 	
-	public $plugin;
-	
-	public function __construct(SystemOS $plugin) {
-	    $this->plugin = $plugin;
-	}
-	
-	public function playClick($player) {
-	    $sound = new GenericSound($player, $click, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playShoot($player) {
-	    $sound = new GenericSound($player, $shoot, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playDoor($player) {
-	    $sound = new GenericSound($player, $door, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playFizz($player) {
-	    $sound = new GenericSound($player, $fizz, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playIgnite($player) {
-	    $sound = new GenericSound($player, $ignite, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playGhast($player) {
-	    $sound = new GenericSound($player, $ghast, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playEnderTP($player) {
-	    $sound = new GenericSound($player, $endertp, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playAnvilBreak($player) {
-	    $sound = new GenericSound($player, $anvilbreak, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playAnvilUse($player) {
-	    $sound = new GenericSound($player, $anviluse, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playAnvilFall($player) {
-	    $sound = new GenericSound($player, $anvilfall, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playPop($player) {
-	    $sound = new GenericSound($player, $pop, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playPortal($player) {
-	    $sound = new GenericSound($player, $pop, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playCamera($player) {
-	    $sound = new GenericSound($player, $camera, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playOrb($player) {
-	    $sound = new GenericSound($player, $orb, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playGuardian($player) {
-	    $sound = new GenericSound($player, $guardian, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playRain($player) {
-	    $sound = new GenericSound($player, $rain, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
-	}
-	
-	public function playThunder($player) {
-	    $sound = new GenericSound($player, $thunder, 0);
-	    $level = $player->getLevel();
-	    $level->addSound($sound, $player);
+	public static function playSound($player, string $soundstring) {
+	    switch ($soundstring) {
+	        case "Click":
+	            $sound = new GenericSound($player, 1000, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+            case "Shoot":
+	            $sound = new GenericSound($player, 1002, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Door":
+	            $sound = new GenericSound($player, 1003, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Fizz":
+	            $sound = new GenericSound($player, 1004, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Ignite":
+	            $sound = new GenericSound($player, 1005, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Ghast":
+	            $sound = new GenericSound($player, 1007, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "EnderTP":
+	            $sound = new GenericSound($player, 1018, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "AnvilBreak":
+	            $sound = new GenericSound($player, 1020, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "AnvilUse":
+	            $sound = new GenericSound($player, 1021, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "AnvilFall":
+	            $sound = new GenericSound($player, 1022, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Pop":
+	            $sound = new GenericSound($player, 1030, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Portal":
+	            $sound = new GenericSound($player, 1032, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Camera":
+	            $sound = new GenericSound($player, 1050, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Orb":
+	            $sound = new GenericSound($player, 1051, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Guardian":
+	            $sound = new GenericSound($player, 2006, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Rain":
+	            $sound = new GenericSound($player, 3001, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        case "Thunder":
+	            $sound = new GenericSound($player, 3002, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	        default:
+	            $sound = new GenericSound($player, 1000, 0);
+	            $level = $player->getLevel();
+	            $level->addSound($sound, $player);
+	            break;
+	    }
+	    
 	}
     
 }

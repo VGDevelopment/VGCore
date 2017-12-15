@@ -59,7 +59,7 @@ use VGCore\listener\CustomEnchantmentListener;
 
 use VGCore\store\ItemList as IL;
 
-use VGCore\sound\Sound;
+use VGCore\sound\Sound as S;
 
 class Handler {
     
@@ -67,11 +67,11 @@ class Handler {
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
-        $this->sound = new Sound($this->plugin);
     }
     
     public function trueAxe(Entity $player, $block, Block $oldblock = null) {
-        $this->sound->playAnvilUse($player);
+        $sound = "AnvilUse";
+        S::playSound($player, $sound);
         if ($block instanceof Wood) {
             $item = $player->getInventory()->getItemInHand();
             for ($i = 0; $i <= 5; $i++) {
@@ -119,7 +119,8 @@ class Handler {
     public function warAxe(Entity $entity, Entity $damager) {
         $allentity = [$entity, $damager];
         foreach ($allentity as $e) {
-            $this->sound->playThunder($e);
+            $sound = "Thunder";
+            S::playSound($e, $sound);
         }
         $entityhealth = $entity->getHealth();
         $healthcalc = $entityhealth - 10;
@@ -129,7 +130,8 @@ class Handler {
     public function disable(Entity $entity, $item, Entity $damager) {
         $allentity = [$entity, $damager];
         foreach ($allentity as $e) {
-            $this->sound->playAnvilFall($e);
+            $sound = "AnvilFall";
+            S::playSound($e, $sound);
         }
         $entity->getInventory()->removeItem($item);
         $motion = $entity->getDirectionVector()->multiply(0.4);
@@ -139,7 +141,8 @@ class Handler {
     public function volley(Entity $entity, Level $level, Entity $damager) {
         $allentity = [$entity, $damager];
         foreach ($allentity as $e) {
-            $this->sound->playAnvilFall($e);
+            $sound = "Pop";
+            S::playSound($e, $sound);
         }
         $entitymotionx = $entity->getMotion()->x;
         $levelproduct = 3 * $level * 0.05;
@@ -152,7 +155,8 @@ class Handler {
     public function lastChance(Entity $entity, $event, Entity $damager) {
         $allentity = [$entity, $damager];
         foreach ($allentity as $e) {
-            $this->sound->playGuardian($e);
+            $sound = "Guardian";
+            S::playSound($e, $sound);
         }
         $event->setCancelled(true);
         $entityhealth = $entity->getHealth(true);
@@ -166,7 +170,8 @@ class Handler {
     }
     
     public function trueMiner($event, Entity $player) {
-        $this->sound->playOrb($player);
+        $sound = "Orb";
+        S::playSound($player, $sound);
         $diamond = Item::get(IL::$diamondore[0], IL::$diamondore[1], 1);
         $newdrop = [$diamond];
         $event->setDrops($newdrop);
