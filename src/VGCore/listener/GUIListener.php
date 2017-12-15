@@ -183,11 +183,62 @@ class GUIListener implements Listener {
 						break;
 					}
 					case '§c§lBLOCKS': {
-						//
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopBlockMenuUI'], $event->getPlayer());
 						break;
 					}
 				}
 				break;
+			}
+			case SystemOS::$uis['shopBlockMenuUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§c§lDirt': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDirtUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lCobblestone': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopCobblestoneUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lOak Wood': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopNormalWoodUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lIron Ore': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopIOreUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lGold Ore': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGOreUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lDiamond Ore': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDOreUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lCoal Ore': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopCOreUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lGlass': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGlassUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lChest': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopChestUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lCrafting Table': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopCraftingTableUI'], $event->getPlayer());
+						break;
+					}
+					case '§c§lFurnace': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopFurnaceUI'], $event->getPlayer());
+						break;
+					}
+				}
 			}
 			case SystemOS::$uis['shopItemMenuUI']: {
 				$data = $event->getData();
@@ -242,7 +293,7 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopIShovelUI'], $event->getPlayer());
 						break;
 					}
-            		case '§c§lGold Sword': {
+        			case '§c§lGold Sword': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGSwordUI'], $event->getPlayer());
 						break;
 					}
@@ -258,7 +309,7 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopGShovelUI'], $event->getPlayer());
 						break;
 					}
-            		case '§c§lDiamond Sword': {
+        			case '§c§lDiamond Sword': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDSwordUI'], $event->getPlayer());
 						break;
 					}
@@ -274,6 +325,171 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDShovelUI'], $event->getPlayer());
 						break;
 					}
+				}
+				break;
+			}
+    		case SystemOS::$uis['shopDirtUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$dirt;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopCobblestoneUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$cobblestone;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopNormalWoodUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$normalwood;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopIOreUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$ironore;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopGOreUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$goldore;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopDOreUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$diamondore;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopCOreUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$coalore;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopGlassUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$glass;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopChestUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$chest;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopCraftingTableUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$craftingtable;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+				}
+				break;
+			}
+			case SystemOS::$uis['shopFurnaceUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$amount = (int)$response[0];
+				$store = new Store($event->getPlugin(), $economy);
+				$product = IL::$furnace;
+				$buy = $store->buyItem($event->getPlayer(), $amount, $product);
+				if ($buy === true) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+				} else if ($buy === false) {
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
 				}
 				break;
 			}
