@@ -10,6 +10,7 @@ use VGCore\SystemOS;
 
 class Sound {
     
+    // sounds
     public $click = 1000;
 	public $shoot = 1002;
 	public $door = 1003;

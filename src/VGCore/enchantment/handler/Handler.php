@@ -59,6 +59,8 @@ use VGCore\listener\CustomEnchantmentListener;
 
 use VGCore\store\ItemList as IL;
 
+use VGCore\sound\Sound;
+
 class Handler {
     
     public $plugin;

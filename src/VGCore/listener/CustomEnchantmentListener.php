@@ -84,10 +84,9 @@ class CustomEnchantmentListener implements Listener {
         }
         $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::TRUEMINER);
         if ($enchantment !== null) {
-            $chance = mt_rand(1, 100) {
-                if ($chance > 95) {
-                    $this->handler->trueMiner($event, $player);
-                }
+            $chance = mt_rand(1, 100);
+            if ($chance > 95) {
+                $this->handler->trueMiner($event, $player);
             }
         }
     }
