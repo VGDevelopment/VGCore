@@ -2,6 +2,8 @@
 
 namespace VGCore\listener;
 
+use pocketmine\event\Event;
+use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 // >>>
 use VGCore\SystemOS;
