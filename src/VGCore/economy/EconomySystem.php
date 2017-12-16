@@ -213,7 +213,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$amount = (float) $amount;
-		$conv = $amount * $dollartogem;
+		$conv = $amount * $this->dollartogem;
 		return $this->db->query("UPDATE users SET gems = gems + $conv WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 
@@ -221,7 +221,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$amount = (float) $amount;
-		$conv = $amount * $dollartocoin;
+		$conv = $amount * $this->dollartocoin;
 		return $this->db->query("UPDATE users SET coins = coins + $conv WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 
@@ -229,7 +229,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$amount = (float) $amount;
-		$conv = $amount * $gemtocoin;
+		$conv = $amount * $this->gemtocoin;
 		return $this->db->query("UPDATE users SET coins = coins + $conv * 100 WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 
@@ -239,7 +239,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$amount = (float) $amount;
-		$conv = $amount * $gemtodollar;
+		$conv = $amount * $this->gemtodollar;
 		return $this->db->query("UPDATE users SET dollars = dollars + $conv WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 
@@ -247,7 +247,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$amount = (float) $amount;
-		$conv = $amount * $cointodollar;
+		$conv = $amount * $this->cointodollar;
 		return $this->db->query("UPDATE users SET dollars = dollars + $conv WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 
@@ -255,7 +255,7 @@ class EconomySystem {
 		$playername = $player->getName();
 		$playername2 = strtolower($playername);
 		$amount = (float) $amount;
-		$conv = $amount * $cointogem;
+		$conv = $amount * $this->cointogem;
 		return $this->db->query("UPDATE users SET gems = gems + $conv WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
 

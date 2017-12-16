@@ -42,4 +42,23 @@ class Store {
         }
     }
     
+    public function sellItem(Player $player, int $amount, array $info) {
+        $name = $player->getName();
+        $check = $this->economy->accountValidate($name);
+        $sellprice = $info[2] / 2;
+        $finalprice = $sellprice * $amount;
+        if ($check === true) {
+            $item = Item::get($info[0]. $info[1], $amount);
+            if ($player->getInventory()->contains($item)) {
+                $player->getInventory()->removeItem($item);
+                $this->economy->addCoin($player, $finalprice);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    
 }

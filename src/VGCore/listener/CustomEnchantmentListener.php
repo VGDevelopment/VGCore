@@ -116,7 +116,7 @@ class CustomEnchantmentListener implements Listener {
                 if ($enchantment !== null) {
                     $chance = mt_rand(1, 10);
                     if ($chance > 7) {
-                        $level = $enchantment->getLevel();
+                        $level = $entity->getLevel();
                         $this->handler->volley($entity, $level, $damager);
                     }
                 }

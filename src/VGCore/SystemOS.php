@@ -26,7 +26,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\ShortTag;
 // >>>
-use VGCore\economy\PlayerData;
+use VGCore\economy\EconomySystem;
 
 use VGCore\gui\lib\UIDriver;
 use VGCore\gui\lib\element\Button;
@@ -44,6 +44,7 @@ use VGCore\gui\lib\window\CustomForm;
 use VGCore\listener\ChatFilterListener;
 use VGCore\listener\GUIListener;
 use VGCore\listener\CustomEnchantmentListener;
+use VGCore\listener\USListener;
 
 use VGCore\network\ModalFormRequestPacket;
 use VGCore\network\ModalFormResponsePacket;
@@ -60,6 +61,10 @@ use VGCore\store\ItemList as IL;
 use VGCore\enchantment\VanillaEnchantment;
 use VGCore\enchantment\CustomEnchantment;
 use VGCore\enchantment\handler\Handler;
+
+use VGCore\user\UserSystem;
+
+use VGCore\sound\Sound;
 
 class SystemOS extends PluginBase {
 
@@ -139,6 +144,10 @@ class SystemOS extends PluginBase {
         // Enables Custom Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy CUSTOM Enchants.");
         $this->loadCustomEnchant();
+        
+        // Enables User Manager
+        $this->getLogger()->info("Enabling the Virtual Galaxy User System.");
+        $this->loadUserSystem();
     }
 
     // Load Base Section
@@ -182,6 +191,10 @@ class SystemOS extends PluginBase {
             CustomEnchantment::createEnchant($id, $setinfo);
         }
         $this->getServer()->getPluginManager()->registerEvents(new CustomEnchantmentListener($this), $this);
+    }
+    
+    public function loadUserSystem() {
+        $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this)
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)
