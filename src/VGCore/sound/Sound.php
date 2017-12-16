@@ -97,6 +97,11 @@ class Sound {
 	            $level = $entity[0]->getLevel();
 	            $level->addSound($sound, $entity);
 	            break;
+	        case "EnderDragon":
+	            $sound = new GenericSound($entity[0], 138, 0);
+	            $level = $entity[0]->getLevel();
+	            $level->addSound($sound, $entity);
+	            break;
 	        default:
 	            $sound = new GenericSound($entity[0], 1000, 0);
 	            $level = $entity[0]->getLevel();

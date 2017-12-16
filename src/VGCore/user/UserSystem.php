@@ -29,8 +29,6 @@ class UserSystem {
 			rank FLOAT,
 			kill FLOAT,
 			death FLOAT,
-			ban FLOAT,
-			banid FLOAT
 			);")) {
 			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
 			return;
@@ -88,45 +86,6 @@ class UserSystem {
 			return true;
 		}
 		return false;
-    }
-    
-    public function banUser(string $user, int $banid) {
-        $lowuser = strtolower($user);
-        $check = $this->checkUser($user);
-        if ($check === true) {
-            $this->db->query("UPDATE users SET ban = 1 WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
-            $this->db->query("UPDATE users SET banid = $banid WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    public function isBan(string $user) {
-        $lowuser = strtolower($user);
-        $check = $this->checkUser($user);
-        if ($check === true) {
-            $query = $this->db->query("SELECT ban FROM users WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
-            $bancheck = $query->fetch_array()[0] ?? false;
-            if ($bancheck === 1) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-    
-    public function getBanID(string $user) {
-        $lowuser = strtolower($user);
-        $check = $this->checkUser($user);
-        if ($check === true) {
-            $query = $this->db->query("SELECT banid FROM users WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
-            return $query->fetch_array()[0] ?? false;
-        } else {
-            return "ERROR";
-        }
     }
     
     public function addKill(string $user) {
