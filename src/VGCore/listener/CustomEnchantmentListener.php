@@ -130,6 +130,20 @@ class CustomEnchantmentListener implements Listener {
                     }
                 }
             }
+        } else if ($event instanceof EntityDamageByChildEntityEvent) {
+            $damager = $event->getDamager();
+            $child = $event->getChild();
+            $entity = $event->getEntity();
+            if ($damager instanceof Player && $child instanceof Projectile) {
+                $damageritem = $damager->getInventory()->getItemInHand();
+                $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::ICEARROW);
+                if ($enchantment !== null) {
+                    $chance = mt_rand(1, 10);
+                    if ($chance > 9) {
+                        $this->handler->iceArrow($entity, $damager);
+                    }
+                }
+            }
         }
     }
     

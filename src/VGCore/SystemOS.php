@@ -112,7 +112,7 @@ class SystemOS extends PluginBase {
         CustomEnchantment::ABSORB => ["Absorb", "Sword", "Damage", "Uncommon", 1, "20% chance to absorb some health from your opponent."],
         CustomEnchantment::LASTCHANCE => ["Last Chance", "Armor", "Damage", "Rare", 1, "50% chance to nullify all damage done on hit and regenerate 2 hearts."],
         CustomEnchantment::MECHANIC => ["Mechanic", "Damageable", "Damage", "Rare", 1, "Automatically repairs your item when you use it."],
-        CustomEnchantment::ICEARROW => ["Ice Arror", "Bow", "Damage", "Rare", 1, "10% chance to freeze the enemy on hit."],
+        CustomEnchantment::ICEARROW => ["Ice Arror", "Bow", "Damage", "Rare", 1, "10% chance to slow the enemy on hit."],
         CustomEnchantment::POISONARROW => ["Poison Arror", "Bow", "Damage", "Rare", 1, "10% chance to give the opponent a 5s Poison Effect."],
         CustomEnchantment::NULLIFY => ["Nullify", "Armor", "Damage", "Rare", 1, "15% to nullify all damage and effects you have on opponent's hit."],
         CustomEnchantment::DISABLE => ["Disable", "Sword", "Damage", "Legendary", 1, "10% chance to make the opponent drop his weapon."],

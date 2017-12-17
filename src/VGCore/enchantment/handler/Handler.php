@@ -149,7 +149,7 @@ class Handler {
     
     public function lastChance(Entity $entity, $event, Entity $damager) {
         $e = [$entity, $damager];
-        $sound = "Guardian";
+        $sound = "EnderDragon";
         S::playSound($e, $sound);
         $event->setCancelled(true);
         $entityhealth = $entity->getHealth(true);
@@ -169,6 +169,17 @@ class Handler {
         $diamond = Item::get(IL::$diamondore[0], IL::$diamondore[1], 1);
         $newdrop = [$diamond];
         $event->setDrops($newdrop);
+    }
+    
+    public function iceArrow(Entity $entity, Entity $damager) {
+        $e = [$entity];
+        $sound = "Portal";
+        S::playSound($e, $sound);
+        $effect = Effect::getEffect(Effect::SLOWNESS);
+        $effect->setAmplifier(3);
+        $effect->setDuration(15);
+        $effect->setVisible(false);
+        $entity->addEffect($effect);
     }
     
 }

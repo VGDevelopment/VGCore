@@ -24,7 +24,7 @@ class CustomEnchantment extends Enchantment {
     const TRUEAXE = 111; // 40% chance to chop down the whole tree
     
     // armor
-    const NULLIFY = 107; // 15% chance to nullify all damage and effects you have or not have when player hits you
+    const NULLIFY = 107; // 15% chance to nullify all damage have when player hits you
     const MINIBLACKHOLE = 106; // 5% to explode when killed and kill anyone in radius of 3 blocks of you (whether it be enemy, or friendly)
     const LASTCHANCE = 112; // 50% chance to occur. If you're below 2 hearts, nullify the damage done by enemy player on that hit and regenerate 5 hearts
     
@@ -32,7 +32,7 @@ class CustomEnchantment extends Enchantment {
     const BOUNCEBACK = 108; // 50% to send the arrow back in the direction it came from
     
     // bow
-    const ICEARROW = 109; // 10% chance to freeze the enemy player upon hit of arrow
+    const ICEARROW = 109; // 10% chance to slow the enemy player upon hit of arrow
     const POISONARROW = 110; // 10% chance to make enemy get poisen
     
     public static $customenchantment;
