@@ -84,8 +84,6 @@ class FactionSystem {
 			$invitername = $inviter->getName();
 			if(!isset($playername, $this->invite)){
 				$this->invite = $playername;
-				$inviter->sendMessage("You've invited "/ $playername. " to the faction!");
-				$player->sendMessage("You've been invited by ".  $invitername. " to join " $this->getPlayerFaction(). "!");
 			}
 		}
 	}
