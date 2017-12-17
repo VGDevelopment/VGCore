@@ -117,7 +117,14 @@ class CustomEnchantmentListener implements Listener {
                     $chance = mt_rand(1, 10);
                     if ($chance > 7) {
                         $level = $entity->getLevel();
-                        $this->handler->volley($entity, $level, $damager);
+                        $this->handler->volley($entity, $damager);
+                    }
+                }
+                $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::ABSORB);
+                if ($enchantment !== null) {
+                    $chance = mt_rand(1, 10);
+                    if ($chance > 8) {
+                        $this->handler->absorb($entity, $damager);
                     }
                 }
                 foreach ($entity->getInventory()->getArmorContents() as $slot => $armor) {
@@ -141,6 +148,13 @@ class CustomEnchantmentListener implements Listener {
                     $chance = mt_rand(1, 10);
                     if ($chance > 9) {
                         $this->handler->iceArrow($entity, $damager);
+                    }
+                }
+                $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::POISONARROW);
+                if ($enchantment !== null) {
+                    $chance = mt_rand(1, 10);
+                    if ($chance > 9) {
+                        $this->handler->poisonArrow($entity, $damager);
                     }
                 }
             }

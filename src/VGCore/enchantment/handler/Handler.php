@@ -135,11 +135,12 @@ class Handler {
         $entity->getLevel()->dropItem($entity->add(0, 1.3, 0), $item, $motion, 40);
     }
     
-    public function volley(Entity $entity, Level $level, Entity $damager) {
+    public function volley(Entity $entity, Entity $damager) {
         $e = [$entity, $damager];
         $sound = "Pop";
         S::playSound($e, $sound);
         $entitymotionx = $entity->getMotion()->x;
+        $level = $entity->getLevel();
         $levelproduct = 3 * $level * 0.05;
         $entitymotiony = $levelproduct + 0.75;
         $entitymotionz = $entity->getMotion()->z;
@@ -180,6 +181,33 @@ class Handler {
         $effect->setDuration(15);
         $effect->setVisible(false);
         $entity->addEffect($effect);
+    }
+    
+    public function poisonArrow(Entity $entity, Entity $damager) {
+        $e = [$entity];
+        $sound = "Portal";
+        S::playSound($e, $sound);
+        $effect = Effect::getEffect(Effect::POISON);
+        $effect->setAmplifier(3);
+        $effect->setDuration(15);
+        $effect->setVisible(false);
+        $entity->addEffect($effect);
+    }
+    
+    public function absorb(Entity $entity, Entity $damager) {
+        $e = [$entity, $damager];
+        $sound = "Blaze";
+        S::playSound($e, $sound);
+        $entityhealth = $entity->getHealth();
+        $damagerhealth = $damager->getHealth();
+        $newehealth = $entityhealth - 4;
+        if ($damagerhealth >= 16) {
+            $newdhealth = $damager->getMaxHealth();
+            $damager->setHealth($newdhealth);
+        } else {
+            $newdhealth = $damagerhealth + 4;
+            $damager->setHealth($newdhealth);
+        }
     }
     
 }
