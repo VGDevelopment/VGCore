@@ -9,8 +9,11 @@ class FactionSystem {
 
 	private $factions;
 	private $plugin;
+
 	public $faction;
 	public $invite = [];
+
+	public $request = [];
 
 
 	public function __construct(SystemOS $plugin) {
@@ -25,15 +28,27 @@ class FactionSystem {
 			return;
 		}
 		if (!$this->db->query("CREATE TABLE IF NOT EXISTS factions(
-			faction FLOAT,
-			player FLOAT,
-			rank FLOAT
+			faction TEXT,
+			player TEXT,
+			rank TEXT,
 			);")) {
 			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
 			return;
-
-			$this->invite = $invite;
 		}
+
+		//FLOAT IS FOR NUMERICAL DATA TYPES :stfacepalm:
+
+		if (!$this->db->query("CREATE TABLE IF NOT EXISTS facstats(
+			faction TEXT,
+			kills TEXT,
+			power TEXT,
+			);")) {
+			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
+			return;
+		}
+
+		$this->request = $request
+		$this->invite = $invite;
 
 		/////////////////////////// FACTION DETAILS ///////////////////////////
 
@@ -47,10 +62,11 @@ class FactionSystem {
 		}
 
 		public function createFaction(string $faction, Player $leader) {
-			$factionname = (float) $faction;
-			$leadername = (float) $leader->getName();
+			$leadername = $leader->getName();
 			if (!$this->factionExists($faction)) {
-				$this->db->query("INSERT INTO factions (player, faction, rank) VALUES ('".$this->db->real_escape_string($leadername), $factionname, 'Leader'););
+				$this->db->query("INSERT INTO factions (player, faction, rank) VALUES ('".$this->db->real_escape_string($leadername), $faction., 'Leader'););
+				$this->db->query("INSERT INTO users (faction, kills) VALUES ('".$this->db->real_escape_string($faction)."', 0);");
+				$this->db->query("INSERT INTO users (faction, power) VALUES ('".$this->db->real_escape_string($faction)."', 50);");
 				return true;
 			}
 			return false;
@@ -69,6 +85,24 @@ class FactionSystem {
 			return $fac;
 		}
 
+		public function getFactionKills(string $faction) {
+			if($this->factionExists($faction)){
+				$dbquery = $this->db->query("SELECT kills FROM facstats WHERE faction='".$this->db->real_escape_string($faction)."'");
+				$kills = $dbquery->fetch_array()[0] ?? false;
+				$dbquery->free();
+				return $kills;
+			}
+		}
+
+		public function getFactionPower(string $faction) {
+			if($this->factionExists($faction)){
+				$dbquery = $this->db->query("SELECT power FROM facstats WHERE faction='".$this->db->real_escape_string($faction)."'");
+				$power = $dbquery->fetch_array()[0] ?? false;
+				$dbquery->free();
+				return $power;
+			}
+		}
+
 		public function isLeader(Player $player){
 			$playername = $player->getName();
 			$dbquery = $this->db->query("SELECT rank FROM factions WHERE player='".$this->db->real_escape_string($playername)."'");
@@ -83,7 +117,16 @@ class FactionSystem {
 			$playername = $player->getName();
 			$invitername = $inviter->getName();
 			if(!isset($playername, $this->invite)){
-				$this->invite = $playername;
+				$this->invite[$playername] = $this->getPlayerFaction($inviter);
+			}
+		}
+
+		/////////////////////////// REQUESTS ///////////////////////////
+
+		public function requestToJoin(Player $player, string $faction){
+			$playername = $player->getName();
+			if(!isset($playername, $this->request) && $this->factionExists($faction)){
+				$this->request[$playername] = $faction;
 			}
 		}
 	}
