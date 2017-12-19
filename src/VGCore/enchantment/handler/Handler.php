@@ -210,4 +210,11 @@ class Handler {
         }
     }
     
+    public function mechanic(Entity $entity, $tool) {
+        $e = [$damager];
+        $sound = "AnvilUse";
+        S::playSound($e, $sound);
+        
+    }
+    
 }

@@ -127,6 +127,10 @@ class CustomEnchantmentListener implements Listener {
                         $this->handler->absorb($entity, $damager);
                     }
                 }
+                $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::MECHANIC);
+                if ($enchantment !== null) {
+                    $this->handler->mechanic($damager, $damageritem);
+                }
                 foreach ($entity->getInventory()->getArmorContents() as $slot => $armor) {
                     $enchantment = $this->plugin->getEnchantment($armor, CustomEnchantment::LASTCHANCE);
                     if ($enchantment !== null) {
@@ -134,6 +138,10 @@ class CustomEnchantmentListener implements Listener {
                         if ($chance > 5) {
                             $this->handler->lastChance($entity, $event, $damager);
                         }
+                    }
+                    $enchantment = $this->plugin->getEnchantment($armor, CustomEnchantment::MECHANIC);
+                    if ($enchantment !== null) {
+                        $this->handler->mechanic($damager, $armor);
                     }
                 }
             }

@@ -9,10 +9,10 @@ use VGCore\SystemOS;
 class CustomEnchantment extends Enchantment {
     
     // tools
-    const MECHANIC = 101; // static enchant
+    const MECHANIC = 100; // static enchant
     
     // sword
-    const ABSORB = 100; // 20% chance to take life
+    const ABSORB = 101; // 20% chance to take life
     const DISABLE = 102; // 10% chance to occur
     const VOLLEY = 103; // 30% chance to occur
     
@@ -21,19 +21,19 @@ class CustomEnchantment extends Enchantment {
     
     // axe
     const WARAXE = 105; // 5% chance to do 5 hearts damage
-    const TRUEAXE = 111; // 40% chance to chop down the whole tree
+    const TRUEAXE = 106; // 40% chance to chop down the whole tree
     
     // armor
     const NULLIFY = 107; // 15% chance to nullify all damage have when player hits you
-    const MINIBLACKHOLE = 106; // 5% to explode when killed and kill anyone in radius of 3 blocks of you (whether it be enemy, or friendly)
-    const LASTCHANCE = 112; // 50% chance to occur. If you're below 2 hearts, nullify the damage done by enemy player on that hit and regenerate 5 hearts
+    const MINIBLACKHOLE = 108; // 5% to explode when killed and kill anyone in radius of 3 blocks of you (whether it be enemy, or friendly)
+    const LASTCHANCE = 109; // 50% chance to occur. If you're below 2 hearts, nullify the damage done by enemy player on that hit and regenerate 5 hearts
     
     // chestplate
-    const BOUNCEBACK = 108; // 50% to send the arrow back in the direction it came from
+    const BOUNCEBACK = 110; // 50% to send the arrow back in the direction it came from
     
     // bow
-    const ICEARROW = 109; // 10% chance to slow the enemy player upon hit of arrow
-    const POISONARROW = 110; // 10% chance to make enemy get poisen
+    const ICEARROW = 111; // 10% chance to slow the enemy player upon hit of arrow
+    const POISONARROW = 112; // 10% chance to make enemy get poisen
     
     public static $customenchantment;
     

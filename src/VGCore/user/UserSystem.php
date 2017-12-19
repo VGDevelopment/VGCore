@@ -14,7 +14,7 @@ class UserSystem {
     
     // servers - each lobby or game server will have different port
     public $lobby = [19132];
-    public $faction = [29838];
+    public $faction = [29838,];
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
@@ -29,6 +29,7 @@ class UserSystem {
 			rank FLOAT,
 			kill FLOAT,
 			death FLOAT,
+			ban INT(1)
 			);")) {
 			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
 			return;
@@ -82,7 +83,7 @@ class UserSystem {
 			$this->db->query("INSERT INTO users (username, rank) VALUES ('" . $this->db->real_escape_string($lowuser) . "', default);");
 			$this->db->query("INSERT INTO users (username, kill) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
 			$this->db->query("INSERT INTO users (username, death) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
-			$this->db->query("INSERT INTO users (username, ban) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);")
+			$this->db->query("INSERT INTO users (username, ban) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
 			return true;
 		}
 		return false;

@@ -25,7 +25,6 @@ class BanSystem {
         }
         if (!$this->db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
-			ban INT(1),
 			banid INT(5),
 			date DATE,
 			reason VARCHAR(50),
