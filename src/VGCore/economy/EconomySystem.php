@@ -3,7 +3,10 @@
 namespace VGCore\economy;
 
 use pocketmine\Player;
+// >>>
 use VGCore\SystemOS;
+
+use VGCore\network\Database as DB;
 
 class EconomySystem {
 
@@ -23,24 +26,7 @@ class EconomySystem {
 
 	public function __construct(SystemOS $plugin) {
 		$this->plugin = $plugin;
-
-		/////////////////////////// DATABASE DETAILS ///////////////////////////
-
-		$this->db = mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1"); // database has host, user, pass, and db name :)
-
-		if ($this->db->connect_error) {
-			$this->plugin->getLogger()->critical("Could not connect to MySQL server: ". $this->db->connect_error);
-			return;
-		}
-		if (!$this->db->query("CREATE TABLE IF NOT EXISTS users(
-			username VARCHAR(20) PRIMARY KEY,
-			dollars FLOAT,
-			gems FLOAT,
-			coins FLOAT
-			);")) {
-			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
-			return;
-		}
+		$this->db = DB::$db;
 	}
 
 	/////////////////////////// PLAYER ACCOUNT DETAILS ///////////////////////////

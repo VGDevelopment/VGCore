@@ -50,6 +50,8 @@ use VGCore\network\ModalFormRequestPacket;
 use VGCore\network\ModalFormResponsePacket;
 use VGCore\network\ServerSettingsRequestPacket;
 use VGCore\network\ServerSettingsResponsePacket;
+use VGCore\network\VGServer;
+use VGCore\network\Database as DB;
 
 use VGCore\command\Tutorial;
 use VGCore\command\Economy;
@@ -148,6 +150,10 @@ class SystemOS extends PluginBase {
         // Enables User Manager
         $this->getLogger()->info("Enabling the Virtual Galaxy User System.");
         $this->loadUserSystem();
+        
+        // Starts Database connection - Centralises everything. DO NOT DISABLE!
+        $this->getLogger()->info("Enabling the Virtual Galaxy Database API.");
+        $this->loadDatabaseAPI();
     }
 
     // Load Base Section
@@ -194,7 +200,11 @@ class SystemOS extends PluginBase {
     }
     
     public function loadUserSystem() {
-        $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this)
+        $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this);
+    }
+    
+    public function loadDatabaseAPI() {
+        DB::createRecord($this);
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)

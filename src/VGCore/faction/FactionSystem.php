@@ -6,6 +6,8 @@ use pocketmine\Player;
 // >>>
 use VGCore\SystemOS;
 
+use VGCore\network\Database as DB;
+
 class FactionSystem {
 	
 	public $db;
@@ -15,24 +17,7 @@ class FactionSystem {
 	
 	public function __construct(SystemOS $plugin) {
 		$this->plugin = $plugin;
-		// Database
-		$this->db = mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1"); // database has host, user, pass, and db name :)
-		if ($this->db->connect_error) {
-			$this->plugin->getLogger()->critical("Could not connect to MySQL server: " . $this->db->connect_error);
-			return;
-		}
-		if (!$this->db->query("CREATE TABLE IF NOT EXISTS factions(
-			player TEXT,
-			faction TEXT,
-			valid INT(1),
-			rank TEXT,
-			kill INT(5),
-			death INT(5),
-			power INT(5)
-			);")) {
-			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
-			return;
-		}
+		$this->db = DB::$db;
 	}
 	
 	public function factionValidate(string $faction) {

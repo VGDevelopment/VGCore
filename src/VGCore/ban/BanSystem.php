@@ -5,7 +5,10 @@ namespace VGCore\ban;
 use pocketmine\Player;
 // >>>
 use VGCore\SystemOS;
-use VGCore\user\UserSystem;
+
+use VGCore\user\UserSystem as US;
+
+use VGCore\network\Database as DB;
 
 class BanSystem {
     
@@ -17,22 +20,7 @@ class BanSystem {
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
         $this->us = new US($this->plugin);
-        // Database
-        $this->db = mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1");
-        if ($this->db->connect_error) {
-            $this->plugin->getLogger()->critical("Could not connect to MySQL server: " . $this->db->connect_error);
-			return;
-        }
-        if (!$this->db->query("CREATE TABLE IF NOT EXISTS users(
-			username VARCHAR(20) PRIMARY KEY,
-			banid INT(5),
-			date DATE,
-			reason VARCHAR(50),
-			admin VARCCHAR(20)
-			);")) {
-			$this->plugin->getLogger()->critical("Error creating table: " . $this->db->error);
-			return;
-		}
+        $this->db = DB::$db;
     }
     
     public function banUser(string $user, string $reason, string $admin, int $banid) {
