@@ -29,40 +29,6 @@ class EconomySystem {
 		$this->db = DB::$db;
 	}
 
-	/////////////////////////// PLAYER ACCOUNT DETAILS ///////////////////////////
-
-	public function accountExists(Player $player) {
-		$playername = $player->getName();
-		$this->accountValidate($playername);
-	}
-	
-	public function accountValidate(string $name) {
-		$lowername = strtolower($name);
-		$result = $this->db->query("SELECT * FROM users WHERE username='".$this->db->real_escape_string($lowername)."'");
-		return $result->num_rows > 0 ? true:false;
-	}
-
-	public function createAccount(Player $player) {
-		$playername = $player->getName();
-		$playername2 = strtolower($playername);
-
-		if (!$this->accountExists($player)) {
-			$this->db->query("INSERT INTO users (username, coins) VALUES ('".$this->db->real_escape_string($playername2)."', 5000);");
-			$this->db->query("INSERT INTO users (username, dollars) VALUES ('".$this->db->real_escape_string($playername2)."', 0);");
-			$this->db->query("INSERT INTO users (username, gems) VALUES ('".$this->db->real_escape_string($playername2)."', 10);");
-			return true;
-		}
-		return false;
-	}
-
-	public function removeAccount(Player $player) {
-		$playername = $player->getName();
-		$playername2 = strtolower($playername);
-
-		if ($this->db->query("DELETE FROM users WHERE username='".$this->db->real_escape_string($playername2)."'") === true) return true;
-		return false;
-	}
-
 	/////////////////////////// DOLLAR CURRENCY ///////////////////////////
 
 	public function getDollar(Player $player) { // shoudn't you be adding method typehints - like this should be int.

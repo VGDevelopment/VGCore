@@ -31,24 +31,6 @@ class UserSystem {
         }
     }
     
-    public function checkUser(string $user) {
-        $lowuser = strtolower($user);
-        $result = $this->db->query("SELECT * FROM users WHERE username='". $this->db->real_escape_string($lowuser) . "'");
-        return $result->num_rows > 0 ? true:false;
-    }
-    
-    public function makeUser(string $user) {
-        $lowuser = strtolower($user);
-        if (!$this->checkUser($user)) {
-			$this->db->query("INSERT INTO users (username, rank) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 'Player');");
-			$this->db->query("INSERT INTO users (username, kills) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
-			$this->db->query("INSERT INTO users (username, deaths) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
-			$this->db->query("INSERT INTO users (username, ban) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
-			return true;
-		}
-		return false;
-    }
-    
     public function addKill(string $user) {
         //
     }
