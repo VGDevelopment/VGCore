@@ -11,6 +11,7 @@ class FactionSystem {
 	public $db;
 	public $plugin;
 	public $faction;
+	public $rank = ["Leader", "Officer", "Member"];
 	
 	public function __construct(SystemOS $plugin) {
 		$this->plugin = $plugin;
@@ -41,9 +42,10 @@ class FactionSystem {
 	
 	public function createFaction(string $faction, Player $leader) {
 		$leadername = $leader->getName();
+		$roleleader = $this->role[0];
 		if (!$this->factionValidate($faction)) {
 			$this->db->query("INSERT INTO factions (player, faction) VALUES ('" . $this->db->real_escape_string($leadername) . $faction . ");");
-			$this->db->query("INSERT INTO factions (player, rank) VALUES ('" . $this->db->real_escape_string($leadername) . "', 'Leader');");
+			$this->db->query("INSERT INTO factions (player, rank) VALUES ('" . $this->db->real_escape_string($leadername) . $roleleader . ");");
 			$this->db->query("INSERT INTO factions (faction, kill) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
 			$this->db->query("INSERT INTO factions (faction, death) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
 			$this->db->query("INSERT INTO factions (faction, power) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
@@ -53,7 +55,7 @@ class FactionSystem {
 	}
 	
 	public function disableFaction(string $faction) {
-		if ($this->factionValidate($faction)) {
+		if (!$this->factionValidate($faction)) {
 			return $this->db->query("UPDATE factions SET valid = 1 WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 		} else {
 			return false;
@@ -61,7 +63,7 @@ class FactionSystem {
 	}
 	
 	public function deleteFaction(string $faction) {
-		if ($this->factionValidate($faction)) {
+		if (!$this->factionValidate($faction)) {
 			return $this->db->query("DELETE FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 		} else {
 			return false;
@@ -69,16 +71,23 @@ class FactionSystem {
 	}
 	
 	public function joinFaction(Player $player, string $faction) {
-		if ($this->factionValidate($faction)) {
+		if (!$this->factionValidate($faction)) {
 			$playername = $player->getName();
-			return $this->db->query("UPDATE factions SET faction = $faction WHERE player='" . $this->db->real_escape_string($playername) . ".");
+			$defrank = $this->rank[2];
+			$query = $this->db->query("UPDATE factions SET faction = $faction WHERE player='" . $this->db->real_escape_string($playername) . ".");
+			$query2 = $this->db->query("UPDATE factions SET rank = $defrank WHERE player='" . $this->db->real_escape_string($playername) . ".");
+			if ($query === true && $query2 === true) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
 	}
 	
 	public function getFactionStat(string $faction) {
-		if ($this->factionValidate($faction)) {
+		if (!$this->factionValidate($faction)) {
 			$stat = [];
 			$dbquery = $this->db->query("SELECT power FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 			$stat[0] = $dbquery->fetch_array()[0] ?? false;

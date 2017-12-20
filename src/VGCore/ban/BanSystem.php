@@ -38,7 +38,7 @@ class BanSystem {
     public function banUser(string $user, string $reason, string $admin, int $banid) {
         $lowuser = strtolower($user);
         $check = $this->us->checkUser($user);
-        if ($check === true) {
+        if ($check === false) {
             $this->db->query("UPDATE users SET ban = 1 WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
             $this->db->query("UPDATE users SET banid = $banid WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
             $this->db->query("UPDATE users SET reason = $reason WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
@@ -51,8 +51,8 @@ class BanSystem {
     
     public function isBan(string $user) {
         $lowuser = strtolower($user);
-        $check = $this->checkUser($user);
-        if ($check === true) {
+        $check = $this->us->checkUser($user);
+        if ($check === false) {
             $query = $this->db->query("SELECT ban FROM users WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
             $bancheck = $query->fetch_array()[0] ?? false;
             if ($bancheck === 1) {
@@ -68,7 +68,7 @@ class BanSystem {
     public function getBanID(string $user) {
         $lowuser = strtolower($user);
         $check = $this->checkUser($user);
-        if ($check === true) {
+        if ($check === false) {
             $bancheck = $this->isBan($user);
             if ($bancheck === true) {
                 $query = $this->db->query("SELECT banid FROM users WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
@@ -84,7 +84,7 @@ class BanSystem {
     public function getBanReason(string $user) {
         $lowuser = strtolower($user);
         $check = $this->checkUser($user);
-        if ($check === true) {
+        if ($check === false) {
             $bancheck = $this->isBan($user);
             if ($bancheck === true) {
                 $query = $this->db->query("SELECT reason FROM users WHERE username='" . $this->db->real_escape_string($lowuser) . "'");

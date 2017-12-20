@@ -210,11 +210,57 @@ class Handler {
         }
     }
     
-    public function mechanic(Entity $entity, $tool) {
-        $e = [$damager];
+    public function mechanic(Entity $entity, Item $tool) {
+        $e = [$entity];
         $sound = "AnvilUse";
         S::playSound($e, $sound);
-        
+        $newdamage = $tool->getDamage() - 1;
+        if ($newdamage < 0) {
+            $item->setDamage(0);
+        } else {
+            $item->setDamage($newdamage);
+        }
+    }
+    
+    public function miniBlackHole(Entity $entity) {
+        $e = [$entity];
+        $sound = "EnderDragon";
+        S::playSound($e, $sound);
+        $random = new Random();
+        $level = $entity->getLevel();
+        $explosionentity = "PrimedTNT";
+        $entx = $entity->x;
+        $enty = $entity->y;
+        $entz = $entity->z;
+        $r = $random->nextFloat() * 1.5 - 1;
+        $r2 = $random->nextFloat() * 1.5;
+        $dtagarray = [
+            new DoubleTag("", $entx), 
+            new DoubleTag("", $enty), 
+            new DoubleTag("", $entz)
+        ];
+        $dtagarray2 = [
+            new DoubleTag("", $r), 
+            new DoubleTag("", $r2), 
+            new DoubleTag("", $r)
+        ];
+        $ftagarray = [
+            new FloatTag("", 0), 
+            new FloatTag("", 0)
+        ];
+        $ltag = new ListTag("Pos", $dtagarray);
+        $ltag2 = new ListTag("Motion", $dtagarray2);
+        $ltag3 = new ListTag("Rotation", $ftagarray);
+        $btag = new ByteTag("Fuse", 40);
+        $ltagarray = [
+            "Pos" => $ltag, 
+            "Motion" => $ltag2, 
+            "Rotation" => $ltag3, 
+            "Fuse" => $btag
+        ];
+        $ctag = new CompoundTag("", $ltagarray);
+        $tnt = Entity::createEntity($explosionentity, $level, $ctag);
+        $tnt->spawnToAll();
     }
     
 }

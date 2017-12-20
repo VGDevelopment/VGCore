@@ -71,7 +71,7 @@ class CustomEnchantmentListener implements Listener {
         $block = $event->getBlock();
         $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::TRUEAXE);
         if ($enchantment !== null) {
-            $chance = mt_rand(1, 10); // no need of doing mt_rand(1, 100) as ratio is same and a decimal value isn't required.
+            $chance = mt_rand(0, 10); // no need of doing mt_rand(1, 100) as ratio is same and a decimal value isn't required.
             if ($chance > 6) { // should be > 6 as that would be 7, 8, 9, and 10. 4 different numbers.
                 if ($block->getId() == Block::WOOD || $block->getId() == Block::WOOD2) {
                     if (!isset($this->plugin->using[$player->getLowerCaseName()]) || $this->plugin->using[$player->getLowerCaseName()] < time()) {
@@ -84,7 +84,7 @@ class CustomEnchantmentListener implements Listener {
         }
         $enchantment = $this->plugin->getEnchantment($item, CustomEnchantment::TRUEMINER);
         if ($enchantment !== null) {
-            $chance = mt_rand(1, 100);
+            $chance = mt_rand(0, 100);
             if ($chance > 95) {
                 $this->handler->trueMiner($event, $player);
             }
@@ -100,21 +100,21 @@ class CustomEnchantmentListener implements Listener {
                 $entityitem = $entity->getInventory()->getItemInHand();
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::WARAXE);
                 if ($enchantment !== null) {
-                    $chance = mt_rand(1, 100);
+                    $chance = mt_rand(0, 100);
                     if ($chance > 95) {
                         $this->handler->warAxe($entity, $damager);
                     }
                 }
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::DISABLE);
                 if ($enchantment !== null) {
-                    $chance = mt_rand(1, 10);
+                    $chance = mt_rand(0, 10);
                     if ($chance > 9) {
                         $this->handler->disable($entity, $entityitem, $damager);
                     }
                 }
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::VOLLEY);
                 if ($enchantment !== null) {
-                    $chance = mt_rand(1, 10);
+                    $chance = mt_rand(0, 10);
                     if ($chance > 7) {
                         $level = $entity->getLevel();
                         $this->handler->volley($entity, $damager);
@@ -122,7 +122,7 @@ class CustomEnchantmentListener implements Listener {
                 }
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::ABSORB);
                 if ($enchantment !== null) {
-                    $chance = mt_rand(1, 10);
+                    $chance = mt_rand(0, 10);
                     if ($chance > 8) {
                         $this->handler->absorb($entity, $damager);
                     }
@@ -134,15 +134,25 @@ class CustomEnchantmentListener implements Listener {
                 foreach ($entity->getInventory()->getArmorContents() as $slot => $armor) {
                     $enchantment = $this->plugin->getEnchantment($armor, CustomEnchantment::LASTCHANCE);
                     if ($enchantment !== null) {
-                        $chance = mt_rand(1, 10);
+                        $chance = mt_rand(0, 10);
                         if ($chance > 5) {
                             $this->handler->lastChance($entity, $event, $damager);
                         }
                     }
                     $enchantment = $this->plugin->getEnchantment($armor, CustomEnchantment::MECHANIC);
                     if ($enchantment !== null) {
-                        $this->handler->mechanic($damager, $armor);
+                        $this->handler->mechanic($entity, $armor);
                     }
+                    $enchantment = $this->plugin->getEnchantment($armor, CustomEnchantment::MINIBLACKHOLE);
+                    if ($enchantment !== null) {
+                        if ($event->getDamage() >= $entity->getHealth()) {
+                            $chance = mt_rand(0, 10);
+                            if ($chance > 5) {
+                                $this->handler->miniBlackHole($entity);
+                            }
+                        }
+                    }
+                    
                 }
             }
         } else if ($event instanceof EntityDamageByChildEntityEvent) {
@@ -153,14 +163,14 @@ class CustomEnchantmentListener implements Listener {
                 $damageritem = $damager->getInventory()->getItemInHand();
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::ICEARROW);
                 if ($enchantment !== null) {
-                    $chance = mt_rand(1, 10);
+                    $chance = mt_rand(0, 10);
                     if ($chance > 9) {
                         $this->handler->iceArrow($entity, $damager);
                     }
                 }
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::POISONARROW);
                 if ($enchantment !== null) {
-                    $chance = mt_rand(1, 10);
+                    $chance = mt_rand(0, 10);
                     if ($chance > 9) {
                         $this->handler->poisonArrow($entity, $damager);
                     }

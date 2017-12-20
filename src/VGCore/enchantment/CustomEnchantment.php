@@ -25,7 +25,7 @@ class CustomEnchantment extends Enchantment {
     
     // armor
     const NULLIFY = 107; // 15% chance to nullify all damage have when player hits you
-    const MINIBLACKHOLE = 108; // 5% to explode when killed and kill anyone in radius of 3 blocks of you (whether it be enemy, or friendly)
+    const MINIBLACKHOLE = 108; // 50% to spawn a TNT and explode damaging players (whether it be enemy, or friendly)
     const LASTCHANCE = 109; // 50% chance to occur. If you're below 2 hearts, nullify the damage done by enemy player on that hit and regenerate 5 hearts
     
     // chestplate

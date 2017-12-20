@@ -12,9 +12,11 @@ class UserSystem {
     
     public $plugin;
     
+    public static $rank = ["Lunar", "Warrior", "Giant", "Dwarf"];
+    
     // servers - each lobby or game server will have different port
     public $lobby = [19132];
-    public $faction = [29838,];
+    public $faction = [29838];
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
@@ -63,14 +65,6 @@ class UserSystem {
         return $result->num_rows > 0 ? true:false;
     }
     
-    public function makeRank(string $rank) {
-        if(!$this->checkExists($rank)) {
-            $this->db->query("INSERT INTO users (rank) VALUES ('". $this->db->real_escape_string($rank) . "'");
-            return true;
-        }
-        return false;
-    }
-    
     public function checkUser(string $user) {
         $lowuser = strtolower($user);
         $result = $this->db->query("SELECT * FROM users WHERE username='". $this->db->real_escape_string($lowuser) . "'");
@@ -79,7 +73,7 @@ class UserSystem {
     
     public function makeUser(string $user) {
         $lowuser = strtolower($user);
-        if(!$this->checkUser($user)) {
+        if (!$this->checkUser($user)) {
 			$this->db->query("INSERT INTO users (username, rank) VALUES ('" . $this->db->real_escape_string($lowuser) . "', default);");
 			$this->db->query("INSERT INTO users (username, kill) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
 			$this->db->query("INSERT INTO users (username, death) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
@@ -91,6 +85,11 @@ class UserSystem {
     
     public function addKill(string $user) {
         //
+    }
+    
+    public function setRank(string $user) {
+        $lowuser = strtolower($user);
+        if (!this->checkUser)
     }
     
 }
