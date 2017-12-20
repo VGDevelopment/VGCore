@@ -12,7 +12,7 @@ class UserSystem {
     
     public $plugin;
     
-    public static $rank = ["Lunar", "Warrior", "Giant", "Dwarf"];
+    public static $rank = ["Lunar", "Warrior", "Giant", "Dwarf", "Discord", "Player"];
     
     // servers - each lobby or game server will have different port
     public $lobby = [19132];
@@ -28,7 +28,7 @@ class UserSystem {
         }
         if (!$this->db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
-			rank FLOAT,
+			rank TEXT,
 			kill FLOAT,
 			death FLOAT,
 			ban INT(1)
@@ -60,9 +60,14 @@ class UserSystem {
         }
     }
     
-    public function checkRank(string $rank) {
-        $result = $this->db->query("SELECT * FROM users WHERE rank='" . $this->db->real_escape_string($rank) . "'");
-        return $result->num_rows > 0 ? true:false;
+    public function getRank(string $username) {
+        if ($this->checkUser($username)) {
+            $lowuser = strtolower($username);
+            $dbquery = $this->db->query("SELECT rank FROM users WHERE username='" . $this->db->real_escape_string($username) . "'");
+            return $dbquery->fetch_array()[0] ?? false;;
+        } else {
+            return false;
+        }
     }
     
     public function checkUser(string $user) {
@@ -74,7 +79,7 @@ class UserSystem {
     public function makeUser(string $user) {
         $lowuser = strtolower($user);
         if (!$this->checkUser($user)) {
-			$this->db->query("INSERT INTO users (username, rank) VALUES ('" . $this->db->real_escape_string($lowuser) . "', default);");
+			$this->db->query("INSERT INTO users (username, rank) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 'Player');");
 			$this->db->query("INSERT INTO users (username, kill) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
 			$this->db->query("INSERT INTO users (username, death) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
 			$this->db->query("INSERT INTO users (username, ban) VALUES ('" . $this->db->real_escape_string($lowuser) . "', 0);");
@@ -87,9 +92,14 @@ class UserSystem {
         //
     }
     
-    public function setRank(string $user) {
+    public function setRank(string $user, string $rank) {
         $lowuser = strtolower($user);
-        if (!this->checkUser)
+        $check = $this->checkUser($user);
+        if ($check === true && in_array($rank, self::rank)) {
+            return $this->db->query("UPDATE users SET rank = $rank WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
+        } else {
+            return false;
+        }
     }
     
 }

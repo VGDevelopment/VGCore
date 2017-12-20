@@ -55,7 +55,7 @@ class FactionSystem {
 	}
 	
 	public function disableFaction(string $faction) {
-		if (!$this->factionValidate($faction)) {
+		if ($this->factionValidate($faction)) {
 			return $this->db->query("UPDATE factions SET valid = 1 WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 		} else {
 			return false;
@@ -63,7 +63,7 @@ class FactionSystem {
 	}
 	
 	public function deleteFaction(string $faction) {
-		if (!$this->factionValidate($faction)) {
+		if ($this->factionValidate($faction)) {
 			return $this->db->query("DELETE FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 		} else {
 			return false;
@@ -71,7 +71,7 @@ class FactionSystem {
 	}
 	
 	public function joinFaction(Player $player, string $faction) {
-		if (!$this->factionValidate($faction)) {
+		if ($this->factionValidate($faction)) {
 			$playername = $player->getName();
 			$defrank = $this->rank[2];
 			$query = $this->db->query("UPDATE factions SET faction = $faction WHERE player='" . $this->db->real_escape_string($playername) . ".");
@@ -87,7 +87,7 @@ class FactionSystem {
 	}
 	
 	public function getFactionStat(string $faction) {
-		if (!$this->factionValidate($faction)) {
+		if ($this->factionValidate($faction)) {
 			$stat = [];
 			$dbquery = $this->db->query("SELECT power FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 			$stat[0] = $dbquery->fetch_array()[0] ?? false;
