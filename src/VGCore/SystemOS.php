@@ -68,6 +68,8 @@ use VGCore\user\UserSystem;
 
 use VGCore\sound\Sound;
 
+use VGCore\lobby\LobbyLoader;
+
 class SystemOS extends PluginBase {
 
     // Base File for arranging everything in good order. This is how every good core should be done.
@@ -154,9 +156,21 @@ class SystemOS extends PluginBase {
         // Starts Database connection - Centralises everything. DO NOT DISABLE!
         $this->getLogger()->info("Enabling the Virtual Galaxy Database API.");
         $this->loadDatabaseAPI();
+        
+        // Loads all Lobby Features
+        $this->getLogger()->info("Enabling the VirtualGalaxy Lobby System.");
+        $this->loadLobby();
+    }
+    
+    public function onDisable() {
+        $this->getLogger()->info("Shutting down VGCore SystemOS and it's dependancies. Disconnecting from VG API.");
+        
+        // unLoads the Lobby Features
+        $this->getLogger()->info("Disabling the VirtualGalaxy Lobby System.");
+        $this->unloadLobby();
     }
 
-    // Load Base Section
+    // Load & Unload Base Section
 
     public function loadUI() {
         $this->getServer()->getPluginManager()->registerEvents(new GUIListener($this), $this);
@@ -205,6 +219,14 @@ class SystemOS extends PluginBase {
     
     public function loadDatabaseAPI() {
         DB::createRecord($this);
+    }
+    
+    public function loadLobby() {
+        LobbyLoader::start($this);
+    }
+    
+    public function unloadLobby() {
+        LobbyLoader::stop($this);
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)
