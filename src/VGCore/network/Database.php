@@ -45,7 +45,7 @@ class Database {
 		}
     }
     
-    public static function checkAccount(string $username) {
+    public static function checkUser(string $username) {
         $lowusername = strtolower($username);
 		$query = self::$db->query("SELECT * FROM users WHERE username='" . self::$db->real_escape_string($lowusername) . "'");
 		return $query->num_rows > 0 ? true:false;
@@ -72,14 +72,17 @@ class Database {
         }
     }
     
-    public static function deleteAccount(string $user) {
-        $lowuser = strtolower($user);
-        $query = self::$db->query("DELETE FROM users WHERE username='" . self::$db->real_escape_string($lowuser) . "'");
-        if ($query === true) {
-            return true;
-        } else {
-            return false;
+    public static function deleteUser(string $user) {
+        if ($check === true) {
+            $lowuser = strtolower($user);
+            $query = self::$db->query("DELETE FROM users WHERE username='" . self::$db->real_escape_string($lowuser) . "'");
+            if ($query === true) {
+                return true;
+            } else {
+                return false;
+            }
         }
+        
     }
     
 }

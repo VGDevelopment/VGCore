@@ -24,6 +24,7 @@ use VGCore\listener\event\UIDataReceiveEvent;
 use VGCore\network\ModalFormResponsePacket;
 use VGCore\network\ServerSettingsRequestPacket;
 use VGCore\network\ServerSettingsResponsePacket;
+use VGCore\network\Database as DB;
 
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
@@ -91,7 +92,6 @@ class GUIListener implements Listener {
 		$economy = new EconomySystem($event->getPlugin());
 		$player = $event->getPlayer();
 		$p = $event->getPlugin();
-		$accountcheck = $economy->createAccount($player);
 		$coin = $economy->getCoin($player);
 		// Run-time UI Form (checkCoinWindowUI) @var SystemOS::$uis [] int array for ID
 		$ui = new CustomForm('§2Your §6Coins');
@@ -148,7 +148,7 @@ class GUIListener implements Listener {
 				$economy = new EconomySystem($event->getPlugin());
 				$player = $event->getPlayer();
 				$sender = $player->getName();
-				$valid = $economy->accountValidate($sendto);
+				$valid = DB::checkUser($sendto);
 				if ($valid === true) {
 					$send = $economy->sendCoin($sender, $sendto, $amount);
 					if ($send === true) {

@@ -7,9 +7,14 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 // >>>
 use VGCore\SystemOS;
+
 use VGCore\user\UserSystem as US;
+
 use VGCore\ban\BanSystem as BS;
+
 use VGCore\economy\EconomySystem as ES;
+
+use VGCore\network\Database as DB;
 
 class USListener implements Listener {
     
@@ -28,8 +33,7 @@ class USListener implements Listener {
     public function onJoin(PlayerJoinEvent $event) {
         $player = $event->getPlayer();
         $name = $player->getName();
-        $this->us->makeUser($name);
-        $this->es->createAccount($player);
+        DB::createUser($name);
         $bancheck = $this->bs->isBan($name);
         if ($bancheck === true) {
             $banid = $this->bs->getBanID($name);
