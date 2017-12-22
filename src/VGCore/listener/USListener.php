@@ -16,6 +16,8 @@ use VGCore\economy\EconomySystem as ES;
 
 use VGCore\network\Database as DB;
 
+use VGCore\lobby\crate\Crate;
+
 class USListener implements Listener {
     
     public $plugin;
@@ -39,6 +41,7 @@ class USListener implements Listener {
             $banid = $this->bs->getBanID($name);
             $player->close("", "§cYou are banned from the §dVGNetwork§c. Appeal by emailing §asupport@vgpe.me§c - BAN ID : §e#" . $banid);
         }
+        Crate::setTitle($player);
     }
     
 }

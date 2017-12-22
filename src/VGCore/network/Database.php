@@ -50,7 +50,7 @@ class Database {
     public static function checkUser(string $username) {
     	$db = self::getDatabase();
         $lowusername = strtolower($username);
-		$query = self::$db->query("SELECT * FROM users WHERE username='" . self::$db->real_escape_string($lowusername) . "'");
+		$query = $db->query("SELECT * FROM users WHERE username='" . $db->real_escape_string($lowusername) . "'");
 		return $query->num_rows > 0 ? true:false;
     }
     
@@ -59,13 +59,13 @@ class Database {
         if ($check === false) {
         	$db = self::getDatabase();
             $lowuser = strtolower($user);
-            $q = $db->query("INSERT INTO users (username, rank) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 'Player');");
-			$q2 = $db->query("INSERT INTO users (username, kills) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q3 = $db->query("INSERT INTO users (username, deaths) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q4 = $db->query("INSERT INTO users (username, ban) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q5 = $db->query("INSERT INTO users (username, coins) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 5000);");
-			$q6 = $db->query("INSERT INTO users (username, dollars) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q7 = $db->query("INSERT INTO users (username, gems) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 10);");
+            $q = $db->query("INSERT INTO users (username, rank) VALUES ('" . $db->real_escape_string($lowuser) . "', 'Player');");
+			$q2 = $db->query("INSERT INTO users (username, kills) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
+			$q3 = $db->query("INSERT INTO users (username, deaths) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
+			$q4 = $db->query("INSERT INTO users (username, ban) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
+			$q5 = $db->query("INSERT INTO users (username, coins) VALUES ('" . $db->real_escape_string($lowuser) . "', 5000);");
+			$q6 = $db->query("INSERT INTO users (username, dollars) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
+			$q7 = $db->query("INSERT INTO users (username, gems) VALUES ('" . $db->real_escape_string($lowuser) . "', 10);");
 			if ($q === true || $q2 === true || $q3 === true || $q4 === true || $q5 === true || $q6 === true || $q7 === true) {
 			    return true;
 			} else {
@@ -80,7 +80,7 @@ class Database {
         if ($check === true) {
         	$db = self::getDatabase();
             $lowuser = strtolower($user);
-            $query = $db->query("DELETE FROM users WHERE username='" . self::$db->real_escape_string($lowuser) . "'");
+            $query = $db->query("DELETE FROM users WHERE username='" . $db->real_escape_string($lowuser) . "'");
             if ($query === true) {
                 return true;
             } else {

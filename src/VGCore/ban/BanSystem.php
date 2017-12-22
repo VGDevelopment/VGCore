@@ -42,8 +42,7 @@ class BanSystem {
         $check = DB::checkUser($user);
         if ($check === true) {
             $query = $this->db->query("SELECT ban FROM users WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
-            $bancheck = $query->fetch_array()[0] ?? false;
-            if ($bancheck === 1) {
+            if ($query === 1) {
                 return true;
             } else {
                 return false;

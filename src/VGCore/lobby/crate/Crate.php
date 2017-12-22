@@ -45,7 +45,6 @@ class Crate {
                 $level->setBlock($pos, $crateblock);
             }
             self::setAir($level);
-            self::setTitle($level);
         }
     }
     
@@ -63,12 +62,14 @@ class Crate {
         }
     }
     
-    private static function setTitle(Level $level, $text = "§k-- §r§e§lCRATE §k--") {
+    private static function setTitle(Player $player, $title = "§k-- §r§e§lCRATE §k--", $text = "") {
         $cratetext = [self::$crate1text, self::$crate2text, self::$crate3text];
         foreach ($cratetext as $ct) {
+            $level = $player->getLevel();
             $pos = new Vector3($ct[0], $ct[1], $ct[2]);
-            $floatingent = new FTP($pos, $text);
-            $level->addParticle($floatingent);
+            $floatingent = new FTP($pos, $text, $title);
+            $floatingent->setInvisible(false);
+            $level->addParticle($floatingent, [$player]);
         }
     }
     

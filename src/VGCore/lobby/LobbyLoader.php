@@ -5,15 +5,17 @@ namespace VGCore\lobby;
 use VGCore\SystemOS;
 
 use VGCore\lobby\crate\Crate;
+use VGCore\lobby\npc\NPCSystem;
 
 class LobbyLoader {
     
     public static function start(SystemOS $plugin) {
-        Crate::turnOn($plugin);
+        $npcsystem = new NPCSystem($plugin);
+        $npcsystem->start();
     }
     
     public static function stop(SystemOS $plugin) {
-        Crate::turnOff($plugin);
+        $plugin->removeEntities();
     }
     
 }
