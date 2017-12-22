@@ -158,7 +158,7 @@ class SystemOS extends PluginBase {
         $this->loadDatabaseAPI();
         
         // Loads all Lobby Features
-        $this->getLogger()->info("Enabling the VirtualGalaxy Lobby System.");
+        $this->getLogger()->info("Enabling the Virtual Galaxy Lobby System.");
         $this->loadLobby();
     }
     

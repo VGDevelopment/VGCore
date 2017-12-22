@@ -6,15 +6,13 @@ use VGCore\SystemOS;
 
 class Database {
     
-    public static $db;
-    
     public static function createRecord(SystemOS $plugin) {
-        self::$db = mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1");
-        if (self::$db->connect_error) {
+    	$db = self::getDatabase();
+        if ($db->connect_error) {
 			$plugin->getLogger()->critical("Could not connect to MySQL server: " . self::$db->connect_error);
 			return;
 		}
-		if (!self::$db->query("CREATE TABLE IF NOT EXISTS users(
+		if (!$db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
 			dollars FLOAT,
 			gems FLOAT,
@@ -28,40 +26,46 @@ class Database {
 			reason VARCHAR(50),
 			admin VARCHAR(20)
 			);")) {
-			$plugin->getLogger()->critical("Error creating 'users' table: " . self::$db->error);
+			$plugin->getLogger()->critical("Error creating 'users' table: " . $db->error);
 			return;
 		}
-		if (!self::$db->query("CREATE TABLE IF NOT EXISTS factions(
+		if (!$db->query("CREATE TABLE IF NOT EXISTS factions(
 			player TEXT,
 			faction TEXT,
 			valid INT(1),
 			rank TEXT,
-			kill INT(5),
-			death INT(5),
+			kills INT(5),
+			deaths INT(5),
 			power INT(5)
 			);")) {
-			$plugin->getLogger()->critical("Error creating 'factions' table: " . self::$db->error);
+			$plugin->getLogger()->critical("Error creating 'factions' table: " . $db->error);
 			return;
 		}
     }
     
+    public static function getDatabase() {
+		return mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1");
+    }
+    
     public static function checkUser(string $username) {
+    	$db = self::getDatabase();
         $lowusername = strtolower($username);
 		$query = self::$db->query("SELECT * FROM users WHERE username='" . self::$db->real_escape_string($lowusername) . "'");
 		return $query->num_rows > 0 ? true:false;
     }
     
     public static function createUser(string $user) {
-        $check = self::checkAccount($user);
+		$check = self::checkUser($user);
         if ($check === false) {
+        	$db = self::getDatabase();
             $lowuser = strtolower($user);
-            $q = self::$db->query("INSERT INTO users (username, rank) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 'Player');");
-			$q2 = self::$db->query("INSERT INTO users (username, kills) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q3 = self::$db->query("INSERT INTO users (username, deaths) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q4 = self::$db->query("INSERT INTO users (username, ban) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q5 = self::$db->query("INSERT INTO users (username, coins) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 5000);");
-			$q6 = self::$db->query("INSERT INTO users (username, dollars) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
-			$q7 = self::$db->query("INSERT INTO users (username, gems) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 10);");
+            $q = $db->query("INSERT INTO users (username, rank) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 'Player');");
+			$q2 = $db->query("INSERT INTO users (username, kills) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
+			$q3 = $db->query("INSERT INTO users (username, deaths) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
+			$q4 = $db->query("INSERT INTO users (username, ban) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
+			$q5 = $db->query("INSERT INTO users (username, coins) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 5000);");
+			$q6 = $db->query("INSERT INTO users (username, dollars) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 0);");
+			$q7 = $db->query("INSERT INTO users (username, gems) VALUES ('" . self::$db->real_escape_string($lowuser) . "', 10);");
 			if ($q === true || $q2 === true || $q3 === true || $q4 === true || $q5 === true || $q6 === true || $q7 === true) {
 			    return true;
 			} else {
@@ -74,8 +78,9 @@ class Database {
     
     public static function deleteUser(string $user) {
         if ($check === true) {
+        	$db = self::getDatabase();
             $lowuser = strtolower($user);
-            $query = self::$db->query("DELETE FROM users WHERE username='" . self::$db->real_escape_string($lowuser) . "'");
+            $query = $db->query("DELETE FROM users WHERE username='" . self::$db->real_escape_string($lowuser) . "'");
             if ($query === true) {
                 return true;
             } else {

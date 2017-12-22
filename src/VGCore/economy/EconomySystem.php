@@ -26,7 +26,7 @@ class EconomySystem {
 
 	public function __construct(SystemOS $plugin) {
 		$this->plugin = $plugin;
-		$this->db = DB::$db;
+		$this->db = DB::getDatabase();
 	}
 
 	/////////////////////////// DOLLAR CURRENCY ///////////////////////////
@@ -210,10 +210,5 @@ class EconomySystem {
 		$conv = $amount * $this->cointogem;
 		return $this->db->query("UPDATE users SET gems = gems + $conv WHERE username='".$this->db->real_escape_string($playername2)."'");
 	}
-
-	/////////////////////////// DATABASE CLOSE ///////////////////////////
-
-	public function close(){
-	 	$this->db->close();
-	}
+	
 }

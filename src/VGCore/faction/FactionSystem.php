@@ -17,7 +17,7 @@ class FactionSystem {
 	
 	public function __construct(SystemOS $plugin) {
 		$this->plugin = $plugin;
-		$this->db = DB::$db;
+		$this->db = DB::getDatabase();
 	}
 	
 	public function factionValidate(string $faction) {
@@ -31,8 +31,8 @@ class FactionSystem {
 		if (!$this->factionValidate($faction)) {
 			$this->db->query("INSERT INTO factions (player, faction) VALUES ('" . $this->db->real_escape_string($leadername) . $faction . ");");
 			$this->db->query("INSERT INTO factions (player, rank) VALUES ('" . $this->db->real_escape_string($leadername) . $roleleader . ");");
-			$this->db->query("INSERT INTO factions (faction, kill) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
-			$this->db->query("INSERT INTO factions (faction, death) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
+			$this->db->query("INSERT INTO factions (faction, kills) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
+			$this->db->query("INSERT INTO factions (faction, deaths) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
 			$this->db->query("INSERT INTO factions (faction, power) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
 			$this->db->query("INSERT INTO factions (faction, valid) VALUES ('" . $this->db->real_escape_string($faction) . "', 0);");
 		}
@@ -77,10 +77,10 @@ class FactionSystem {
 			$dbquery = $this->db->query("SELECT power FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 			$stat[0] = $dbquery->fetch_array()[0] ?? false;
 			$dbquery->free();
-			$dbquery = $this->db->query("SELECT kill FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
+			$dbquery = $this->db->query("SELECT kills FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 			$stat[1] = $dbquery->fetch_array()[0] ?? false;
 			$dbquery->free();
-			$dbquery = $this->db->query("SELECT death FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
+			$dbquery = $this->db->query("SELECT deaths FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 			$stat[2] = $dbquery->fetch_array()[0] ?? false;
 			$dbquery->free();
 			return $stat; // returns array of stats rather than just one at a time. One issue would be time - however, with fast server connections, there shouldn't be latancy.
