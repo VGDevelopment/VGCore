@@ -9,22 +9,22 @@ use VGCore\SystemOS;
 use VGCore\network\Database as DB;
 
 class FactionSystem {
-	
+
 	public $db;
 	public $plugin;
 	public $faction;
 	public $rank = ["Leader", "Officer", "Member"];
-	
+
 	public function __construct(SystemOS $plugin) {
 		$this->plugin = $plugin;
 		$this->db = DB::getDatabase();
 	}
-	
+
 	public function factionValidate(string $faction) {
 		$result = $this->db->query("SELECT * FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
 		return $result->num_rows > 0 ? true:false;
 	}
-	
+
 	public function createFaction(string $faction, Player $leader) {
 		$leadername = $leader->getName();
 		$roleleader = $this->role[0];
@@ -38,7 +38,7 @@ class FactionSystem {
 		}
 		return false;
 	}
-	
+
 	public function disableFaction(string $faction) {
 		if ($this->factionValidate($faction)) {
 			return $this->db->query("UPDATE factions SET valid = 1 WHERE faction='" . $this->db->real_escape_string($faction) . "'");
@@ -46,7 +46,7 @@ class FactionSystem {
 			return false;
 		}
 	}
-	
+
 	public function deleteFaction(string $faction) {
 		if ($this->factionValidate($faction)) {
 			return $this->db->query("DELETE FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
@@ -54,7 +54,25 @@ class FactionSystem {
 			return false;
 		}
 	}
-	
+
+	public function invitePlayer(Player $player, string $faction){
+		if($this->factionValidate($faction)){
+			$playername = $player->getName();
+			$this->db->query("INSERT INTO factions (player, invites) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+		} else {
+			return false;
+		}
+	}
+
+	public function requestPlayer(Player $player, string $faction){
+		if($this->factionValidate($faction)){
+			$playername = $player->getName();
+			$this->db->query("INSERT INTO factions (player, requests) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+		} else {
+			returrn false;
+		}
+	}
+
 	public function joinFaction(Player $player, string $faction) {
 		if ($this->factionValidate($faction)) {
 			$playername = $player->getName();
@@ -70,7 +88,7 @@ class FactionSystem {
 			return false;
 		}
 	}
-	
+
 	public function getFactionStat(string $faction) {
 		if ($this->factionValidate($faction)) {
 			$stat = [];
@@ -88,5 +106,5 @@ class FactionSystem {
 			return false;
 		}
 	}
-	
+
 }
