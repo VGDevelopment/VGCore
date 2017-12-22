@@ -21,13 +21,13 @@ use VGCore\network\VGServer;
 class Crate {
     
     private static $crate1 = [142, 7, 109];
-    private static $air1 = [142, 8, 109];
+    private static $air1 = [141, 7, 109];
     
     private static $crate2 = [137, 7, 106];
-    private static $air2 = [137, 8, 106];
+    private static $air2 = [136, 7, 106];
     
     private static $crate3 = [132, 7, 109];
-    private static $air3 = [132, 8, 109];
+    private static $air3 = [131, 7, 109];
     
     private static $crate1text = [142, 10, 109];
     private static $crate2text = [137, 10, 107];

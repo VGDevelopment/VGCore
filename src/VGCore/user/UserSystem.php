@@ -18,7 +18,7 @@ class UserSystem {
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
-        $this->db = DB::$db;
+        $this->db = DB::getDatabase();
     }
     
     public function getRank(string $username) {
