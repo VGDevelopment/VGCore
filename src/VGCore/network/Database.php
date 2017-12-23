@@ -5,7 +5,7 @@ namespace VGCore\network;
 use VGCore\SystemOS;
 
 class Database {
-    
+
     public static function createRecord(SystemOS $plugin) {
     	$db = self::getDatabase();
         if ($db->connect_error) {
@@ -31,6 +31,8 @@ class Database {
 		}
 		if (!$db->query("CREATE TABLE IF NOT EXISTS factions(
 			player TEXT,
+      invites TEXT,
+      requests TEXT,
 			faction TEXT,
 			valid INT(1),
 			rank TEXT,
@@ -42,18 +44,18 @@ class Database {
 			return;
 		}
     }
-    
+
     public static function getDatabase() {
 		return mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1");
     }
-    
+
     public static function checkUser(string $username) {
     	$db = self::getDatabase();
         $lowusername = strtolower($username);
 		$query = $db->query("SELECT * FROM users WHERE username='" . $db->real_escape_string($lowusername) . "'");
 		return $query->num_rows > 0 ? true:false;
     }
-    
+
     public static function createUser(string $user) {
 		$check = self::checkUser($user);
         if ($check === false) {
@@ -75,7 +77,7 @@ class Database {
             return false;
         }
     }
-    
+
     public static function deleteUser(string $user) {
         if ($check === true) {
         	$db = self::getDatabase();
@@ -87,7 +89,7 @@ class Database {
                 return false;
             }
         }
-        
+
     }
-    
+
 }
