@@ -1,5 +1,7 @@
 <?php
 
+namespace VGCore\lobby\npc;
+
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -62,7 +64,7 @@ class NPCSystem {
             $ftag2
         ];
         $skin = "SantaClaus";
-        $skindata = $this->skin($skin);
+        $skindata = $this->skinData($skin);
         $stag = new StringTag("Data", $skindata);
         $stagarray = [
             "Data" => $stag
@@ -87,22 +89,22 @@ class NPCSystem {
     }
     
     public function skinData(string $skin) {
-        $path = "/skin/" . $name;
+        $path = "/skin/" . $skin;
         $image = imagecreatefrompng($path);
         $imagesize = getimagesize($path)[1];
         $int = (int)$imagesize;
         for ($y = 0; $y < $int; $y++) {
             for ($x = 0; $x < 64; $x++) {
-                $argb = imagecolorat($image, $x, $y);
-                $eq1 = $argb >> 24;
+                $icat = imagecolorat($image, $x, $y);
+                $eq1 = $icat >> 24;
                 $inteq1 = (int)$eq1;
                 $eq2 = (~$inteq1) << 1;
 				$a = $eq2 & 0xff;
-				$eq3 = $argb >> 16;
+				$eq3 = $icat >> 16;
 				$r = $eq4 & 0xff;
-				$eq4 = $argb >> 8;
+				$eq4 = $icat >> 8;
 				$g = $eq4 & 0xff;
-				$b = $argb & 0xff;
+				$b = $icat & 0xff;
 				$skinbyte = chr($r) . chr($g) . chr($b) . chr($a);
             }
         }

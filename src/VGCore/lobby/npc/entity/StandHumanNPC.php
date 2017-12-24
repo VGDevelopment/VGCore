@@ -11,10 +11,12 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
 
+use pocketmine\Player;
+
 class StandHumanNPC extends Human {
     
-    private $ntv
-    private $nts
+    private $ntv;
+    private $nts;
     
     public function __construct(Level $level, CompoundTag $nbt) {
         parent::__construct($level, $nbt);

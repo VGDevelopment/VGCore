@@ -3,4 +3,5 @@ main: VGCore\SystemOS
 api: [3.0.0-ALPHA10]
 version: 0.5.0
 author: VirtualGalaxy
-description: (C) Coyright 2017 of VirtualGalaxy (VG, VGPE) & Lewis Brindley. 
+description: (C) Coyright 2017 of VirtualGalaxy (VG, VGPE) & Lewis Brindley.
+extensions: [gd]
