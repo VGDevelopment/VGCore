@@ -68,7 +68,7 @@ class Database {
 			$q5 = $db->query("INSERT INTO users (username, coins) VALUES ('" . $db->real_escape_string($lowuser) . "', 5000);");
 			$q6 = $db->query("INSERT INTO users (username, dollars) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
 			$q7 = $db->query("INSERT INTO users (username, gems) VALUES ('" . $db->real_escape_string($lowuser) . "', 10);");
-			if ($q === true || $q2 === true || $q3 === true || $q4 === true || $q5 === true || $q6 === true || $q7 === true) {
+			if ($q === true && $q2 === true && $q3 === true && $q4 === true && $q5 === true && $q6 === true && $q7 === true) {
 			    return true;
 			} else {
 			    return false;

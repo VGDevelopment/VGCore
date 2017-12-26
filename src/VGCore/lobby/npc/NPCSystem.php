@@ -89,7 +89,7 @@ class NPCSystem {
     }
     
     public function skinData(string $skin) {
-        $path = "/skin/" . $skin;
+        $path = $this->plugin->getDataFolder() . "/skin/" . $skin;
         $image = imagecreatefrompng($path);
         $imagesize = getimagesize($path)[1];
         $int = (int)$imagesize;

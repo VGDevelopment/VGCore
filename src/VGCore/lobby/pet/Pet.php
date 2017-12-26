@@ -2,98 +2,89 @@
 
 namespace VGCore\lobby\pet;
 
-use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
-
-use pocketmine\nbt\tag\ByteTag;
+use pocketmine\level\Location;
+use pocketmine\level\Position;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\StringTag;
-
 use pocketmine\Player;
-
-use pocketmine\level\Location;
-use pocketmine\level\Position;
 // >>>
 use VGCore\SystemOS;
-// use VGCore\lobby\pet\entity\EnderDragon;
 
 class Pet {
     
+    const PET_CLASS = [
+        WolfPet::class,   
+        PigPet::class,
+        BabyZombiePet::class
+    ];
+    
+    public static $pet = [];
+    
     private $plugin;
-    
-    private $dwarfpet = [
-        "EnderDragon",
-        "Baby Zombie",
-        "Pig",
-        "Wolf",
-        "Spider"
-    ];
-    
-    private $giantpet = [
-        "Baby Zombie",
-        "Pig",
-        "Wolf",
-        "Spider"
-    ];
-    
-    private $warriorpet = [
-        "Pig",
-        "Wolf",
-        "Spider"
-    ];
-    
-    private $lunarpet = [
-        "Wolf",
-        "Spider"
-    ];
-    
-    private $allpet = [
-        "Spider"    
-    ];
     
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
     }
     
-    public function createPet(Player $player, string $entitytype, bool $baby = false) {
+    public function start() {
+        foreach (self::PET_CLASS as $pet) {
+            Entity::registerEntity($pet, true);
+        }
+    }
+    
+    public function getOrigin($player) {
+        $random = mt_rand(8, 12);
         $level = $player->getLevel();
-        $ext = mt_rand(8, 12);
-        $paim = [
-            $player->yaw,
-            $player->pitch
-        ];
         $ppos = [
             $player->x,
             $player->y,
             $player->z
         ];
-        $eq = -sin(deg2rad($paim[0]));
-        $x = $eq * $len + $ppos[0];
+        $paim = [
+            $player->yaw,
+            $player->pitch
+        ];
+        $eq1 = -sin(deg2rad($paim[0]));
         $eq2 = cos(deg2rad($paim[0]));
-        $z = $eq2 * $len + $ppos[2];
-        $y = $level->getHighestBlockAt($x, $z);
-        $eq3 = $y + 2;
-        $pos = new Position($x, $eq3, $z, $level);
-        $dtag1 = new DoubleTag("", $pos->x);
-        $dtag2 = new DoubleTag("", $pos->y);
-        $dtag3 = new DoubleTag("", $pos->z);
+		$x = $eq1 * $random + $ppos[0];
+		$z = $eq2 * $random + $ppos[2];
+		$highestblock = $level->getHighestBlockAt($x, $z);
+		$y = $highestblock + 2;
+		$origin = new Position($x, $y, $z, $level);
+		return $origin;
+    }
+    
+    public function makePet(Player $player, string $type, float $scale = 1.0) {
+        $level = $player->getLevel();
+        $origin = $this->getOrigin($player);
+		$opos = [
+            $origin->x,
+            $origin->y,
+            $origin->z
+        ];
+        $oaim = [
+            $origin->yaw,
+            $origin->pitch
+        ];
+        $dtag1 = new DoubleTag("", $opos[0]);
+        $dtag2 = new DoubleTag("", $opos[1]);
+        $dtag3 = new DoubleTag("", $opos[2]);
+        $dtag4 = new DoubleTag("", 0);
         $dtagarray1 = [
             $dtag1,
             $dtag2,
             $dtag3
         ];
-        $dtag4 = new DoubleTag("", 0);
         $dtagarray2 = [
             $dtag4,
             $dtag4,
             $dtag4
         ];
-        $ftag1 = new FloatTag("", $pos instanceof Location ? $pos->yaw : 0);
-        $ftag2 = new FloatTag("", $pos instanceof Location ? $pos->pitch : 0);
+        $ftag1 = new FloatTag("", $origin instanceof Location ? $oaim[0] : 0);
+        $ftag2 = new FloatTag("", $origin instanceof Location ? $oaim[1] : 0);
         $ftagarray = [
             $ftag1,
             $ftag2
@@ -101,26 +92,45 @@ class Pet {
         $ltag1 = new ListTag("Pos", $dtagarray1);
         $ltag2 = new ListTag("Motion", $dtagarray2);
         $ltag3 = new ListTag("Rotation", $ftagarray);
-        $mixtagarray =[
+        $ltagarray = [
             "Pos" => $ltag1,
             "Motion" => $ltag2,
             "Rotation" => $ltag3
         ];
-        $nbt = new CompoundTag("", $mixtagarray);
-        switch ($entitytype) {
-            case "EnderDragon":
-                $pet = Entity::createEntity("VGEnderDragonPet", $player->getLevel(), $nbt);
-                $pet->despawnFromAll();
-                $name = $player->getName();
-                $pet->setNameTagVisible(true);
-                $pet->setScale($scale);
-                $pet->setOwner($player);
-                $pet->spawnToAll();
-                $pet->setNameTag("§e" . $player->getName() . "§a's §aPet");
-                break;
+        $nbt = new CompoundTag("", $ltagarray);
+        switch ($type) {
+            case "Wolf":
+                $pet = Entity::createEntity("WolfPet", $level, $nbt);
+            case "Pig":
+                $pet = Entity::createEntity("PigPet", $level, $nbt);
+            case "BabyZombie":
+                $pet = Entity::createEntity("BabyZombiePet", $level, $nbt);
+                $scale = $scale / 2;
             default:
-                break;
+                $pet = null;
         }
+        $name = $player->getName();
+        $pet->setNameTagVisible(true);
+        $pet->setOwner($player);
+        $pet->spawnToAll();
+        $pet->setNameTag("§e" . $name . "§a's §e" . $type . " §aPet");
+        $id = $pet->getId();
+        self::$pet[$name] = [
+            "Pet" => $pet,
+            "ID" => $id
+        ];
+    }
+    
+    public function removePet(Player $player) {
+        $name = $player->getName();
+        $pet = self::$pet[$name]['Pet'];
+        $pet->fastClose();
+        unset(self::$pet[$name]);
+    }
+    
+    public function getPetID(Player $player) {
+        $name = $player->getName();
+        return self::$pet[$name]['ID'];
     }
     
 }
