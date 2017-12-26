@@ -102,7 +102,18 @@ abstract class BasicPet extends Creature {
         $newx = $px + $addx;
         $newy = $py + 2;
         $newz = $px + $addz;
-        $newpoint = new Position($newx, $newy, $newz, $owner->getLevel());
+        $x = $this->x;
+        $y = $this->y;
+        $z = $this->z;
+        $vector = new Vector3($x + $newx, $y + $newy, $z + $newz);
+        $motion = $vector->normalize();
+        $this->motionX = $motion->x * 0.19;
+        $this->motionZ = $motion->z * 0.19;
+        if ($this instanceof FlyingPet) {
+            $this->motionY = $motion->y * 0.19;
+        } else {
+            $this->motionY = 0.6;
+        }
     }
     
 }
