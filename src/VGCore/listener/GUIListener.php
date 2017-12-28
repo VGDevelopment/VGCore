@@ -104,6 +104,7 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
+				var_dump($response);
 				break;
 			}
 			case SystemOS::$uis['tutorialUI']: {

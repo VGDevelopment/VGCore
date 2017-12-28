@@ -252,7 +252,9 @@ class SystemOS extends PluginBase {
         // Server Settings
         $ui = new CustomForm('§2VirtualGalaxy Settings');
         $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
-        $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, you nick (if your rank permits changing), and much more.');
+        $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, or your pets (if your rank permits changing), and much more.');
+        $pet = new Dropdown('§eChoose your pet:', ['§aWolf Pet', '§aBabyZombie Pet', '§aPig Pet']);
+        $ui->addElement($intro);
         $ui->addElement($intro);
         self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
