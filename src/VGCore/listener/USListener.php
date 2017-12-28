@@ -41,7 +41,6 @@ class USListener implements Listener {
             $banid = $this->bs->getBanID($name);
             $player->close("", "§cYou are banned from the §dVGNetwork§c. Appeal by emailing §asupport@vgpe.me§c - BAN ID : §e#" . $banid);
         }
-        Crate::setTitle($player);
     }
     
 }

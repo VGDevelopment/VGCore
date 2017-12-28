@@ -36,10 +36,9 @@ class NPCSystem {
         foreach ($classnpc as $class) {
             Entity::registerEntity($class, true);
         }
-        $this->spawnCrateNPC();
     }
     
-    public function spawnCrateNPC() {
+    public function spawnCrateNPC($skin) {
         $cratenpc = $this->cratenpc;
         $dtag1 = new DoubleTag("", $cratenpc[0]);
         $dtag2 = new DoubleTag("", $cratenpc[1]);
@@ -64,7 +63,7 @@ class NPCSystem {
             $ftag2
         ];
         $skin = "SantaClaus";
-        $skindata = $this->skinData($skin);
+        $skindata = $skin->getSkinData();
         $stag = new StringTag("Data", $skindata);
         $stagarray = [
             "Data" => $stag
@@ -89,7 +88,7 @@ class NPCSystem {
     }
     
     public function skinData(string $skin) {
-        $path = $this->plugin->getDataFolder() . "/skin/" . $skin;
+        $path = "/skin/" . $skin;
         $image = imagecreatefrompng($path);
         $imagesize = getimagesize($path)[1];
         $int = (int)$imagesize;

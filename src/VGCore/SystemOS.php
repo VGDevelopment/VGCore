@@ -56,6 +56,7 @@ use VGCore\network\Database as DB;
 use VGCore\command\Tutorial;
 use VGCore\command\Economy;
 use VGCore\command\VGEnchant;
+use VGCore\command\NPC;
 
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
@@ -196,6 +197,7 @@ class SystemOS extends PluginBase {
         $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
+        $this->getServer()->getCommandMap()->register("npc", new NPC("npc", $this));
     }
 
     public function loadVanillaEnchant() {
@@ -255,7 +257,7 @@ class SystemOS extends PluginBase {
         $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, or your pets (if your rank permits changing), and much more.');
         $pet = new Dropdown('§eChoose your pet:', ['§aWolf Pet', '§aBabyZombie Pet', '§aPig Pet']);
         $ui->addElement($intro);
-        $ui->addElement($intro);
+        $ui->addElement($pet);
         self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
