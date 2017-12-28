@@ -4,15 +4,15 @@ namespace VGCore\lobby\pet\entity;
 
 use VGCore\lobby\pet\ai\PAI;
 
-class WolfPet extends PAI {
+class BabyZombiePet extends PAI {
     
-    const NETWORK_ID = 14;
+    const NETWORK_ID = 32;
     
-    public $width = 0.72;
+    public $width = 0.36;
 	public $height = 0.9;
 	
 	public function getName() {
-		return "Wolf Pet";
+		return "BabyZombie Pet";
 	}
     
 }

@@ -13,6 +13,9 @@ use pocketmine\Player;
 // >>>
 use VGCore\SystemOS;
 
+use VGCore\lobby\pet\entity\BabyZombiePet;
+use VGCore\lobby\pet\entity\WolfPet;
+
 class Pet {
     
     const PET_CLASS = [
@@ -105,7 +108,6 @@ class Pet {
                 $pet = Entity::createEntity("PigPet", $level, $nbt);
             case "BabyZombie":
                 $pet = Entity::createEntity("BabyZombiePet", $level, $nbt);
-                $scale = $scale / 2;
             default:
                 $pet = null;
         }
