@@ -197,7 +197,6 @@ class SystemOS extends PluginBase {
         $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
-        $this->getServer()->getCommandMap()->register("npc", new NPC("npc", $this));
     }
 
     public function loadVanillaEnchant() {

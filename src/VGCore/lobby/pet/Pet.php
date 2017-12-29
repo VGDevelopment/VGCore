@@ -15,6 +15,7 @@ use VGCore\SystemOS;
 
 use VGCore\lobby\pet\entity\BabyZombiePet;
 use VGCore\lobby\pet\entity\WolfPet;
+use VGCore\lobby\pet\entity\PigPet;
 
 class Pet {
     

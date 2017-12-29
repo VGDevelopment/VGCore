@@ -4,18 +4,17 @@ namespace VGCore\lobby;
 
 use VGCore\SystemOS;
 
-use VGCore\lobby\crate\Crate;
-use VGCore\lobby\npc\NPCSystem;
+use VGCore\lobby\pet\Pet;
 
 class LobbyLoader {
     
     public static function start(SystemOS $plugin) {
-        $npcsystem = new NPCSystem($plugin);
-        $npcsystem->start();
+        $pet = new Pet($plugin);
+        $pet->start();
     }
     
     public static function stop(SystemOS $plugin) {
-        $plugin->removeEntities();
+        
     }
     
 }
