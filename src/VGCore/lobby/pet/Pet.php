@@ -103,11 +103,11 @@ class Pet {
         ];
         $nbt = new CompoundTag("", $ltagarray);
         switch ($type) {
-            case "Wolf":
+            case "Wolf Pet":
                 $pet = Entity::createEntity("WolfPet", $level, $nbt);
-            case "Pig":
+            case "Pig Pet":
                 $pet = Entity::createEntity("PigPet", $level, $nbt);
-            case "BabyZombie":
+            case "BabyZombie Pet":
                 $pet = Entity::createEntity("BabyZombiePet", $level, $nbt);
             default:
                 $pet = null;

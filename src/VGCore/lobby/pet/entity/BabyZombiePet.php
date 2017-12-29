@@ -11,7 +11,7 @@ class BabyZombiePet extends PAI {
     public $width = 0.36;
 	public $height = 0.9;
 	
-	public function getName() {
+	public function getName(): string {
 		return "BabyZombie Pet";
 	}
     

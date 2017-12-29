@@ -56,7 +56,6 @@ use VGCore\network\Database as DB;
 use VGCore\command\Tutorial;
 use VGCore\command\Economy;
 use VGCore\command\VGEnchant;
-use VGCore\command\NPC;
 
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;

@@ -26,7 +26,7 @@ abstract class PAI extends Creature {
         // no need to save - included as it extends Creature()
     }
     
-    public function attack($damage, EntityDamageEvent $event) {
+    public function attack(EntityDamageEvent $source) {
         // pets don't attack :p
     } 
     
@@ -112,7 +112,7 @@ abstract class PAI extends Creature {
         $level->addEntityMovement($chunkx, $chunkz, $cdata[5], $cdata[0], $cdata[1], $cdata[2], $cdata[3], $cdata[4]);
     }
     
-    public function setMove($dx, $dy, $dz) {
+    public function move(float $dx, float $dy, float $dz): bool {
         $this->boundingBox->offset($dx, 0, 0);
         $this->boundingBox->offset(0, 0, $dz);
         $this->boundingBox->offset(0, $dy, 0);
@@ -123,7 +123,7 @@ abstract class PAI extends Creature {
         return true;
     }
     
-    public function move() {
+    public function setMove() {
         if ($this->target === null) {
             $x = $this->owner->x - $this->x;
             $z = $this->owner->z - $this->z;
@@ -197,7 +197,7 @@ abstract class PAI extends Creature {
             }
         }
         $dy = $this->motionY;
-        $this->setMove($dx, $dy, $dz);
+        $this->move($dx, $dy, $dz);
         $this->updateMove();
     }
     
@@ -240,7 +240,7 @@ abstract class PAI extends Creature {
         parent::close();
     }
      
-    public function onUpdate(int $tick) {
+    public function onUpdate(int $currentTick): bool {
         if (!($this->owner instanceof Player) || $this->owner->closed) {
             $this->fastClose();
             return false;
@@ -254,13 +254,13 @@ abstract class PAI extends Creature {
         if ($this->closed) {
             return false;
         }
-        $tickdiff = $tick - $this->lastUpdate;
-        $this->lastUpdate = $tick;
+        $tickdiff = $currentTick - $this->lastUpdate;
+        $this->lastUpdate = $currentTick;
         if ($this->target === null && $this->getDistanceToOwner() > 20) {
             $this->goToOwner();
         }
         $this->entityBaseTick($tickdiff);
-        $this->move();
+        $this->setMove();
         $this->checkChunks();
         return true;
     }

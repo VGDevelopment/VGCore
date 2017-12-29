@@ -29,6 +29,8 @@ use VGCore\network\Database as DB;
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
 
+use VGCore\lobby\pet\Pet;
+
 class GUIListener implements Listener {
 
     public $plugin;
@@ -104,7 +106,9 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				var_dump($response);
+				$pet = $response[1];
+				$petsys = new Pet($this->os);
+				$petsys->makePet($event->getPlayer(), $pet);
 				break;
 			}
 			case SystemOS::$uis['tutorialUI']: {

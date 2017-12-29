@@ -11,7 +11,7 @@ class PigPet extends PAI {
     public $width = 0.7;
     public $height = 0.9;
     
-    public function getName() {
+    public function getName(): string {
         return "Pig Pet";
     }
     

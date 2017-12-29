@@ -11,7 +11,7 @@ class WolfPet extends PAI {
     public $width = 0.72;
 	public $height = 0.9;
 	
-	public function getName() {
+	public function getName(): string {
 		return "Wolf Pet";
 	}
     
