@@ -69,10 +69,6 @@ class Pet {
             $origin->y,
             $origin->z
         ];
-        $oaim = [
-            $origin->yaw,
-            $origin->pitch
-        ];
         $dtag1 = new DoubleTag("", $opos[0]);
         $dtag2 = new DoubleTag("", $opos[1]);
         $dtag3 = new DoubleTag("", $opos[2]);
@@ -87,8 +83,8 @@ class Pet {
             $dtag4,
             $dtag4
         ];
-        $ftag1 = new FloatTag("", $origin instanceof Location ? $oaim[0] : 0);
-        $ftag2 = new FloatTag("", $origin instanceof Location ? $oaim[1] : 0);
+        $ftag1 = new FloatTag("", 180);
+        $ftag2 = new FloatTag("", 180);
         $ftagarray = [
             $ftag1,
             $ftag2
@@ -102,6 +98,7 @@ class Pet {
             "Rotation" => $ltag3
         ];
         $nbt = new CompoundTag("", $ltagarray);
+        var_dump($type);
         switch ($type) {
             case "Wolf Pet":
                 $pet = Entity::createEntity("WolfPet", $level, $nbt);
