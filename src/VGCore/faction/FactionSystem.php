@@ -27,7 +27,7 @@ class FactionSystem {
 
 	public function createFaction(string $faction, Player $leader) {
 		$leadername = $leader->getName();
-		$roleleader = $this->role[0];
+		$roleleader = $this->rank[0];
 		if (!$this->factionValidate($faction)) {
 			$this->db->query("INSERT INTO factions (player, faction) VALUES ('" . $this->db->real_escape_string($leadername) . $faction . ");");
 			$this->db->query("INSERT INTO factions (player, rank) VALUES ('" . $this->db->real_escape_string($leadername) . $roleleader . ");");
