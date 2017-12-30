@@ -112,8 +112,14 @@ class GUIListener implements Listener {
 						$this->os->destroyPet($pet->getName(), $player);
 					}
 				}
-				if ($pet === "EnderDragon") {
+				if ($pet === "EnderDragon" || $pet === "Baby Ghast") {
+					if ($pet === "Baby Ghast") {
+						$pet = "Ghast";
+					}
 					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 0.3);
+				} else if ($pet === "Baby Zombie") {
+					$pet = "Zombie";
+					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 0.5);
 				} else {
 					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet");
 				}
