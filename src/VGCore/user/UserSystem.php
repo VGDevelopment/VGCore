@@ -22,7 +22,7 @@ class UserSystem {
     }
     
     public function getRank(string $username) {
-        if ($this->checkUser($username)) {
+        if (DB::checkUser($username)) {
             $lowuser = strtolower($username);
             $dbquery = $this->db->query("SELECT rank FROM users WHERE username='" . $this->db->real_escape_string($username) . "'");
             return $dbquery->fetch_array()[0] ?? false;;
@@ -37,7 +37,7 @@ class UserSystem {
     
     public function setRank(string $user, string $rank) {
         $lowuser = strtolower($user);
-        $check = $this->checkUser($user);
+        $check = DB::checkUser($user);
         if ($check === true && in_array($rank, self::rank)) {
             return $this->db->query("UPDATE users SET rank = $rank WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
         } else {
