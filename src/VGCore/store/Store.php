@@ -8,6 +8,8 @@ use pocketmine\item\Item;
 use VGCore\SystemOS;
 use VGCore\economy\EconomySystem;
 
+use VGCore\network\Database as DB;
+
 class Store {
     
     public $plugin;
@@ -20,7 +22,7 @@ class Store {
     
     public function buyItem(Player $player, int $amount, array $info) {
         $name = $player->getName();
-        $check = $this->economy->accountValidate($name);
+        $check = DB::checkUser($name);
         $price = $info[2];
         $finalprice = $price * $amount;
         if ($check === true) {

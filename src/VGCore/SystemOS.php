@@ -20,11 +20,23 @@ use pocketmine\Server;
 use pocketmine\item\Item;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\Armor;
+
 use pocketmine\level\Position;
+
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\ShortTag;
+use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\StringTag;
+
+use pocketmine\entity\Attribute;
+use pocketmine\entity\Entity;
+use pocketmine\Player;
+use pocketmine\plugin\PluginBase;
 // >>>
 use VGCore\economy\EconomySystem;
 
@@ -45,6 +57,12 @@ use VGCore\listener\ChatFilterListener;
 use VGCore\listener\GUIListener;
 use VGCore\listener\CustomEnchantmentListener;
 use VGCore\listener\USListener;
+use VGCore\listener\PetListener;
+use VGCore\listener\RidingListener;
+use VGCore\listener\event\PetEvent;
+use VGCore\listener\event\RemakePetEvent;
+use VGCore\listener\event\MakePetEvent;
+use VGCore\listener\event\DestroyPetEvent;
 
 use VGCore\network\ModalFormRequestPacket;
 use VGCore\network\ModalFormResponsePacket;
@@ -68,7 +86,7 @@ use VGCore\user\UserSystem;
 
 use VGCore\sound\Sound;
 
-use VGCore\lobby\LobbyLoader;
+use VGCore\lobby\pet\BasicPet;
 
 class SystemOS extends PluginBase {
 
@@ -107,6 +125,17 @@ class SystemOS extends PluginBase {
     private $messages;
     // @var string [] array
     private $badwords;
+    
+    private $pet = [
+        "EnderDragon"
+    ];
+    
+    private $petclass = [
+        EnderDragonPet::class    
+    ];
+    
+    private static $toggleoff = [];
+    private static $toggleon = [];
 
     // @var customenchantment
     public $enchantment = [
@@ -124,27 +153,27 @@ class SystemOS extends PluginBase {
         CustomEnchantment::TRUEAXE => ["True Axe", "Axe", "Break", "Legendary", 1, "40% chance to chop down all logs connected with this one."],
         CustomEnchantment::MINIBLACKHOLE => ["Mini Black Hole", "Armor", "Damage", "Legendary", 1, "5% chance to explode and kill all near opponents."]
         
-        ];
+    ];
 
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
-
+        
         // enables UI - make comment line to disable UI. May cause extreme failures if disabled.
         $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
         $this->loadUI();
-
+        
         // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused. # Made comment line because Mojang Chat Filter is on.
         // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
         // $this->loadFilter();
-
+        
         // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
         $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.");
         $this->loadCommand();
-
+        
         // Enables Vanilla Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy VANILLA Enchants.");
         $this->loadVanillaEnchant();
-
+        
         // Enables Custom Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy CUSTOM Enchants.");
         $this->loadCustomEnchant();
@@ -158,16 +187,12 @@ class SystemOS extends PluginBase {
         $this->loadDatabaseAPI();
         
         // Loads all Lobby Features
-        $this->getLogger()->info("Enabling the Virtual Galaxy Lobby System.");
-        $this->loadLobby();
+        $this->getLogger()->info("Enabling the Virtual Galaxy Pet System.");
+        $this->loadPet();
     }
     
     public function onDisable() {
         $this->getLogger()->info("Shutting down VGCore SystemOS and it's dependancies. Disconnecting from VG API.");
-        
-        // unLoads the Lobby Features
-        $this->getLogger()->info("Disabling the VirtualGalaxy Lobby System.");
-        $this->unloadLobby();
     }
 
     // Load & Unload Base Section
@@ -221,12 +246,12 @@ class SystemOS extends PluginBase {
         DB::createRecord($this);
     }
     
-    public function loadLobby() {
-        LobbyLoader::start($this);
-    }
-    
-    public function unloadLobby() {
-        LobbyLoader::stop($this);
+    public function loadPet() {
+        foreach($this->petclass as $class) {
+            Entity::registerEntity($class, true);
+        }
+        $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)
@@ -943,6 +968,233 @@ class SystemOS extends PluginBase {
                 break;
         }
         return self::NOT_COMPATIBLE;
+    }
+    
+    // Pets
+    
+    public function petAlive(string $entityname): bool {
+        foreach ($this->pet as $pet) {
+            if (strtolower($pet) === strtolower($entityname)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function getPet(string $entityname): ?string {
+        foreach ($this->pet as $pet) {
+            if(strtolower($pet) === strtolower($entityname)) {
+                return $pet;
+            }
+        }
+        return false;
+    }
+    
+    public function makePet(string $entityname, Player $player, string $petname, float $scale = 1.0, bool $baby = false): ?BasicPet {
+        foreach ($this->getPlayerPet($player) as $pet) {
+            if ($pet->getName() === $petname) {
+                $this->destroyPet($pet->getName(), $player);
+            }
+        }
+        $pdata = [
+            $player->x,
+            $player->y,
+            $player->z,
+            $player->yaw,
+            $player->pitch
+        ];
+        $dtag1 = new DoubleTag("", $pdata[0]);
+        $dtag2 = new DoubleTag("", $pdata[1]);
+        $dtag3 = new DoubleTag("", $pdata[2]);
+        $dtag4 = new DoubleTag("", 0);
+        $dtagarray1 = [
+            $dtag1,
+            $dtag2,
+            $dtag3
+        ];
+        $dtagarray2 = [
+            $dtag4,
+            $dtag4,
+            $dtag4
+        ];
+        $ftag1 = new FloatTag("", $pdata[3]);
+        $ftag2 = new FloatTag("", $pdata[4]);
+        $ftagarray = [
+            $ftag1,
+            $ftag2
+        ];
+        $ltag1 = new ListTag("Pos", $dtagarray1);
+        $ltag2 = new ListTag("Motion", $dtagarray2);
+        $latg3 = new ListTag("Rotation", $dtagarray3);
+        $stag1 = new StringTag("owner", $player->getName());
+        $stag2 = new StringTag("name", $petname);
+        if ($baby = true) {
+            $ftag3 = new FloatTag("scale", $scale / 2);
+        } else {
+            $ftag3 = new FloatTag("scale", $scale);
+        }
+        $btag = new ByteTag("baby", (int)$baby);
+        $mixtagarray = [
+            "Pos" => $ltag1,
+            "Motion" => $ltag2,
+            "Rotation" => $ltag3,
+            "owner" => $stag1,
+            "name" => $stag2,
+            "scale" => $ftag3,
+            "baby" => $btag
+        ];
+        $nbt = new CompoundTag("", $mixtagarray);
+        $level = $player->getLevel();
+        $etype = $entityname . "Pet";
+        $entity = Entity::createEntity($etype, $level, $nbt);
+        if ($entity instanceof BasicPet) {
+            $event = new MakePetEvent($this, $entity);
+            $this->getServer()->getPluginManager()->callEvent($event);
+            if ($event->isCancelled()) {
+                $this->destroyPet($entity->getName(), $player);
+                return null;
+            }
+            return $entity;
+        }
+        return null;
+    }
+    
+    public function getPlayerPet(Player $player): array {
+        $playerpet = [];
+        $entarray = $player->getLevel()->getEntities();
+        foreach ($entarray as $entity) {
+            if ($entity instanceof BasicPet) {
+                if ($entity->getOwner() === null || $entity->isClosed() || !($entity->isAlive())) {
+                    continue;
+                }
+                $name = $player->getName();
+                if ($entity->getOwnerName() === $name) {
+                    $playerpet[] = $entity;
+                }
+            }
+        }
+        return $playerpet;
+    }
+    
+    public function getPetByName(string $name, Player $player = null): ?BasicPet {
+        if ($player !== null) {
+            foreach ($this->getPlayerPet($player) as $pet) {
+                $strpos = strpos(strtolower($pet->getName()), strtolower($name));
+                if ($strpos !== false) {
+                    return $pet;
+                }
+            }
+            return null;
+        }
+        foreach ($this->getServer->getLevels() as $level) {
+            foreach ($level->getEntities() as $entity) {
+                if (!($entity instanceof BasicPet)) {
+                    continue;
+                }
+                $strpos = strpos(strtolower($entity->getName()), strtolower($name));
+                if ($strpos !== false) {
+                    return $entity;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public function destroyPet(string $name, Player $player = null): bool {
+        $pet = $this->getPetByName($name);
+        if ($pet === null) {
+            return false;
+        }
+        if ($player !== null) {
+            foreach ($this->getPlayerPet($player) as $ppet) {
+                $strpos = strpos(strtolower($ppet->getName()), strtolower($name));
+                if ($strpos !== false) {
+                    $event = new DestroyPetEvent($this, $ppet);
+                    $this->getServer()->getPluginManager()->callEvent($event);
+                    if ($event->isCancelled()) {
+                        return false;
+                    }
+                    if ($ppet->ridden()) {
+                        $ppet->throwRiderOff();
+                    }
+                    $ppet->kill(true);
+                    return true;
+                }
+            }
+            return false;
+        }
+        $event = new DestroyPetEvent($this, $pet);
+        $this->getServer()->getPluginManager()->callEvent($event);
+        if ($event->isCancelled()) {
+            return false;
+        }
+        if ($pet->ridden()) {
+            $pet->throwRiderOff();
+        }
+        $ppet->kill(true);
+        return true;
+    }
+    
+    public function getRiddenPet(Player $player): BasicPet {
+        foreach ($this->getPlayerPet($player) as $pet) {
+            if ($pet->ridden()) {
+                return $pet
+            }
+        }
+        return null;
+    }
+    
+    public function playerRidding(Player $player): bool {
+        foreach ($this->getPlayerPet($player) as $pet) {
+            if ($pet->ridden()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function pMultipleToggleOn(Player $player): bool {
+        return !isset(self::$toggleoff[$player->getName()]);
+    }
+    
+    public function toggleMultiplePet(Player $player): bool {
+        if ($this->pMultipleToggleOn($player)) {
+            self::$toggleoff[$player->getName()] = true;
+            foreach ($this->getPlayerPet($player) as $pet) {
+                $pet->despawnFromAll();
+                $pet->setDormant();
+            }
+            return false;
+        } else {
+            unset(self::$toggleoff[$player->getName()]);
+            foreach ($this->getPlayerPet($player) as $pet) {
+                $pet->spawnToAll();
+                $pet->setDormant(false);
+            }
+            return true;
+        }
+    }
+    
+    public function pSingletonToggleOn(BasicPet $pet, Player $player): bool {
+        if (isset(self::$toggleon[$pet->getName()])) {
+            return self::$toggleon[$pet->getName()] = $player->getName();
+        }
+        return false;
+    }
+    
+    public function toggleSingletonPet(BasicPet $pet, Player $player): bool {
+        if (isset(self::$toggleon[$pet->getName()])) {
+            if (self::$toggleon[$pet->getName()] === $player->getName()) {
+                $pet->spawnToAll();
+                $pet->setDormant(false);
+                unset(self::$toggleon[$pet->getName()]);
+                return true;
+            }
+        }
+        $pet->despawnFromAll();
+        $pet->setDormant();
+        self::$toggleon[$pet->getName()] = $player->getName();
+        return false;
     }
 
 }

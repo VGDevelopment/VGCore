@@ -31,8 +31,8 @@ class Database {
 		}
 		if (!$db->query("CREATE TABLE IF NOT EXISTS factions(
 			player TEXT,
-      invites TEXT,
-      requests TEXT,
+    		invites TEXT,
+    		requests TEXT,
 			faction TEXT,
 			valid INT(1),
 			rank TEXT,
