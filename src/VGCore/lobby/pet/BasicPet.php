@@ -208,7 +208,7 @@ abstract class BasicPet extends Creature implements Rideable {
             return parent::onUpdate($currentTick);
         }
         if ($this->getLevel()->getId() !== $owner->getLevel()->getId()) {
-            $newpet = $this->getOS()->createPet($this->getEntityType(), $this->getOwner(), $this->name, $this->scale, (bool)$this->namedtag->["baby"]);
+            $newpet = $this->getOS()->makePet($this->getEntityType(), $this->getOwner(), $this->name, $this->scale, (bool)$this->namedtag->["baby"]);
             $this->close();
             return false;
         }

@@ -51,8 +51,8 @@ class PetListener implements Listener {
 				return;
 			}
 			$owner = $this->os->getServer()->getPlayer($pet->getOwnerName());
-			$this->os->removePet($pet->getName(), $pet->getOwner());
-			$newpet = $this->os->createPet($pet->getEntityType(), $owner, $pet->getName());
+			$this->os->destroyPet($pet->getName(), $pet->getOwner());
+			$newpet = $this->os->makePet($pet->getEntityType(), $owner, $pet->getName());
 			$event = new RemakePetEvent($this->os, $newpet, $delay);
 			$this->os->getServer()->getPluginManager()->callEvent($event);
 			if($event->isCancelled()) {

@@ -105,6 +105,14 @@ class GUIListener implements Listener {
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
 				$pet = $response[1];
+				$ppet = $this->os->getPlayerPet($player);
+				$petcount = count($ppet);
+				if ($petcount > 0) {
+					foreach ($ppet as $pet) {
+						$this->os->destroyPet($pet->getName(), $player);
+					}
+				}
+				$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet");
 				break;
 			}
 			case SystemOS::$uis['tutorialUI']: {
