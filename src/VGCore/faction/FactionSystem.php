@@ -108,20 +108,20 @@ class FactionSystem {
 	}
 	
 	public function newLand($faction, $x1, $z1, $x2, $z2, string $level) {
-                $this->db->query("INSERT OR REPLACE INTO factions (faction, x1, z1, x2, z2, world) VALUES ('" . $this->db->real_escape_string($faction) . $x1 . $z1 . $x2. $z2 . $level . ");");
-        }
+		$this->db->query("INSERT OR REPLACE INTO factions (faction, x1, z1, x2, z2, world) VALUES ('" . $this->db->real_escape_string($faction) . $x1 . $z1 . $x2. $z2 . $level . ");");
+    }
 	
-        public function claimLand(Player $player, $faction, $size = 15) {
-                $x = floor($player->getX());
-                $y = floor($player->getY());
-                $z = floor($player->getZ());
-                $level = $player->getLevel();
-                $arm = ($size - 1) / 2;
-                $block = new Snow();
-                $level->setBlock(new Vector3($x + $arm, $y, $z + $arm), $block);
-                $level->setBlock(new Vector3($x - $arm, $y, $z - $arm), $block);
-                $this->newLand($faction, $x + $arm, $z + $arm, $x - $arm, $z - $arm, $level->getName());
-                return true;
-        }
+	public function claimLand(Player $player, $faction, $size = 15) {
+		$x = floor($player->x);
+		$y = floor($player->y);
+		$z = floor($player->z);
+		$level = $player->getLevel();
+		$arm = ($size - 1) / 2;
+		$block = new Snow();
+		$level->setBlock(new Vector3($x + $arm, $y, $z + $arm), $block);
+		$level->setBlock(new Vector3($x - $arm, $y, $z - $arm), $block);
+		$this->newLand($faction, $x + $arm, $z + $arm, $x - $arm, $z - $arm, $level->getName());
+        return true;
+    }
 
 }
