@@ -69,7 +69,7 @@ class FactionSystem {
 			$playername = $player->getName();
 			$this->db->query("INSERT INTO factions (player, requests) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
 		} else {
-			returrn false;
+			return false;
 		}
 	}
 
