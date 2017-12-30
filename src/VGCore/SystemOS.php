@@ -35,8 +35,6 @@ use pocketmine\nbt\tag\StringTag;
 
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
-use pocketmine\Player;
-use pocketmine\plugin\PluginBase;
 // >>>
 use VGCore\economy\EconomySystem;
 
@@ -87,6 +85,7 @@ use VGCore\user\UserSystem;
 use VGCore\sound\Sound;
 
 use VGCore\lobby\pet\BasicPet;
+use VGCore\lobby\pet\entity\EnderDragonPet;
 
 class SystemOS extends PluginBase {
 
@@ -1138,7 +1137,7 @@ class SystemOS extends PluginBase {
     public function getRiddenPet(Player $player): BasicPet {
         foreach ($this->getPlayerPet($player) as $pet) {
             if ($pet->ridden()) {
-                return $pet
+                return $pet;
             }
         }
         return null;
