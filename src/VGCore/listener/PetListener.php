@@ -47,7 +47,7 @@ class PetListener implements Listener {
         $pet = $event->getEntity();
         $delay = 2;
         if ($pet instanceof BasicPet) {
-            if($pet->checkEventIgnorant) {
+            if($pet->checkEventIgnorant()) {
 				return;
 			}
 			$owner = $this->os->getServer()->getPlayer($pet->getOwnerName());

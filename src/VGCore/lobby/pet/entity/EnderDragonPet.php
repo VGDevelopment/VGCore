@@ -8,7 +8,7 @@ class EnderDragonPet extends FlyingPet {
     
     public $networkid = 53;
     public $name = "Ender Dragon Pet";
-    public $width = 1.25;
-    public $height = 0.5;
+    public $width = 2.5;
+    public $height = 1;
     
 }
