@@ -1024,7 +1024,7 @@ class SystemOS extends PluginBase {
         ];
         $ltag1 = new ListTag("Pos", $dtagarray1);
         $ltag2 = new ListTag("Motion", $dtagarray2);
-        $latg3 = new ListTag("Rotation", $dtagarray3);
+        $ltag3 = new ListTag("Rotation", $ftagarray);
         $stag1 = new StringTag("owner", $player->getName());
         $stag2 = new StringTag("name", $petname);
         if ($baby = true) {

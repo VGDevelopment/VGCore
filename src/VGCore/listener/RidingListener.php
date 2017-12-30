@@ -40,7 +40,7 @@ class RidingListener implements Listener {
 			}
 		} elseif ($packet instanceof PlayerActionPacket) {
 			if ($packet->action === $packet::ACTION_JUMP) {
-				foreach ($this->getLoader()->getPlayerPet($event->getPlayer()) as $pet) {
+				foreach ($this->os->getPlayerPet($event->getPlayer()) as $pet) {
 					if ($pet->isRiding()) {
 						$pet->dismountOwner();
 					}

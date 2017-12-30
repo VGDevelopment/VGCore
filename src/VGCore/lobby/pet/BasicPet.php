@@ -73,10 +73,10 @@ abstract class BasicPet extends Creature implements Rideable {
         parent::__construct($level, $nbt);
         $this->setNameTagVisible(true);
         $this->setNameTagAlwaysVisible(true);
-        $this->owner = $nbt->namedtag["owner"];
-        $this->name = $nbt->namedtag["name"];
-        $this->scale = $nbt->namedtag["scale"];
-        $baby = $nbt->namedtag["baby"];
+        $this->owner = $this->namedtag["owner"];
+        $this->name = $this->namedtag["name"];
+        $this->scale = $this->namedtag["scale"];
+        $baby = $this->namedtag["baby"];
         if ((bool)$baby === true) {
             $this->setScale($this->scale / 2);
         } else {
@@ -203,7 +203,7 @@ abstract class BasicPet extends Creature implements Rideable {
     } 
     
     public function onUpdate(int $currentTick): bool {
-        $owner = $this->owner;
+        $owner = $this->getOwner();
         if (!($this->isAlive())) {
             return parent::onUpdate($currentTick);
         }
@@ -230,7 +230,7 @@ abstract class BasicPet extends Creature implements Rideable {
                     $this->zoff
                 ];
                 foreach ($offset as $off) {
-                    $off = lcg_value() * $multiplicationValue * (3 + $this->scale);
+                    $off = lcg_value() * $mvalue * (3 + $this->scale);
                 }
             }
         }
