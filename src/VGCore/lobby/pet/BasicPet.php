@@ -218,7 +218,7 @@ abstract class BasicPet extends Creature implements Rideable {
         }
         $this->postick++;
         if ($this->findNewPos()) {
-            if ($this->ownerstalk !== true) {
+            if ($this->ownerstalk !== false) {
                 if ((bool)mt_rand(0, 1)) {
                     $mvalue = 1; 
                 } else {

@@ -40,6 +40,9 @@ class PetListener implements Listener {
                 $event->setCancelled();
                 return;
             }
+            if ($event instanceof EntityDamageByEntityEvent) {
+                $event->setCancelled();
+            }
         }
     }
     

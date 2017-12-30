@@ -86,6 +86,10 @@ use VGCore\sound\Sound;
 
 use VGCore\lobby\pet\BasicPet;
 use VGCore\lobby\pet\entity\EnderDragonPet;
+use VGCore\lobby\pet\entity\ChickenPet;
+use VGCore\lobby\pet\entity\ZombiePet;
+use VGCore\lobby\pet\entity\WolfPet;
+use VGCore\lobby\pet\entity\GhastPet;
 
 class SystemOS extends PluginBase {
 
@@ -126,11 +130,19 @@ class SystemOS extends PluginBase {
     private $badwords;
     
     private $pet = [
-        "EnderDragon"
+        "EnderDragon",
+        "Chicken",
+        "Zombie",
+        "Wolf",
+        "Ghast"
     ];
     
     private $petclass = [
-        EnderDragonPet::class    
+        EnderDragonPet::class,
+        ChickenPet::class,
+        ZombiePet::class,
+        WolfPet::class,
+        GhastPet::class
     ];
     
     private static $toggleoff = [];
@@ -990,6 +1002,10 @@ class SystemOS extends PluginBase {
     }
     
     public function makePet(string $entityname, Player $player, string $petname, float $scale = 1.0, bool $baby = false): ?BasicPet {
+        $servercheck = new VGServer($this->plugin)->checkServer();
+        if ($servercheck !== "Lobby") {
+            return null;
+        }
         foreach ($this->getPlayerPet($player) as $pet) {
             if ($pet->getName() === $petname) {
                 $this->destroyPet($pet->getName(), $player);
@@ -1085,7 +1101,7 @@ class SystemOS extends PluginBase {
             }
             return null;
         }
-        foreach ($this->getServer->getLevels() as $level) {
+        foreach ($this->getServer()->getLevels() as $level) {
             foreach ($level->getEntities() as $entity) {
                 if (!($entity instanceof BasicPet)) {
                     continue;
