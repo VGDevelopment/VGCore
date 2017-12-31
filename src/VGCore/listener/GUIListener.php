@@ -119,9 +119,9 @@ class GUIListener implements Listener {
 					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 0.3);
 				} else if ($pet === "Baby Zombie") {
 					$pet = "Zombie";
-					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 0.5);
+					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 1.5);
 				} else {
-					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet");
+					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 1.25);
 				}
 				break;
 			}

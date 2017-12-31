@@ -1002,7 +1002,8 @@ class SystemOS extends PluginBase {
     }
     
     public function makePet(string $entityname, Player $player, string $petname, float $scale = 1.0, bool $baby = false): ?BasicPet {
-        $servercheck = new VGServer($this->plugin)->checkServer();
+        $server = new VGServer($this);
+        $servercheck = $server->checkServer();
         if ($servercheck !== "Lobby") {
             return null;
         }

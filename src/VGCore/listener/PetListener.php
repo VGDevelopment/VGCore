@@ -33,13 +33,14 @@ class PetListener implements Listener {
     }
     
     public function onDamage(EntityDamageEvent $event): void {
-        $player = $event->getEntity();
-        if ($player instanceof Player) {
+        $entity = $event->getEntity();
+        if ($entity instanceof Player) {
             $eventcause = $event->getCause();
-            if ($eventcause === $event::CAUSE_FALL && $this->os->playerRidding($player)) {
+            if ($eventcause === $event::CAUSE_FALL && $this->os->playerRidding($entity)) {
                 $event->setCancelled();
                 return;
             }
+        } else if ($entity instanceof BasicPet) {
             if ($event instanceof EntityDamageByEntityEvent) {
                 $event->setCancelled();
             }
@@ -53,9 +54,10 @@ class PetListener implements Listener {
             if($pet->checkEventIgnorant()) {
 				return;
 			}
-			$owner = $this->os->getServer()->getPlayer($pet->getOwnerName());
-			$this->os->destroyPet($pet->getName(), $pet->getOwner());
+			$owner = $pet->getOwner();
 			$newpet = $this->os->makePet($pet->getEntityType(), $owner, $pet->getName());
+			$this->os->destroyPet($pet->getName(), $owner);
+			var_dump($newpet);
 			$event = new RemakePetEvent($this->os, $newpet, $delay);
 			$this->os->getServer()->getPluginManager()->callEvent($event);
 			if($event->isCancelled()) {
