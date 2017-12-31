@@ -11,7 +11,7 @@ use VGCore\lobby\pet\BasicPet;
 
 class DestroyPetEvent extends PetEvent implements Cancellable {
     
-    public static $handlerlist = null;
+    public static $handlerList = null;
     
     private $pet;
     
