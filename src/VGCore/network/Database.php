@@ -20,7 +20,9 @@ class Database {
 			kills FLOAT,
 			deaths FLOAT,
 			faction VARCHAR(30),
-			role VARCHAR(12)
+			role VARCHAR(12),
+			invites VARCHAR(30),
+			requests VARCHAR(30),
 			ban FLOAT,
 			rank TEXT,
 			banid INT(5),
