@@ -21,7 +21,7 @@ class PlayerSetting extends PluginCommand {
         $this->setPermission("vgcore.playersetting");
     }
     
-    public function execute(CommandSender $sender, string $commandLabel) {
+    public function execute(CommandSender $sender, string $commandLabel, array $args) {
         UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['settingsUI'], $sender);
     }
     

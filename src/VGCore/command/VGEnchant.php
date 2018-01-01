@@ -21,7 +21,7 @@ class VGEnchant extends PluginCommand {
         $this->setPermission("vgcore.vgenchant");
     }
     
-    public function execute(CommandSender $sender, string $commandLabel) {
+    public function execute(CommandSender $sender, string $commandLabel, array $args) {
         UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['customEnchantUI'], $sender);
     }
     

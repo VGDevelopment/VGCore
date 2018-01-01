@@ -21,7 +21,7 @@ class Economy extends PluginCommand {
         $this->setPermission("vgcore.economy");
     }
     
-    public function execute(CommandSender $sender, string $commandLabel) {
+    public function execute(CommandSender $sender, string $commandLabel, array $args) {
         UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['economyUI'], $sender);
     }
     
