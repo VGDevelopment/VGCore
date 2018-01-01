@@ -132,16 +132,12 @@ class SystemOS extends PluginBase {
     private $pet = [
         "EnderDragon",
         "Chicken",
-        "Zombie",
-        "Wolf",
         "Ghast"
     ];
     
     private $petclass = [
         EnderDragonPet::class,
         ChickenPet::class,
-        ZombiePet::class,
-        WolfPet::class,
         GhastPet::class
     ];
     
@@ -215,7 +211,8 @@ class SystemOS extends PluginBase {
 		PacketPool::registerPacket(new ModalFormResponsePacket());
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
-
+        
+        UIDriver::resetUIs($this); // reset all the uis to scratch
 		$this->createUIs(); // creates the forms in @var $uis [] int array.
 		$this->createShopUI(); // creates the forms in @var $uis [] int array.
     }
@@ -229,7 +226,7 @@ class SystemOS extends PluginBase {
     }
 
     public function loadCommand() {
-        $this->getServer()->getCommandMap()->register("tutorial", new Tutorial("tutorial", $this));
+        $this->getServer()->getCommandMap()->register("settings", new PlayerSetting("settings", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
     }
@@ -268,31 +265,20 @@ class SystemOS extends PluginBase {
     // >>> Section 1 - Graphical User Interface (GUI)
 
     public function createUIs() {
-        UIDriver::resetUIs($this); // Reloads all UIs and dynamic fields.
-        // Tutorial MENU
-        $ui = new SimpleForm('§2VirtualGalaxy Tutorial', '§aClick the correct button to load the tutorial for that category.');
-        $serversettingtutorial = new Button('§2Account Settings');
-        $ui->addButton($serversettingtutorial);
-        self::$uis['tutorialUI'] = UIDriver::addUI($this, $ui);
-        // Account Settings Tutorial
-        $ui = new CustomForm('§2Account Settings Tutorial');
-        $serversetting = new Label('§eTo manage most of your in-game account settings, please use the VirtualGalaxy Settings available to each user by following instructions for your corresponding device :');
-        $serversettingios = new Label('§eFOR IOS USERS : Close this menu > Click the pause button > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
-        $serversettingandroid = new Label('§eFOR ANDROID USERS : Close this menu > Tap the RETURN Button (to find out return button on your device, read the manual given with your device) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
-        $serversettingwindow = new Label('§eFOR WINDOWS 10 USERS : Press the ESC button on your keyboard (usually at top left corner) > Click Settings > VirtualGalaxy Settings > Follow instructions given on that panel.');
-        $ui->addElement($serversetting);
-        $ui->addElement($serversettingios);
-        $ui->addElement($serversettingandroid);
-        $ui->addElement($serversettingwindow);
-        self::$uis['serverSettingTutorialUI'] = UIDriver::addUI($this, $ui);
         // Server Settings
-        $ui = new CustomForm('§2VirtualGalaxy Settings');
-        $ui->addIconUrl('https://pbs.twimg.com/profile_images/932011013632864256/Ghb05ZtV_400x400.jpg');
-        $intro = new Label('§6This is your private server settings for your account. Here you can manage your account details such as the rank for your account, or your pets (if your rank permits changing), and much more.');
-        $pet = new Dropdown('§eChoose your pet:', ['EnderDragon', 'Baby Ghast', 'Baby Zombie', 'Wolf', 'Chicken']);
-        $ui->addElement($intro);
-        $ui->addElement($pet);
+        $ui = new CustomForm('§eVirtualGalaxy Tutorial');
+        $ui->addIconUrl('https://preview.ibb.co/ioc1Zb/Pluto_Icon_with_background.png');
         self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
+        // Settings
+        $ui = new SimpleForm('§cVirtualGalaxy User Settings', '§ePlease click an option.');
+        $petmenu = new Button('§cPets');
+        $ui->addButton($petmenu);
+        self::$uis['settingsUI'] = UIDriver::addUI($this, $ui);
+        // Pet Menu 
+        $ui = new CustomForm('§cPets');
+        $pet = new Dropdown('§eChoose your pet:', ['EnderDragon', 'Baby Ghast', 'Chicken']);
+        $ui->addElement($pet);
+        self::$uis['petUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
         $checkcoin = new Button('§2Check §6Coins');

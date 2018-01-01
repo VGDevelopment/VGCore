@@ -85,7 +85,7 @@ abstract class BasicPet extends Creature implements Rideable {
         $this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY, (bool)$baby);
         $this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
         $this->spawnToAll();
-        $this->getAttributeMap()->addAttribute(Attribute::getAttribute(20));
+        $this->getAttributeMap()->addAttribute(Attribute::getAttribute(6)); // 20 was removed in 1.2 - oops
     }
     
     public function getOS(): SystemOS {

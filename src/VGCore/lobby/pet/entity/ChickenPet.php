@@ -2,10 +2,10 @@
 
 namespace VGCore\lobby\pet\entity;
 
-use VGCore\lobby\pet\WalkingPet;
+use VGCore\lobby\pet\FlyingPet;
 use VGCore\lobby\pet\int\SmallPet;
 
-class ChickenPet extends WalkingPet implements SmallPet {
+class ChickenPet extends FlyingPet implements SmallPet {
     
     public $networkid = 10;
     public $name = "Chicken Pet";

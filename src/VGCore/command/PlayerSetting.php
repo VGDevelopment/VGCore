@@ -12,17 +12,17 @@ use VGCore\SystemOS;
 
 use VGCore\gui\lib\UIDriver;
 
-class VGEnchant extends PluginCommand {
+class PlayerSetting extends PluginCommand {
     
     public function __construct($name, SystemOS $plugin) {
         parent::__construct($name, $plugin);
-        $this->setDescription("Access VG Custom Enchants");
-        $this->setUsage("/vgenchant");
-        $this->setPermission("vgcore.vgenchant");
+        $this->setDescription("Access VG Player Settings");
+        $this->setUsage("/settings");
+        $this->setPermission("vgcore.playersetting");
     }
     
     public function execute(CommandSender $sender, string $commandLabel) {
-        UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['customEnchantUI'], $sender);
+        UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['settingsUI'], $sender);
     }
     
 }

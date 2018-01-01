@@ -104,7 +104,25 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				$pet = $response[1];
+				break;
+			}
+			case SystemOS::$uis['settingsUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§cPets': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['petUI'], $event->getPlayer());
+						break;
+					}
+				}
+				break;
+			}
+			case SystemOS::$uis['petUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$pet = $response[0];
 				$ppet = $this->os->getPlayerPet($player);
 				$petcount = count($ppet);
 				if ($petcount > 0) {
@@ -117,23 +135,8 @@ class GUIListener implements Listener {
 						$pet = "Ghast";
 					}
 					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 0.3);
-				} else if ($pet === "Baby Zombie") {
-					$pet = "Zombie";
-					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 1.5);
 				} else {
-					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 1.25);
-				}
-				break;
-			}
-			case SystemOS::$uis['tutorialUI']: {
-				$data = $event->getData();
-				$ui = UIDriver::getPluginUI($this->os, $id);
-				$response = $ui->handle($data, $event->getPlayer());
-				switch ($response) {
-					case '§2Account Settings': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['serverSettingTutorialUI'], $event->getPlayer());
-						break;
-					}
+					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 3.25);
 				}
 				break;
 			}
