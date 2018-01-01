@@ -61,7 +61,17 @@ class Database {
         if ($check === false) {
         	$db = self::getDatabase();
             $lowuser = strtolower($user);
-            $q = $db->query("INSERT INTO users (username, rank, kills, deaths, ban, coins, dollars, gems) VALUES ('" . $db->real_escape_string($lowuser) . "', 'Player', '0', '0', '0', '5000', '0', '10');");
+            $q = $db->query("INSERT INTO users (username, rank, kills, deaths, ban, coins, dollars, gems) VALUES ('" 
+            . $db->real_escape_string($lowuser) . 
+            "',
+            'Player',
+            '0',
+            '0',
+            '0',
+            '5000',
+            '0',
+            '10'
+            );");
 			if ($q === true) {
 			} else {
 			    return false;
