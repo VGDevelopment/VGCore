@@ -62,12 +62,12 @@ class Database {
         	$db = self::getDatabase();
             $lowuser = strtolower($user);
             $q = $db->query("INSERT INTO users (username, rank) VALUES ('" . $db->real_escape_string($lowuser) . "', 'Player');");
-			$q2 = $db->query("INSERT INTO users (username, kills) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
-			$q3 = $db->query("INSERT INTO users (username, deaths) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
-			$q4 = $db->query("INSERT INTO users (username, ban) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
-			$q5 = $db->query("INSERT INTO users (username, coins) VALUES ('" . $db->real_escape_string($lowuser) . "', 5000);");
-			$q6 = $db->query("INSERT INTO users (username, dollars) VALUES ('" . $db->real_escape_string($lowuser) . "', 0);");
-			$q7 = $db->query("INSERT INTO users (username, gems) VALUES ('" . $db->real_escape_string($lowuser) . "', 10);");
+			$q2 = $db->query("INSERT INTO users (username, kills) VALUES ('" . $db->real_escape_string($lowuser) . "', '0');");
+			$q3 = $db->query("INSERT INTO users (username, deaths) VALUES ('" . $db->real_escape_string($lowuser) . "', '0');");
+			$q4 = $db->query("INSERT INTO users (username, ban) VALUES ('" . $db->real_escape_string($lowuser) . "', '0');");
+			$q5 = $db->query("INSERT INTO users (username, coins) VALUES ('" . $db->real_escape_string($lowuser) . "', '5000');");
+			$q6 = $db->query("INSERT INTO users (username, dollars) VALUES ('" . $db->real_escape_string($lowuser) . "', '0');");
+			$q7 = $db->query("INSERT INTO users (username, gems) VALUES ('" . $db->real_escape_string($lowuser) . "', '10');");
 			if ($q === true && $q2 === true && $q3 === true && $q4 === true && $q5 === true && $q6 === true && $q7 === true) {
 			    return true;
 			} else {
