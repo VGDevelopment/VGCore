@@ -19,6 +19,8 @@ class Database {
 			coins FLOAT,
 			kills FLOAT,
 			deaths FLOAT,
+			faction VARCHAR(30),
+			role VARCHAR(12)
 			ban FLOAT,
 			rank TEXT,
 			banid INT(5),
