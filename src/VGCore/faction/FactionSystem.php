@@ -29,7 +29,7 @@ class FactionSystem {
 		$leadername = $leader->getName();
 		$roleleader = $this->rank[0];
 		if (!$this->factionValidate($faction)) {
-			INSERT INTO factions (faction, leader, kills, deaths, power, valid) VALUES ('" . $db->real_escape_string($faction) . 
+			$this->db->query("INSERT INTO factions (faction, leader, kills, deaths, power, valid) VALUES ('" . $db->real_escape_string($faction) . 
 		"', 
 		$leadername,
 		'0000', 
