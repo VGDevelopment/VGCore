@@ -69,7 +69,7 @@ use VGCore\network\ServerSettingsResponsePacket;
 use VGCore\network\VGServer;
 use VGCore\network\Database as DB;
 
-use VGCore\command\Tutorial;
+use VGCore\command\PlayerSetting;
 use VGCore\command\Economy;
 use VGCore\command\VGEnchant;
 
