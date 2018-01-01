@@ -29,12 +29,14 @@ class FactionSystem {
 		$leadername = $leader->getName();
 		$roleleader = $this->rank[0];
 		if (!$this->factionValidate($faction)) {
-			$this->db->query("INSERT INTO factions (player, faction) VALUES ('" . $this->db->real_escape_string($leadername) . $faction . ");");
-			$this->db->query("INSERT INTO factions (player, rank) VALUES ('" . $this->db->real_escape_string($leadername) . $roleleader . ");");
-			$this->db->query("INSERT INTO factions (faction, kills) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
-			$this->db->query("INSERT INTO factions (faction, deaths) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
-			$this->db->query("INSERT INTO factions (faction, power) VALUES ('" . $this->db->real_escape_string($faction) . "', 00000);");
-			$this->db->query("INSERT INTO factions (faction, valid) VALUES ('" . $this->db->real_escape_string($faction) . "', 0);");
+			INSERT INTO factions (faction, leader, kills, deaths, power, valid) VALUES ('" . $db->real_escape_string($faction) . 
+		"', 
+		$leadername,
+		'0000', 
+		'0000', 
+		'0000', 
+		'0'
+		);");
 		}
 		return false;
 	}
@@ -58,7 +60,7 @@ class FactionSystem {
 	public function invitePlayer(Player $player, string $faction){
 		if($this->factionValidate($faction)){
 			$playername = $player->getName();
-			$this->db->query("INSERT INTO factions (player, invites) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+			$this->db->query("INSERT INTO users (username, invites) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
 		} else {
 			return false;
 		}
@@ -67,7 +69,7 @@ class FactionSystem {
 	public function requestPlayer(Player $player, string $faction){
 		if($this->factionValidate($faction)){
 			$playername = $player->getName();
-			$this->db->query("INSERT INTO factions (player, requests) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+			$this->db->query("INSERT INTO users (username, requests) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
 		} else {
 			return false;
 		}
@@ -77,8 +79,8 @@ class FactionSystem {
 		if ($this->factionValidate($faction)) {
 			$playername = $player->getName();
 			$defrank = $this->rank[2];
-			$query = $this->db->query("UPDATE factions SET faction = $faction WHERE player='" . $this->db->real_escape_string($playername) . ".");
-			$query2 = $this->db->query("UPDATE factions SET rank = $defrank WHERE player='" . $this->db->real_escape_string($playername) . ".");
+			$query = $this->db->query("UPDATE users SET faction = $faction WHERE player='" . $this->db->real_escape_string($playername) . ".");
+			$query2 = $this->db->query("UPDATE users SET role = $defrank WHERE player='" . $this->db->real_escape_string($playername) . ".");
 			if ($query === true && $query2 === true) {
 				return true;
 			} else {
