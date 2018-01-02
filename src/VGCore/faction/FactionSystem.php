@@ -101,7 +101,7 @@ class FactionSystem {
 
 	public function isInFaction(Player $player) {
 		$playername = $player->getName();
-		$result = $this->db->query("SELECT player FROM master WHERE player='$player';");
+		$result = $this->db->query("SELECT faction FROM users WHERE username='".$this->db->real_escape_string($playername)."'");
   	$array = $result->fetchArray()[0] ?? false;
     return empty($array) == false;
 	}
