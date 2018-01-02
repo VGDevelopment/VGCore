@@ -89,8 +89,11 @@ use VGCore\lobby\pet\BasicPet;
 use VGCore\lobby\pet\entity\EnderDragonPet;
 use VGCore\lobby\pet\entity\ChickenPet;
 use VGCore\lobby\pet\entity\ZombiePet;
+use VGCore\lobby\pet\entity\ZombiePigmanPet;
 use VGCore\lobby\pet\entity\WolfPet;
 use VGCore\lobby\pet\entity\GhastPet;
+use VGCore\lobby\pet\entity\BlazePet;
+use VGCore\lobby\pet\entity\CowPet;
 
 class SystemOS extends PluginBase {
 
@@ -121,7 +124,7 @@ class SystemOS extends PluginBase {
         'IV' => 4,
         'I' => 1
     ];
-    
+
     // @var integer [] array
     public static $uis;
 
@@ -129,23 +132,29 @@ class SystemOS extends PluginBase {
     private $messages;
     // @var string [] array
     private $badwords;
-    
+
     private $pet = [
         "EnderDragon",
         "Chicken",
         "Wolf",
         "Zombie",
-        "Ghast"
+        "Zombie Pigman"
+        "Ghast",
+        "Blaze",
+        "Cow"
     ];
-    
+
     private $petclass = [
         EnderDragonPet::class,
         ChickenPet::class,
         WolfPet::class,
         ZombiePet::class,
-        GhastPet::class
+        ZombiePigmanPet::class,
+        GhastPet::class,
+        BlazePet::class,
+        CowPet::class
     ];
-    
+
     private static $toggleoff = [];
     private static $toggleon = [];
 
@@ -164,49 +173,49 @@ class SystemOS extends PluginBase {
         CustomEnchantment::TRUEMINER => ["True Miner", "Pickaxe", "Break", "Legendary", 1, "5% chance that whatever block you mine, turns into a diamond."],
         CustomEnchantment::TRUEAXE => ["True Axe", "Axe", "Break", "Legendary", 1, "40% chance to chop down all logs connected with this one."],
         CustomEnchantment::MINIBLACKHOLE => ["Mini Black Hole", "Armor", "Damage", "Legendary", 1, "5% chance to explode and kill all near opponents."]
-        
+
     ];
 
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
-        
+
         // enables UI - make comment line to disable UI. May cause extreme failures if disabled.
         $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
         $this->loadUI();
-        
+
         // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused. # Made comment line because Mojang Chat Filter is on.
         // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
         // $this->loadFilter();
-        
+
         // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
         $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.");
         $this->loadCommand();
-        
+
         // Enables Vanilla Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy VANILLA Enchants.");
         $this->loadVanillaEnchant();
-        
+
         // Enables Custom Enchants
         $this->getLogger()->info("Enabling the Virtual Galaxy CUSTOM Enchants.");
         $this->loadCustomEnchant();
-        
+
         // Enables User Manager
         $this->getLogger()->info("Enabling the Virtual Galaxy User System.");
         $this->loadUserSystem();
-        
+
         // Starts Database connection - Centralises everything. DO NOT DISABLE!
         $this->getLogger()->info("Enabling the Virtual Galaxy Database API.");
         $this->loadDatabaseAPI();
-        
+
         // Loads all Lobby Features
         $this->getLogger()->info("Enabling the Virtual Galaxy Pet System.");
         $this->loadPet();
-        
-        // Loads all VG Music 
+
+        // Loads all VG Music
         $this->getLogger()->info("Enabling the Virtual Galaxy Music System : Registering music files.");
         $this->loadMusic();
     }
-    
+
     public function onDisable() {
         $this->getLogger()->info("Shutting down VGCore SystemOS and it's dependancies. Disconnecting from VG API.");
     }
@@ -220,7 +229,7 @@ class SystemOS extends PluginBase {
 		PacketPool::registerPacket(new ModalFormResponsePacket());
 		PacketPool::registerPacket(new ServerSettingsRequestPacket());
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
-        
+
         UIDriver::resetUIs($this); // reset all the uis to scratch
 		$this->createUIs(); // creates the forms in @var $uis [] int array.
 		$this->createShopUI(); // creates the forms in @var $uis [] int array.
@@ -254,15 +263,15 @@ class SystemOS extends PluginBase {
         }
         $this->getServer()->getPluginManager()->registerEvents(new CustomEnchantmentListener($this), $this);
     }
-    
+
     public function loadUserSystem() {
         $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this);
     }
-    
+
     public function loadDatabaseAPI() {
         DB::createRecord($this);
     }
-    
+
     public function loadPet() {
         foreach($this->petclass as $class) {
             Entity::registerEntity($class, true);
@@ -270,7 +279,7 @@ class SystemOS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
     }
-    
+
     public function loadMusic() {
         MusicPlayer::$songlist = glob($this->getDataFolder() . "songlist/*.nbs");
     }
@@ -289,9 +298,9 @@ class SystemOS extends PluginBase {
         $ui->addButton($petmenu);
         $ui->addButton($music);
         self::$uis['settingsUI'] = UIDriver::addUI($this, $ui);
-        // Pet Menu 
+        // Pet Menu
         $ui = new CustomForm('§cPets');
-        $pet = new Dropdown('§eChoose your pet:', ['OFF', 'EnderDragon', 'Baby Ghast', 'Chicken', 'Wolf', 'Zombie']);
+        $pet = new Dropdown('§eChoose your pet:', ['OFF', 'EnderDragon', 'Baby Ghast', 'Chicken', 'Cow', 'Wolf', 'Blaze', 'Zombie', 'Zombie Pigman']);
         $ui->addElement($pet);
         self::$uis['petUI'] = UIDriver::addUI($this, $ui);
         // Music Menu
@@ -986,9 +995,9 @@ class SystemOS extends PluginBase {
         }
         return self::NOT_COMPATIBLE;
     }
-    
+
     // Pets
-    
+
     public function petAlive(string $entityname): bool {
         foreach ($this->pet as $pet) {
             if (strtolower($pet) === strtolower($entityname)) {
@@ -997,7 +1006,7 @@ class SystemOS extends PluginBase {
         }
         return false;
     }
-    
+
     public function getPet(string $entityname): ?string {
         foreach ($this->pet as $pet) {
             if(strtolower($pet) === strtolower($entityname)) {
@@ -1006,7 +1015,7 @@ class SystemOS extends PluginBase {
         }
         return false;
     }
-    
+
     public function makePet(string $entityname, Player $player, string $petname, float $scale = 1.0, bool $baby = false): ?BasicPet {
         $server = new VGServer($this);
         $servercheck = $server->checkServer();
@@ -1080,7 +1089,7 @@ class SystemOS extends PluginBase {
         }
         return null;
     }
-    
+
     public function getPlayerPet(Player $player): array {
         $playerpet = [];
         $entarray = $player->getLevel()->getEntities();
@@ -1097,7 +1106,7 @@ class SystemOS extends PluginBase {
         }
         return $playerpet;
     }
-    
+
     public function getPetByName(string $name, Player $player = null): ?BasicPet {
         if ($player !== null) {
             foreach ($this->getPlayerPet($player) as $pet) {
@@ -1121,7 +1130,7 @@ class SystemOS extends PluginBase {
         }
         return null;
     }
-    
+
     public function destroyPet(string $name, Player $player = null): bool {
         $pet = $this->getPetByName($name);
         if ($pet === null) {
@@ -1156,7 +1165,7 @@ class SystemOS extends PluginBase {
         $ppet->kill(true);
         return true;
     }
-    
+
     public function getRiddenPet(Player $player): BasicPet {
         foreach ($this->getPlayerPet($player) as $pet) {
             if ($pet->ridden()) {
@@ -1165,7 +1174,7 @@ class SystemOS extends PluginBase {
         }
         return null;
     }
-    
+
     public function playerRidding(Player $player): bool {
         foreach ($this->getPlayerPet($player) as $pet) {
             if ($pet->ridden()) {
@@ -1174,11 +1183,11 @@ class SystemOS extends PluginBase {
         }
         return false;
     }
-    
+
     public function pMultipleToggleOn(Player $player): bool {
         return !isset(self::$toggleoff[$player->getName()]);
     }
-    
+
     public function toggleMultiplePet(Player $player): bool {
         if ($this->pMultipleToggleOn($player)) {
             self::$toggleoff[$player->getName()] = true;
@@ -1196,14 +1205,14 @@ class SystemOS extends PluginBase {
             return true;
         }
     }
-    
+
     public function pSingletonToggleOn(BasicPet $pet, Player $player): bool {
         if (isset(self::$toggleon[$pet->getName()])) {
             return self::$toggleon[$pet->getName()] = $player->getName();
         }
         return false;
     }
-    
+
     public function toggleSingletonPet(BasicPet $pet, Player $player): bool {
         if (isset(self::$toggleon[$pet->getName()])) {
             if (self::$toggleon[$pet->getName()] === $player->getName()) {
