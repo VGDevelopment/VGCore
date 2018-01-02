@@ -79,8 +79,8 @@ class FactionSystem {
 		if ($this->factionValidate($faction)) {
 			$playername = $player->getName();
 			$defrank = $this->rank[2];
-			$query = $this->db->query("UPDATE users SET faction = $faction WHERE player='" . $this->db->real_escape_string($playername) . ".");
-			$query2 = $this->db->query("UPDATE users SET role = $defrank WHERE player='" . $this->db->real_escape_string($playername) . ".");
+			$query = $this->db->query("UPDATE users SET faction = $faction WHERE username='" . $this->db->real_escape_string($playername) . ".");
+			$query2 = $this->db->query("UPDATE users SET role = $defrank WHERE username='" . $this->db->real_escape_string($playername) . ".");
 			if ($query === true && $query2 === true) {
 				return true;
 			} else {

@@ -34,12 +34,9 @@ class Database {
 			return;
 		}
 		if (!$db->query("CREATE TABLE IF NOT EXISTS factions(
-			player TEXT,
-    		invites TEXT,
-    		requests TEXT,
-			faction TEXT,
+			faction VARCHAR(30),
 			valid INT(1),
-			rank TEXT,
+			rank VARCHAR(12),
 			kills INT(5),
 			deaths INT(5),
 			power INT(5)
@@ -65,8 +62,8 @@ class Database {
         if ($check === false) {
         	$db = self::getDatabase();
             $lowuser = strtolower($user);
-            $q = $db->query("INSERT INTO users (username, rank, kills, deaths, ban, coins, dollars, gems) VALUES ('" 
-            . $db->real_escape_string($lowuser) . 
+            $q = $db->query("INSERT INTO users (username, rank, kills, deaths, ban, coins, dollars, gems) VALUES ('"
+            . $db->real_escape_string($lowuser) .
             "',
             'Player',
             '0',

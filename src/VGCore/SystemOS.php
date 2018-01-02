@@ -311,6 +311,13 @@ class SystemOS extends PluginBase {
         $music = new Dropdown('§eChoose your jam:', ['OFF', 'Radioactive', 'ShapeOfYou', 'ShapeOfYou5tick']);
         $ui->addElement($music);
         self::$uis['musicUI'] = UIDriver::addUI($this, $ui);
+        // Faction Menu
+        $ui = new SimpleForm('§cFactionMenu', '§aClick the correct button to perform that action.');
+        $createfac = new Button('Create Faction');
+        $joinfac = new Button('Join Faction');
+        $ui->addButton($createfac);
+        $ui->addButton($joinfac);
+        self::$uis['factionUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
         $checkcoin = new Button('§2Check §6Coins');
