@@ -4,7 +4,7 @@ namespace VGCore\lobby\pet\entity;
 
 use VGCore\lobby\pet\WalkingPet;
 
-class ZombiePet extends WalkingPet {
+class ZombiePet extends FlyingPet {
     
     public $networkid = 32;
     public $name = "Zombie Pet";

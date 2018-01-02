@@ -140,8 +140,7 @@ class Handler {
         $sound = "Pop";
         S::playSound($e, $sound);
         $entitymotionx = $entity->getMotion()->x;
-        $level = $entity->getLevel();
-        $levelproduct = 3 * $level * 0.05;
+        $levelproduct = 3 * 0.05;
         $entitymotiony = $levelproduct + 0.75;
         $entitymotionz = $entity->getMotion()->z;
         $newmotion = new Vector3($entitymotionx, $entitymotiony, $entitymotionz);

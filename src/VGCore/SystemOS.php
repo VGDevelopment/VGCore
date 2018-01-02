@@ -84,6 +84,7 @@ use VGCore\user\UserSystem;
 
 use VGCore\sound\Sound;
 
+use VGCore\lobby\music\MusicPlayer;
 use VGCore\lobby\pet\BasicPet;
 use VGCore\lobby\pet\entity\EnderDragonPet;
 use VGCore\lobby\pet\entity\ChickenPet;
@@ -132,12 +133,16 @@ class SystemOS extends PluginBase {
     private $pet = [
         "EnderDragon",
         "Chicken",
+        "Wolf",
+        "Zombie",
         "Ghast"
     ];
     
     private $petclass = [
         EnderDragonPet::class,
         ChickenPet::class,
+        WolfPet::class,
+        ZombiePet::class,
         GhastPet::class
     ];
     
@@ -196,6 +201,10 @@ class SystemOS extends PluginBase {
         // Loads all Lobby Features
         $this->getLogger()->info("Enabling the Virtual Galaxy Pet System.");
         $this->loadPet();
+        
+        // Loads all VG Music 
+        $this->getLogger()->info("Enabling the Virtual Galaxy Music System : Registering music files.");
+        $this->loadMusic();
     }
     
     public function onDisable() {
@@ -261,6 +270,10 @@ class SystemOS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
     }
+    
+    public function loadMusic() {
+        MusicPlayer::$songlist = glob($this->getDataFolder() . "songlist/*.nbs");
+    }
 
     // >>> Section 1 - Graphical User Interface (GUI)
 
@@ -272,13 +285,20 @@ class SystemOS extends PluginBase {
         // Settings
         $ui = new SimpleForm('§cVirtualGalaxy User Settings', '§ePlease click an option.');
         $petmenu = new Button('§cPets');
+        $musicmenu = new Button('§cMusic');
         $ui->addButton($petmenu);
+        $ui->addButton($music);
         self::$uis['settingsUI'] = UIDriver::addUI($this, $ui);
         // Pet Menu 
         $ui = new CustomForm('§cPets');
-        $pet = new Dropdown('§eChoose your pet:', ['EnderDragon', 'Baby Ghast', 'Chicken']);
+        $pet = new Dropdown('§eChoose your pet:', ['OFF', 'EnderDragon', 'Baby Ghast', 'Chicken', 'Wolf', 'Zombie']);
         $ui->addElement($pet);
         self::$uis['petUI'] = UIDriver::addUI($this, $ui);
+        // Music Menu
+        $ui = new CustomForm('§cPets');
+        $music = new Dropdown('§eChoose your jam:', ['OFF', 'Radioactive', 'ShapeOfYou', 'ShapeOfYou5tick']);
+        $ui->addElement($music);
+        self::$uis['musicUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
         $checkcoin = new Button('§2Check §6Coins');

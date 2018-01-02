@@ -29,6 +29,8 @@ use VGCore\network\Database as DB;
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
 
+use VGCore\lobby\music\MusicPlayer;
+
 class GUIListener implements Listener {
 
     public $plugin;
@@ -115,6 +117,10 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['petUI'], $event->getPlayer());
 						break;
 					}
+					case '§cMusic': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['musicUI'], $event->getPlayer());
+						break;
+					}
 				}
 				break;
 			}
@@ -125,7 +131,7 @@ class GUIListener implements Listener {
 				$pet = $response[0];
 				$ppet = $this->os->getPlayerPet($player);
 				$petcount = count($ppet);
-				if ($petcount > 0) {
+				if ($pet === "OFF") {
 					foreach ($ppet as $pet) {
 						$this->os->destroyPet($pet->getName(), $player);
 					}
@@ -138,6 +144,21 @@ class GUIListener implements Listener {
 				} else {
 					$this->os->makePet($pet, $player, $player->getName() . "'s " . $pet . " Pet", 3.25);
 				}
+				break;
+			}
+			case SystemOS::$uis['musicUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$music = $response[0];
+				if ($music === "OFF") {
+					$p->getServer()->getScheduler()->cancelTasks($p);
+					return;
+				}
+				$filename = $music . ".nbs";
+				$mp = new MusicPlayer($p);
+				$p->getServer()->getScheduler()->cancelTasks($p);
+				$mp->playSong($filename);
 				break;
 			}
 			case SystemOS::$uis['economyUI']: {
