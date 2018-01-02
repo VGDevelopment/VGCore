@@ -72,6 +72,7 @@ use VGCore\network\Database as DB;
 use VGCore\command\PlayerSetting;
 use VGCore\command\Economy;
 use VGCore\command\VGEnchant;
+use VGCore\command\Faction;
 
 use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
@@ -250,6 +251,7 @@ class SystemOS extends PluginBase {
         $this->getServer()->getCommandMap()->register("settings", new PlayerSetting("settings", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
+	$this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
     }
 
     public function loadVanillaEnchant() {
