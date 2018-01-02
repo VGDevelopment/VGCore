@@ -94,6 +94,7 @@ use VGCore\lobby\pet\entity\WolfPet;
 use VGCore\lobby\pet\entity\GhastPet;
 use VGCore\lobby\pet\entity\BlazePet;
 use VGCore\lobby\pet\entity\CowPet;
+use VGCore\lobby\pet\entity\PolarBearPet;
 
 class SystemOS extends PluginBase {
 
@@ -135,6 +136,7 @@ class SystemOS extends PluginBase {
 
     private $pet = [
         "EnderDragon",
+        "Polar Bear",
         "Chicken",
         "Wolf",
         "Zombie",
@@ -146,6 +148,7 @@ class SystemOS extends PluginBase {
 
     private $petclass = [
         EnderDragonPet::class,
+        PolarBearPet::class,
         ChickenPet::class,
         WolfPet::class,
         ZombiePet::class,
@@ -300,7 +303,7 @@ class SystemOS extends PluginBase {
         self::$uis['settingsUI'] = UIDriver::addUI($this, $ui);
         // Pet Menu
         $ui = new CustomForm('§cPets');
-        $pet = new Dropdown('§eChoose your pet:', ['OFF', 'EnderDragon', 'Baby Ghast', 'Chicken', 'Cow', 'Wolf', 'Blaze', 'Zombie', 'Zombie Pigman']);
+        $pet = new Dropdown('§eChoose your pet:', ['OFF', 'EnderDragon', 'Polar Bear', 'Baby Ghast', 'Chicken', 'Cow', 'Wolf', 'Blaze', 'Zombie', 'Zombie Pigman']);
         $ui->addElement($pet);
         self::$uis['petUI'] = UIDriver::addUI($this, $ui);
         // Music Menu
