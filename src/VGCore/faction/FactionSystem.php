@@ -29,12 +29,12 @@ class FactionSystem {
 		$leadername = $leader->getName();
 		$roleleader = $this->rank[0];
 		if (!$this->factionValidate($faction)) {
-			$this->db->query("INSERT INTO factions (faction, leader, kills, deaths, power, valid) VALUES ('" . $db->real_escape_string($faction) . 
-		"', 
+			$this->db->query("INSERT INTO factions (faction, leader, kills, deaths, power, valid) VALUES ('" . $db->real_escape_string($faction) .
+		"',
 		$leadername,
-		'0000', 
-		'0000', 
-		'0000', 
+		'0000',
+		'0000',
+		'0000',
 		'0'
 		);");
 		}
@@ -91,6 +91,21 @@ class FactionSystem {
 		}
 	}
 
+	public function getPlayerFaction(Player $player) {
+		$playername = $player->getName();
+		$dbquery = $this->db->query("SELECT faction FROM users WHERE username='".$this->db->real_escape_string($playername)."'");
+		$fac = $dbquery->fetch_array()[0] ?? false;
+		$fac->free();
+		return $fac;
+	}
+
+	public function isInFaction(Player $player) {
+		$playername = $player->getName();
+		$result = $this->db->query("SELECT player FROM master WHERE player='$player';");
+  	$array = $result->fetchArray()[0] ?? false;
+    return empty($array) == false;
+	}
+
 	public function getFactionStat(string $faction) {
 		if ($this->factionValidate($faction)) {
 			$stat = [];
@@ -108,11 +123,11 @@ class FactionSystem {
 			return false;
 		}
 	}
-	
+
 	public function newLand($faction, $x1, $z1, $x2, $z2, string $level) {
 		$this->db->query("INSERT OR REPLACE INTO factions (faction, x1, z1, x2, z2, world) VALUES ('" . $this->db->real_escape_string($faction) . $x1 . $z1 . $x2. $z2 . $level . ");");
     }
-	
+
 	public function claimLand(Player $player, $faction, $size = 15) {
 		$x = floor($player->x);
 		$y = floor($player->y);
