@@ -17,18 +17,18 @@ class Faction extends PluginCommand {
 
   public $faction;
 
-    public function __construct($name, SystemOS $plugin, FactionSystem $faction) {
-        parent::__construct($name, $plugin);
-        $this->setDescription("Access Faction Features");
-        $this->setUsage("/faction");
-        $this->setPermission("vgcore.faction");
-        $this->faction = $faction;
-    }
+  public function __construct($name, SystemOS $plugin, FactionSystem $faction) {
+    parent::__construct($name, $plugin);
+    $this->setDescription("Access Faction Features");
+    $this->setUsage("/faction");
+    $this->setPermission("vgcore.faction");
+    $this->faction = $faction;
+  }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args) {
-        if(!$this->faction->isInFaction($sender)){
-          UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['factionUI'], $sender); // returns a Menu for thos who's not in a fac yt.
-        }
+  public function execute(CommandSender $sender, string $commandLabel, array $args) {
+    if(!$this->faction->isInFaction($sender)){
+      UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['factionUI'], $sender); // returns a Menu for thos who's not in a fac yt.
     }
+  }
 
 }

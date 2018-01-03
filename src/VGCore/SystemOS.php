@@ -141,7 +141,7 @@ class SystemOS extends PluginBase {
         "Chicken",
         "Wolf",
         "Zombie",
-        "Zombie Pigman"
+        "Zombie Pigman",
         "Ghast",
         "Blaze",
         "Cow"
@@ -236,6 +236,7 @@ class SystemOS extends PluginBase {
 
         UIDriver::resetUIs($this); // reset all the uis to scratch
 		$this->createUIs(); // creates the forms in @var $uis [] int array.
+		$this->createFactionUI(); // creates the forms in @var $uis [] int array.
 		$this->createShopUI(); // creates the forms in @var $uis [] int array.
     }
 
@@ -251,7 +252,7 @@ class SystemOS extends PluginBase {
         $this->getServer()->getCommandMap()->register("settings", new PlayerSetting("settings", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
-	$this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
+	    $this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
     }
 
     public function loadVanillaEnchant() {
@@ -286,7 +287,7 @@ class SystemOS extends PluginBase {
     }
 
     public function loadMusic() {
-        MusicPlayer::$songlist = glob($this->getDataFolder() . "songlist/*.nbs");
+        MusicPlayer::$songlist = glob($this->getDataFolder() . "resources/songlist/*.nbs");
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)
@@ -313,12 +314,6 @@ class SystemOS extends PluginBase {
         $music = new Dropdown('§eChoose your jam:', ['OFF', 'Radioactive', 'ShapeOfYou', 'ShapeOfYou5tick']);
         $ui->addElement($music);
         self::$uis['musicUI'] = UIDriver::addUI($this, $ui);
-        // Faction Menu
-        $ui = new SimpleForm('§cFactionMenu', '§aClick the correct button to perform that action.');
-        $createfac = new Button('Create Faction');
-        $joinfac = new Button('Join Faction');
-        $ui->addButton($createfac);
-        $ui->addButton($joinfac);
         self::$uis['factionUI'] = UIDriver::addUI($this, $ui);
         // Economy Menu
         $ui = new SimpleForm('§2EconomyMenu', '§aClick the correct button to perform that action.');
@@ -349,6 +344,15 @@ class SystemOS extends PluginBase {
         // ERROR Modal Window
         $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again. For further assistance, read the Tutorial or contact our support team : §esupport@vgpe.me§a.', '...', '...');
         self::$uis['errorUI'] = UIDriver::addUI($this, $ui);
+    }
+    
+    public function createFactionUI() {
+        // Faction Menu
+        $ui = new SimpleForm('§cFactionMenu', '§aClick the correct button to perform that action.');
+        $createfac = new Button('Create Faction');
+        $joinfac = new Button('Join Faction');
+        $ui->addButton($createfac);
+        $ui->addButton($joinfac);
     }
 
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.

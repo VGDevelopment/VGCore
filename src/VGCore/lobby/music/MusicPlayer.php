@@ -49,6 +49,7 @@ class MusicPlayer {
         if ($song === null) {
             $song = self::playRandom();
         }
+        var_dump(self::$songlist);
         return $song;
     }
     
@@ -70,10 +71,10 @@ class MusicPlayer {
         $this->play($song);
     }
     
-    public function play(string $songfile) {
+    public function play(string $songfile = "") {
         $songfile = self::nextSong();
         if ($songfile === "") {
-            return;
+            $this->plugin->getServer()->getLogger()->info("No songs found. ERROR");
         }
         $song = null;
         try {
