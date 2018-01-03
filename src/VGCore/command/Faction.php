@@ -17,12 +17,12 @@ class Faction extends PluginCommand {
 
   public $faction;
 
-  public function __construct($name, SystemOS $plugin, FactionSystem $faction) {
+  public function __construct($name, SystemOS $plugin) {
     parent::__construct($name, $plugin);
     $this->setDescription("Access Faction Features");
     $this->setUsage("/faction");
     $this->setPermission("vgcore.faction");
-    $this->faction = $faction;
+    $this->faction = new FactionSystem($plugin);
   }
 
   public function execute(CommandSender $sender, string $commandLabel, array $args) {
