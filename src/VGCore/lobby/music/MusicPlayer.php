@@ -40,7 +40,7 @@ class MusicPlayer {
         return self::$songlist[array_rand(self::$songlist)];
     }
     
-    public function static addSongToPlaylist($filename) {
+    public static function addSongToPlaylist($filename) {
         self::$playlist[] = $filename;
     }
     
@@ -66,14 +66,12 @@ class MusicPlayer {
     }
     
     public function playSong($filename) {
-        $song = $filename;
+        $song = $this->plugin->getDataFolder() . "resources/songlist/" . $filename . ".nbs";
         $this->play($song);
     }
     
-    public function play(string $songfile = "") {
-        if ($songfile === "") {
-            $songfile = self::nextSong();
-        }
+    public function play(string $songfile) {
+        $songfile = self::nextSong();
         if ($songfile === "") {
             return;
         }

@@ -2,7 +2,7 @@
 
 namespace VGCore\lobby\pet\entity;
 
-use VGCore\lobby\pet\WalkingPet;
+use VGCore\lobby\pet\FlyingPet;
 use VGCore\lobby\pet\int\SmallPet;
 
 class WolfPet extends FlyingPet implements SmallPet {

@@ -18,7 +18,7 @@ class NBSParser {
     const BASS_DRUM = 2;
     const SNARE = 3;
     const CLICK = 4;
-    const GUITAR - 5;
+    const GUITAR = 5;
     const FLUTE = 6;
     const BELL = 7;
     const CHIME = 8;

@@ -155,10 +155,10 @@ class GUIListener implements Listener {
 					$p->getServer()->getScheduler()->cancelTasks($p);
 					return;
 				}
-				$filename = $music . ".nbs";
+				$filename = $music;
 				$mp = new MusicPlayer($p);
 				$p->getServer()->getScheduler()->cancelTasks($p);
-				$mp->playSong($filename);
+				$mp->play();
 				break;
 			}
 			case SystemOS::$uis['economyUI']: {

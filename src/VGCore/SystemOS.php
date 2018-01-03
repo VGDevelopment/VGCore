@@ -301,7 +301,7 @@ class SystemOS extends PluginBase {
         $petmenu = new Button('§cPets');
         $musicmenu = new Button('§cMusic');
         $ui->addButton($petmenu);
-        $ui->addButton($music);
+        $ui->addButton($musicmenu);
         self::$uis['settingsUI'] = UIDriver::addUI($this, $ui);
         // Pet Menu
         $ui = new CustomForm('§cPets');
