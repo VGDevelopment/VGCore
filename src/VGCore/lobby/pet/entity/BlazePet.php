@@ -2,7 +2,7 @@
 
 namespace VGCore\lobby\pet\entity;
 
-use VGCore\lobby\pet\WalkingPet;
+use VGCore\lobby\pet\FlyingPet;
 
 class BlazePet extends FlyingPet {
 
