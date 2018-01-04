@@ -344,7 +344,7 @@ class SystemOS extends PluginBase {
         $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again. For further assistance, read the Tutorial or contact our support team : §esupport@vgpe.me§a.', '...', '...');
         self::$uis['errorUI'] = UIDriver::addUI($this, $ui);
     }
-    
+
     public function createFactionUI() {
         // Faction Menu
         $ui = new SimpleForm('§cFactionMenu', '§aClick the correct button to perform that action.');
@@ -353,6 +353,24 @@ class SystemOS extends PluginBase {
         $ui->addButton($createfac);
         $ui->addButton($joinfac);
         self::$uis['factionUI'] = UIDriver::addUI($this, $ui);
+        // Create Faction Menu
+        $ui = new CustomForm('§8CreateFaction');
+        $input = new Input('§eName your faction', 'Non-alphanumeric characters)');
+        $ui->addElement($input);
+        self::$uis['createFactionUI'] = UIDriver::addUI($this, $ui);
+        // Join Faction Menu
+        $ui = new SimpleForm('§cJoinFaction', '§aClick the correct button to perform that action.');
+        $createfac = new Button('Check Invites');
+        $joinfac = new Button('Check Requests');
+        $ui->addButton($createfac);
+        $ui->addButton($joinfac);
+        self::$uis['joinFactionUI'] = UIDriver::addUI($this, $ui);
+        // Check Invites Menu
+        $ui = new SimpleForm('§aCheck Faction Invites', '§aClick the correct button to check that faction.');
+        self::$uis['checkInviteUI'] = UIDriver::addUI($this, $ui);
+        // Check Requests Menu
+        $ui = new SimpleForm('§aCheck Faction Requests', '§aClick the correct button to check that faction.');
+        self::$uis['checkRequestUI'] = UIDriver::addUI($this, $ui);
     }
 
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.

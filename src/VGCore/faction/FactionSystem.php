@@ -60,7 +60,7 @@ class FactionSystem {
 	public function invitePlayer(Player $player, string $faction){
 		if($this->factionValidate($faction)){
 			$playername = $player->getName();
-			$this->db->query("INSERT INTO users (username, invites) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+			$this->db->query("INSERT OR REPLACE INTO users (username, invites) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
 		} else {
 			return false;
 		}
@@ -69,7 +69,7 @@ class FactionSystem {
 	public function requestPlayer(Player $player, string $faction){
 		if($this->factionValidate($faction)){
 			$playername = $player->getName();
-			$this->db->query("INSERT INTO users (username, requests) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+			$this->db->query("INSERT OR REPLACE INTO users (username, requests) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
 		} else {
 			return false;
 		}
