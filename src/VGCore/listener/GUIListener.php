@@ -159,7 +159,7 @@ class GUIListener implements Listener {
 				$filename = $music;
 				$mp = new MusicPlayer($p);
 				$p->getServer()->getScheduler()->cancelTasks($p);
-				$mp->play();
+				$mp->makeTask();
 				break;
 			}
 			case SystemOS::$uis['economyUI']: {
@@ -217,8 +217,7 @@ class GUIListener implements Listener {
 				$enchantment = $plugin->setEnchantment($playeritemhand, $string, 1, true, $player);
 				$playerinv->setItemInHand($enchantment);
 			}
-
-      case SystemOS::$uis['factionUI']: {
+			case SystemOS::$uis['factionUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
@@ -234,37 +233,35 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
-
-      case SystemOS::$uis['createFactionUI']: {
-        $faction = new FactionSystem($event->getPlugin());
+			case SystemOS::$uis['createFactionUI']: {
+				$faction = new FactionSystem($event->getPlugin());
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
 				$string = $response[0];
 				$plugin = $event->getPlugin();
 				$player = $event->getPlayer();
-				if(!$this->alphanum($string)){
-          $player->sendMessage("§cYou may only use letters and numbers.");
-          return true;
-        }
-        if($faction->factionValidate($string)){
-          $player->sendMessage("§cThat faction already exists!");
-          return true;
-        }
-        if(strlen($string) > 30){
-          $player->sendMessage("§cThat name is too long, the limit is 30 characters.");
-          return true;
-        }
-        if($faction->isinFaction($player)){
-          $player->sendMesssage("§cYou're already in a faction!");
-          return true;
-        }else{
-          $faction->createFaction($string, $player);
-        }
-        break;
-      }
-
-      case SystemOS::$uis['joinFactionUI']: {
+				if(!$this->alphanum($string)) {
+					$player->sendMessage("§cYou may only use letters and numbers.");
+					return true;
+        		}
+				if($faction->factionValidate($string)){
+					$player->sendMessage("§cThat faction already exists!");
+					return true;
+				}
+				if(strlen($string) > 30){
+					$player->sendMessage("§cThat name is too long, the limit is 30 characters.");
+					return true;
+				}
+				if($faction->isinFaction($player)){
+					$player->sendMesssage("§cYou're already in a faction!");
+					return true;
+				}else{
+					$faction->createFaction($string, $player);
+				}
+				break;
+			}
+			case SystemOS::$uis['joinFactionUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
@@ -280,7 +277,6 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
-
 			case SystemOS::$uis['shopMainMenuUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
