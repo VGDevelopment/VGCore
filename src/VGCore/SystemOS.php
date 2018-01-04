@@ -287,7 +287,7 @@ class SystemOS extends PluginBase {
     }
 
     public function loadMusic() {
-        MusicPlayer::$songlist = glob($this->getDataFolder() . "resources/songlist/*.nbs");
+        //
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)
