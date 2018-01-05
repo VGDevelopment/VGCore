@@ -85,7 +85,7 @@ use VGCore\user\UserSystem;
 
 use VGCore\sound\Sound;
 
-use VGCore\lobby\music\MusicPlayer;
+use VGCore\lobby\music\MusicPlayer as MP;
 use VGCore\lobby\pet\BasicPet;
 use VGCore\lobby\pet\entity\EnderDragonPet;
 use VGCore\lobby\pet\entity\ChickenPet;
@@ -287,7 +287,7 @@ class SystemOS extends PluginBase {
     }
 
     public function loadMusic() {
-        //
+        MP::start($this);
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)

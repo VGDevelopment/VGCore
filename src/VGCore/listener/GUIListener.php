@@ -156,7 +156,7 @@ class GUIListener implements Listener {
 					return;
 				}
 				$mp = new MusicPlayer($p);
-				$mp->play();
+				$mp->play($event->getPlayer());
 				break;
 			}
 			case SystemOS::$uis['economyUI']: {

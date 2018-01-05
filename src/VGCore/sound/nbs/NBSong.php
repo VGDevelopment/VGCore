@@ -50,7 +50,7 @@ class NBSong {
     private $data;
     
     public function __construct(string $filepath) {
-        $file = fopen($filepath);
+        $file = fopen($filepath, "r");
         $this->b = fread($file, filesize($filepath));
         fclose($file);
         // Making the header of the Binary NBT
@@ -119,9 +119,8 @@ class NBSong {
         } else if ($len === true) {
             return substr($this->b, $this->o);
         }
-        $bo = $this->b{$this->o};
         $substr = substr($this->b, ($this->o += $len) - $len, $len);
-        return $len === 1 ? $bo : $substr;
+        return $len === 1 ? $this->b{$this->o} : $substr;
     }
     
     public function string(bool $netid = false) {
@@ -132,23 +131,23 @@ class NBSong {
     
     public function byte(): int {
         $info = $this->info(1);
-        return Binary::readByte($info);
+        return Bin::readByte($info);
     }
     
     public function int(bool $netid = false): int {
         if ($netid === true) {
-            return Binary::readVarInt($this->b, $this->o);
+            return Bin::readVarInt($this->b, $this->o);
         }
         $info = $this->info(4);
-        $b1 = Binary::readInt($info);
-        $b2 = Binary::readLInt($info);
+        $b1 = Bin::readInt($info);
+        $b2 = Bin::readLInt($info);
         return $this->endian === NBT::BIG_ENDIAN ? $b1 : $b2;
     }
     
     public function short() {
         $info = $this->info(2);
-        $b1 = Binary::readShort($info);
-        $b2 = Binary::readLShort($info);
+        $b1 = Bin::readShort($info);
+        $b2 = Bin::readLShort($info);
         return $this->endian === NBT::BIG_ENDIAN ? $b1 : $b2;
     }
     

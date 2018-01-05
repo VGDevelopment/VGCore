@@ -9,7 +9,7 @@ class NBSNote {
     public $instrument;
     public $key;
     
-    public function __construct($tick, $layer, int $inst, int $key) {
+    public function __construct($tick, $layer, int $instrument, int $key) {
         $this->tick = $tick;
         $this->layer = $layer;
         $this->instrument = $instrument;

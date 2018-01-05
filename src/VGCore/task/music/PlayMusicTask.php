@@ -101,7 +101,7 @@ class PlayMusicTask extends PluginTask {
             }
             $pk->pitch = intval($n->key - 33);
             $pk2 = clone $pk;
-            $pk2->position = $this->pl->asVector3()->add(0, -50 + 1);
+            $pk2->position = $this->pl->asVector3()->add(0, MP::soundVolume($this->pl) + 1);
             $this->pl->dataPacket($pk2);
         }
     }
