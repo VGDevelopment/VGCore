@@ -153,13 +153,10 @@ class GUIListener implements Listener {
 				$response = $ui->handle($data, $event->getPlayer());
 				$music = $response[0];
 				if ($music === "OFF") {
-					$p->getServer()->getScheduler()->cancelTasks($p);
 					return;
 				}
-				$filename = $music;
 				$mp = new MusicPlayer($p);
-				$p->getServer()->getScheduler()->cancelTasks($p);
-				$mp->makeTask();
+				$mp->play();
 				break;
 			}
 			case SystemOS::$uis['economyUI']: {

@@ -2,53 +2,107 @@
 
 namespace VGCore\task\music;
 
-use pocketmine\Level;
-use pocketmine\Server;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
-use pocketmine\math\AxisAlignedBB;
-use pocketmine\math\Vector3;
-use pocketmine\math\Math;
-use pocketmine\level\format\Chunk;
-use pocketmine\level\format\FullChunk;
-use pocketmine\utils\BinaryStream;
-use pocketmine\utils\Binary;
-//
-use VGCore\SystemOS;
-use VGCore\sound\nbs\Song;
-use VGCore\task\music\PlayMusicTask;
+use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\PluginException;
+use pocketmine\scheduler\PluginTask;
+use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat;
+// >>>
+use VGCore\SystemOS as OS;
+use VGCore\lobby\music\MusicPlayer as MP;
+use VGCore\sound\nbs\{
+    NBSong as Song,
+    NBSNote as Note,
+    NBSLayer as Layer
+};
 
 class PlayMusicTask extends PluginTask {
     
-    private $plugin;
-    private $mp;
-    private $song;
-    private $sound;
-    private $songtick;
-    private $songlenght;
+    public $song = null;
+    public $songfile = "";
+    public $cl = 0;
+    public $sl;
     
-    public function __construct(SystemOS $plugin, MusicPlayer $mp) {
-        parent::__construct($plugin);
-        $this->plugin = $plugin;
+    private $mp;
+    private $os;
+    private $pl;
+    
+    public function __construct(OS $os, MP $mp, string $songfile, Song $song, Player $player) {
+        parent::__construct($os);
+        $this->os = $os;
         $this->mp = $mp;
-        $this->song = $mp->song;
-        $this->sound = $this->song->nbsound;
-        $this->songtick = $this->song->tick;
-        $this->songlenght = $this->song->lenght;
+        $this->song = $song;
+        $this->songfile = $songfile;
+        $this->sl = $song->lenght;
+        $this->pl = $player;
+        MP::$task[] = $this->getTaskId();
     }
     
     public function onRun(int $currentTick) {
-        $songsound = $this->sound[$this->songtick];
-        if (isset($songsound)) {
-            $i = 0;
-            foreach ($songsound as $sd) {
-                $this->mp->play($sd[0], $sd[1], $i);
-                $i++;
-            }
+        if ($this->cl > $this->sl) {
+            $this->getHandler()->cancel();
+            MP::instance()->play();
+            return;
         }
-        $this->songtick = $this->mp->song->tick++;
-        if ($this->songtick > $this->songlenght) {
-            $this->mp->makeTask();
+        $floorcl = floor($this->cl);
+        $note = $this->song->noteTick($floorcl);
+        $this->cl++;
+        if (empty($note)) {
+            return;
+        }
+        foreach ($note as $n) {
+            $pk = new LevelSoundEventPacket();
+            $pk->sound = LevelSoundEventPacket::SOUND_NOTE;
+            $i = $n->instrument;
+            switch ($i) {
+                case Song::PIANO: {
+                    $pk->extraData = 0;
+                    break;
+                }
+                case Song::BASS_DRUM: {
+                    $pk->extraData = 1;
+                    break;
+                }
+                case Song::SNARE: {
+                    $pk->extraData = 2;
+                    break;
+                }
+                case Song::CLICK: {
+                    $pk->extraData = 3;
+                    break;
+                }
+                case Song::BASS_TWICE: {
+                    $pk->extraData = 4;
+                    break;
+                }
+                case Song::GUITAR: {
+                    $pk->extraData = $i;
+                    break;
+                }
+                case Song::FLUTE: {
+                    $pk->extraData = $i;
+                    break;
+                }
+                case Song::BELL: {
+                    $pk->extraData = $i;
+                    break;
+                }
+                case Song::CHIME: {
+                    $pk->extraData = $i;
+                    break;
+                }
+                case Song::XYLOPHONE: {
+                    $pk->extraData = $i;
+                    break;
+                }
+            }
+            $pk->pitch = intval($n->key - 33);
+            $pk2 = clone $pk;
+            $pk2->position = $this->pl->asVector3()->add(0, -50 + 1);
+            $this->pl->dataPacket($pk2);
         }
     }
     
