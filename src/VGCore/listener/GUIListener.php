@@ -118,10 +118,12 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['petUI'], $event->getPlayer());
 						break;
 					}
+					/*
 					case '§cMusic': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['musicUI'], $event->getPlayer());
 						break;
 					}
+					*/
 				}
 				break;
 			}
@@ -147,6 +149,7 @@ class GUIListener implements Listener {
 				}
 				break;
 			}
+			/*
 			case SystemOS::$uis['musicUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
@@ -159,6 +162,7 @@ class GUIListener implements Listener {
 				$mp->play($event->getPlayer());
 				break;
 			}
+			*/
 			case SystemOS::$uis['economyUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);

@@ -285,7 +285,7 @@ class SystemOS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
     }
-
+    
     public function loadMusic() {
         MP::start($this);
     }
@@ -300,9 +300,9 @@ class SystemOS extends PluginBase {
         // Settings
         $ui = new SimpleForm('§cVirtualGalaxy User Settings', '§ePlease click an option.');
         $petmenu = new Button('§cPets');
-        $musicmenu = new Button('§cMusic');
+        // $musicmenu = new Button('§cMusic');
         $ui->addButton($petmenu);
-        $ui->addButton($musicmenu);
+        // $ui->addButton($musicmenu);
         self::$uis['settingsUI'] = UIDriver::addUI($this, $ui);
         // Pet Menu
         $ui = new CustomForm('§cPets');
