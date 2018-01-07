@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\block\item;
+namespace VGCore\factory\item;
 
 use pocketmine\block\Block;
 

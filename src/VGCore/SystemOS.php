@@ -99,7 +99,7 @@ use VGCore\store\{
     ItemList as IL
 };
 
-use VGCore\enhantment\{
+use VGCore\enchantment\{
     VanillaEnchantment,
     CustomEnchantment,
     handler\Handler
@@ -112,7 +112,7 @@ use VGCore\sound\Sound;
 use VGCore\lobby\music\MusicPlayer as MP;
 use VGCore\lobby\pet\BasicPet;
 use VGCore\lobby\pet\entity\{
-    EnderDragon,
+    EnderDragonPet,
     ChickenPet,
     ZombiePet,
     ZombiePigmanPet,

@@ -207,7 +207,7 @@ class MobSpawner extends Spawnable {
         return true;
     }
     
-    public function addSpawnData(CompoundTag $nbt): void {
+    public function addAdditionalSpawnData(CompoundTag $nbt): void {
         $nbt->eid = $this->namedtag->eid;
         $nbt->Delay = $this->namedtag->Delay;
         $nbt->sc = $this->namedtag->sc;

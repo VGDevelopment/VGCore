@@ -12,6 +12,7 @@ use VGCore\spawner\entity\{
     CowSpawner,
     IronGolemSpawner,
     MooshroomSpawner,
+    OcelotSpawner,
     PigSpawner,
     SheepSpawner,
     SkeletonSpawner,

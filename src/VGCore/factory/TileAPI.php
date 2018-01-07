@@ -4,7 +4,7 @@ namespace VGCore\factory;
 
 use pocketmine\tile\Tile;
 // >>>
-use VGCore\tile\{
+use VGCore\factory\tile\{
     MobSpawner
 };
 

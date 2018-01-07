@@ -3,7 +3,8 @@
 namespace VGCore\factory\block;
 
 use pocketmine\block\{
-    Block, MosterSpawner as MS    
+    Block, 
+    MonsterSpawner as MS    
 };
 
 use pocketmine\item\{
