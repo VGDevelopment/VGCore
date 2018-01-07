@@ -2,84 +2,108 @@
 
 namespace VGCore;
 
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
+use pocketmine\command\{
+    Command,
+    CommandSender
+};
 
 use pocketmine\Player;
 
-use pocketmine\plugin\PluginBase;
-use pocketmine\plugin\Plugin;
+use pocketmine\plugin\{
+    PluginBase,
+    Plugin
+};
 
-use pocketmine\utils\Config;
-use pocketmine\utils\TextFormat as Chat;
+use pocketmine\utils\{
+    Config,
+    TextFormat as Chat
+};
 
 use pocketmine\network\mcpe\protocol\PacketPool;
 
 use pocketmine\Server;
 
-use pocketmine\item\Item;
-use pocketmine\item\enchantment\Enchantment;
-use pocketmine\item\Armor;
+use pocketmine\item\{
+    Item,
+    Armor,
+    enchantment\Enchantment
+};
 
 use pocketmine\level\Position;
 
-use pocketmine\nbt\NBT;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\ShortTag;
-use pocketmine\nbt\tag\ByteTag;
-use pocketmine\nbt\tag\DoubleTag;
-use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\IntTag;
-use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\{
+    NBT,
+    tag\CompoundTag,
+    tag\ListTag,
+    tag\ShortTag,
+    tag\ByteTag,
+    tag\DoubleTag,
+    tag\FloatTag,
+    tag\IntTag,
+    tag\StringTag
+};
 
-use pocketmine\entity\Attribute;
-use pocketmine\entity\Entity;
+use pocketmine\entity\{
+    Attribute,
+    Entity
+};
 // >>>
 use VGCore\economy\EconomySystem;
 
-use VGCore\gui\lib\UIDriver;
-use VGCore\gui\lib\element\Button;
-use VGCore\gui\lib\element\Dropdown;
-use VGCore\gui\lib\element\Element;
-use VGCore\gui\lib\element\Input;
-use VGCore\gui\lib\element\Label;
-use VGCore\gui\lib\element\Slider;
-use VGCore\gui\lib\element\StepSlider;
-use VGCore\gui\lib\element\Toggle;
-use VGCore\gui\lib\window\SimpleForm;
-use VGCore\gui\lib\window\ModalWindow;
-use VGCore\gui\lib\window\CustomForm;
+use VGCore\gui\lib\{
+    UIDriver,
+    element\Button,
+    element\Dropdown,
+    element\Element,
+    element\Input,
+    element\Label,
+    element\Slider,
+    element\StepSlider,
+    element\Toggle,
+    window\SimpleForm,
+    window\ModalWindow,
+    window\CustomForm
+};
 
-use VGCore\listener\ChatFilterListener;
-use VGCore\listener\GUIListener;
-use VGCore\listener\CustomEnchantmentListener;
-use VGCore\listener\USListener;
-use VGCore\listener\PetListener;
-use VGCore\listener\RidingListener;
-use VGCore\listener\event\PetEvent;
-use VGCore\listener\event\RemakePetEvent;
-use VGCore\listener\event\MakePetEvent;
-use VGCore\listener\event\DestroyPetEvent;
+use VGCore\listener\{
+    ChatFilterListener,
+    GUIListener,
+    CustomEnchantmentListener,
+    USListener,
+    PetListener,
+    RidingListener,
+    event\PetEvent,
+    event\MakePetEvent,
+    event\RemakePetEvent,
+    event\DestroyPetEvent
+};
 
-use VGCore\network\ModalFormRequestPacket;
-use VGCore\network\ModalFormResponsePacket;
-use VGCore\network\ServerSettingsRequestPacket;
-use VGCore\network\ServerSettingsResponsePacket;
-use VGCore\network\VGServer;
-use VGCore\network\Database as DB;
+use VGCore\network\{
+    ModalFormRequestPacket,
+    ModalFormResponsePacket,
+    ServerSettingsRequestPacket,
+    ServerSettingsResponsePacket,
+    VGServer,
+    Database as DB
+};
 
-use VGCore\command\PlayerSetting;
-use VGCore\command\Economy;
-use VGCore\command\VGEnchant;
-use VGCore\command\Faction;
+use VGCore\command\{
+    PlayerSetting,
+    Economy,
+    VGEnchant,
+    Faction
+};
 
-use VGCore\store\Store;
-use VGCore\store\ItemList as IL;
+use VGCore\store\{
+    Store,
+    ItemList as IL
+};
 
-use VGCore\enchantment\VanillaEnchantment;
-use VGCore\enchantment\CustomEnchantment;
-use VGCore\enchantment\handler\Handler;
+use VGCore\enhantment\{
+    VanillaEnchantment,
+    CustomEnchantment,
+    handler\Handler
+};
 
 use VGCore\user\UserSystem;
 
@@ -87,15 +111,25 @@ use VGCore\sound\Sound;
 
 use VGCore\lobby\music\MusicPlayer as MP;
 use VGCore\lobby\pet\BasicPet;
-use VGCore\lobby\pet\entity\EnderDragonPet;
-use VGCore\lobby\pet\entity\ChickenPet;
-use VGCore\lobby\pet\entity\ZombiePet;
-use VGCore\lobby\pet\entity\ZombiePigmanPet;
-use VGCore\lobby\pet\entity\WolfPet;
-use VGCore\lobby\pet\entity\GhastPet;
-use VGCore\lobby\pet\entity\BlazePet;
-use VGCore\lobby\pet\entity\CowPet;
-use VGCore\lobby\pet\entity\PolarBearPet;
+use VGCore\lobby\pet\entity\{
+    EnderDragon,
+    ChickenPet,
+    ZombiePet,
+    ZombiePigmanPet,
+    WolfPet,
+    GhastPet,
+    BlazePet,
+    CowPet,
+    PolarBearPet
+};
+
+use VGCore\factory\{
+    BlockAPI,
+    ItemAPI,
+    TileAPI
+};
+
+use VGCore\spawner\SpawnerAPI;
 
 class SystemOS extends PluginBase {
 
@@ -216,8 +250,16 @@ class SystemOS extends PluginBase {
         $this->loadPet();
 
         // Loads all VG Music
-        $this->getLogger()->info("Enabling the Virtual Galaxy Music System : Registering music files.");
-        $this->loadMusic();
+        // $this->getLogger()->info("Enabling the Virtual Galaxy Music System : Registering music files.");
+        // $this->loadMusic();
+        
+        // Loads all VG Factory
+        $this->getLogger()->info("Enabling the Virtual Galaxy Factory API.");
+        $this->loadFactory();
+        
+        // Loads all VG Spawners.
+        $this->getLogger()->info("Enabling the Virtual Galaxy Spawner API.");
+        $this->loadSpawner();
     }
 
     public function onDisable() {
@@ -226,7 +268,7 @@ class SystemOS extends PluginBase {
 
     // Load & Unload Base Section
 
-    public function loadUI() {
+    public function loadUI(): void {
         $this->getServer()->getPluginManager()->registerEvents(new GUIListener($this), $this);
 
         PacketPool::registerPacket(new ModalFormRequestPacket());
@@ -240,7 +282,7 @@ class SystemOS extends PluginBase {
 		$this->createShopUI(); // creates the forms in @var $uis [] int array.
     }
 
-    public function loadFilter() {
+    public function loadFilter(): void {
         $this->getServer()->getPluginManager()->registerEvents(new ChatFilterListener($this), $this);
         $this->badwords = $this->getConfig()->get("badwords");
         if (!is_array($this->badwords)) {
@@ -248,20 +290,20 @@ class SystemOS extends PluginBase {
         }
     }
 
-    public function loadCommand() {
+    public function loadCommand(): void {
         $this->getServer()->getCommandMap()->register("settings", new PlayerSetting("settings", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
 	    $this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
     }
 
-    public function loadVanillaEnchant() {
+    public function loadVanillaEnchant(): void {
         $system = new VanillaEnchantment($this);
         $system->registerEnchant();
     }
 
-    public function loadCustomEnchant() {
-        CustomEnchantment::init(); // only way to construct a static class / initialise a static class
+    public function loadCustomEnchant(): void {
+        CustomEnchantment::init();
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             $setinfo = $this->setInfo($id, $info);
@@ -270,15 +312,15 @@ class SystemOS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new CustomEnchantmentListener($this), $this);
     }
 
-    public function loadUserSystem() {
+    public function loadUserSystem(): void {
         $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this);
     }
 
-    public function loadDatabaseAPI() {
+    public function loadDatabaseAPI(): void {
         DB::createRecord($this);
     }
 
-    public function loadPet() {
+    public function loadPet(): void {
         foreach($this->petclass as $class) {
             Entity::registerEntity($class, true);
         }
@@ -286,8 +328,18 @@ class SystemOS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
     }
     
-    public function loadMusic() {
+    public function loadMusic(): void {
         MP::start($this);
+    }
+    
+    public function loadFactory(): void {
+        BlockAPI::start();
+        TileAPI::start();
+        ItemAPI::start();
+    }
+    
+    public function loadSpawner(): void {
+        SpawnerAPI::start();
     }
 
     // >>> Section 1 - Graphical User Interface (GUI)
