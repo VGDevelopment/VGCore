@@ -16,6 +16,7 @@ use VGCore\spawner\entity\{
     PigSpawner,
     SheepSpawner,
     SkeletonSpawner,
+    SpiderSpawner,
     ZombiePigmanSpawner,
     ZombieSpawner
 };

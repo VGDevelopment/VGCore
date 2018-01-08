@@ -75,7 +75,7 @@ class MonsterSpawner extends MS {
             foreach ($pos as $index => $value) {
                 $itag[$index] = new IntTag($tilepos[$index], (int)$pos[$index]);
             }
-            $stag = new StringTag(Tile::TAG_ID, Tile::MobSpawner);
+            $stag = new StringTag(Tile::TAG_ID, Tile::MOB_SPAWNER);
             $mixtagarray = [
                 $stag,
                 $itag[0],
@@ -83,7 +83,7 @@ class MonsterSpawner extends MS {
                 $itag[2]
             ];
             $nbt = new CompoundTag("", $mixtagarray);
-            $mstile = Tile::createTile(Tile::MobSpawner, $level, $nbt);
+            $mstile = Tile::createTile(Tile::MOB_SPAWNER, $level, $nbt);
             $tile->setEntityID($this->eid);
             return true;
         }

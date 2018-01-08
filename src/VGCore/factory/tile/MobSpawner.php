@@ -25,20 +25,20 @@ class MobSpawner extends Spawnable {
     
     public function __construct(Level $level, CompoundTag $nbt) {
         parent::__construct($level, $nbt);
-        if (!(isset($nbt->eid)) || !($nbt->eid instanceof IntTag)) {
-            $nbt->eid = new IntTag("eid", 0);
+        if (!(isset($nbt->EntityId)) || !($nbt->EntityId instanceof IntTag)) {
+            $nbt->EntityId = new IntTag("EntityId", 0);
         }
-        if (!(isset($nbt->sc)) && !($nbt->sc instanceof IntTag)) {
-            $nbt->sc = new IntTag("sc", 4);
+        if (!(isset($nbt->SpawnCount)) && !($nbt->SpawnCount instanceof IntTag)) {
+            $nbt->SpawnCount = new IntTag("SpawnCount", 4);
         }
-        if (!(isset($nbt->sr)) && !($nbt->sr instanceof IntTag)) {
-            $nbt->sr = new IntTag("sr", 4);
+        if (!(isset($nbt->SpawnRange)) && !($nbt->SpawnRange instanceof IntTag)) {
+            $nbt->SpawnRange = new IntTag("SpawnRange", 4);
         }
-        if (!(isset($nbt->minsd)) && !($nbt->minsd instanceof IntTag)) {
-            $nbt->minsd = new IntTag("minsd", 200);
+        if (!(isset($nbt->MinSpawnDelay)) && !($nbt->MinSpawnDelay instanceof IntTag)) {
+            $nbt->MinSpawnDelay = new IntTag("MinSpawnDelay", 200);
         }
-        if (!(isset($nbt->maxsd)) && !($nbt->maxsd instanceof IntTag)) {
-            $nbt->maxsd = new IntTag("maxsd", 800);
+        if (!(isset($nbt->MaxSpawnDelay)) && !($nbt->MaxSpawnDelay instanceof IntTag)) {
+            $nbt->MaxSpawnDelay = new IntTag("MaxSpawnDelay", 800);
         }
         if ($this->entityID() > 0) {
             $this->scheduleUpdate();
@@ -46,23 +46,23 @@ class MobSpawner extends Spawnable {
     }
     
     public function entityID(): int {
-        return $this->namedtag["eid"];
+        return $this->namedtag["EntityId"];
     }
     
     public function sc(): int {
-        return $this->namedtag["sc"];
+        return $this->namedtag["SpawnCount"];
     }
     
     public function sr(): int {
-        return $this->namedtag["sr"];
+        return $this->namedtag["SpawnRange"];
     }
     
     public function minsd(): int {
-        return $this->namedtag["minsd"];
+        return $this->namedtag["MinSpawnDelay"];
     }
     
     public function maxsd(): int {
-        return $this->namedtag["maxsd"];
+        return $this->namedtag["MaxSpawnDelay"];
     }
     
     public function delay(): int {
@@ -70,10 +70,10 @@ class MobSpawner extends Spawnable {
     }
     
     public function setEntityID(int $id): bool {
-        $this->namedtag->eid->setValue($id);
+        $this->namedtag->EntityId->setValue($id);
         $this->onChanged();
         $this->scheduleUpdate();
-        if ($this->namedtag["eid"] === $id) {
+        if ($this->namedtag["EntityId"] === $id) {
             return true;
         } else {
             return false;
@@ -81,8 +81,8 @@ class MobSpawner extends Spawnable {
     }
     
     public function setSC(int $sc): bool {
-        $this->namedtag->sc->setValue($sc);
-        if ($this->namedtag["sc"] === $sc) {
+        $this->namedtag->SpawnCount->setValue($sc);
+        if ($this->namedtag["SpawnCount"] === $sc) {
             return true;
         } else {
             return false;
@@ -90,8 +90,8 @@ class MobSpawner extends Spawnable {
     }
     
     public function setSR(int $sr): bool {
-        $this->namedtag->sr->setValue($sr);
-        if ($this->namedtag["sr"] === $sr) {
+        $this->namedtag->SpawnRange->setValue($sr);
+        if ($this->namedtag["SpawnRange"] === $sr) {
             return true;
         } else {
             return false;
@@ -99,8 +99,8 @@ class MobSpawner extends Spawnable {
     }
     
     public function setMinSD(int $minsd): bool {
-        $this->namedtag->minsd->setValue($minsd);
-        if ($this->namedtag["minsd"] === $minsd) {
+        $this->namedtag->MinSpawnDelay->setValue($minsd);
+        if ($this->namedtag["MinSpawnDelay"] === $minsd) {
             return true;
         } else {
             return false;
@@ -108,8 +108,8 @@ class MobSpawner extends Spawnable {
     }
     
     public function setMaxSD(int $maxsd): bool {
-        $this->namedtag->maxsd->setValue($maxsd);
-        if ($this->namedtag["maxsd"] ===  $maxsd) {
+        $this->namedtag->MaxSpawnDelay->setValue($maxsd);
+        if ($this->namedtag["MaxSpawnDelay"] ===  $maxsd) {
             return true;
         } else {
             return false;
@@ -126,7 +126,7 @@ class MobSpawner extends Spawnable {
     }
     
     public function getName(): string {
-        $eid = $this->namedtag["eid"];
+        $eid = $this->namedtag["EntityId"];
         if ($eid === 0) {
             return "Monster Spawner";
         } else {
@@ -136,7 +136,7 @@ class MobSpawner extends Spawnable {
     }
     
     public function updateRequest(): bool {
-        $eid = $this->namedtag["eid"];
+        $eid = $this->namedtag["EntityId"];
         if ($eid === 0) {
             return false;
         }
@@ -173,16 +173,16 @@ class MobSpawner extends Spawnable {
             $delay = $this->namedtag["Delay"];
             if ($delay <= 0) {
                 $success = 0;
-                for ($i = 0; $i < $this->namedtag["sc"]; $i++) {
+                for ($i = 0; $i < $this->namedtag["SpawnCount"]; $i++) {
                     $r1 = mt_rand();
                     $r2 = mt_rand(-1, 1);
                     $rmax = mt_getrandmax();
-                    $sr = $this->namedtag["sr"];
+                    $sr = $this->namedtag["SpawnRange"];
                     $pos = $this->add($r1 / $rmax * $sr, $r2, $r1 / $rmax * $sr);
                     $target = $this->getLevel()->getBlock($pos);
                     if ($target->getId() === Item::AIR) {
                         $success++;
-                        $eid = $this->namedtag["eid"];
+                        $eid = $this->namedtag["EntityId"];
                         $level = $this->getLevel();
                         $nbtdata = [
                             $target->add(0.5, 0, 0.5),
@@ -196,7 +196,7 @@ class MobSpawner extends Spawnable {
                     }
                 }
                 if ($success > 0) {
-                    $r1 = mt_rand($this->namedtag['minsd'], $this->namedtag['maxsd']);
+                    $r1 = mt_rand($this->namedtag['MinSpawnDelay'], $this->namedtag['MaxSpawnDelay']);
                     $this->setDelay($r1);
                 }
             } else {
@@ -208,12 +208,12 @@ class MobSpawner extends Spawnable {
     }
     
     public function addAdditionalSpawnData(CompoundTag $nbt): void {
-        $nbt->eid = $this->namedtag->eid;
+        $nbt->EntityId = $this->namedtag->EntityId;
         $nbt->Delay = $this->namedtag->Delay;
-        $nbt->sc = $this->namedtag->sc;
-        $nbt->sr = $this->namedtag->sr;
-        $nbt->minsd = $this->namedtag->minsd;
-        $nbt->maxsd = $this->namedtag->maxsd;
+        $nbt->SpawnCount = $this->namedtag->SpawnCount;
+        $nbt->SpawnRange = $this->namedtag->SpawnRange;
+        $nbt->MinSpawnDelay = $this->namedtag->MinSpawnDelay;
+        $nbt->MaxSpawnDelay = $this->namedtag->MaxSpawnDelay;
     }
     
 }
