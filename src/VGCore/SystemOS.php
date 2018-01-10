@@ -91,7 +91,8 @@ use VGCore\command\{
     PlayerSetting,
     Economy,
     VGEnchant,
-    Faction
+    Faction,
+    Spawn
 };
 
 use VGCore\store\{
@@ -295,6 +296,7 @@ class SystemOS extends PluginBase {
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
 	    $this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
+	    $this->getServer()->getCommandMap()->register("spawn", new Spawn("spawn", $this));
     }
 
     public function loadVanillaEnchant(): void {
