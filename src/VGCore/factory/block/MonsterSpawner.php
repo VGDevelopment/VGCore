@@ -67,7 +67,7 @@ class MonsterSpawner extends MS {
         return true;
     }
     
-    public function getDrops(): array {
+    public function getDrops(Item $item): array {
         return self::$drop;
     }
     
@@ -75,6 +75,7 @@ class MonsterSpawner extends MS {
         if ($this->entityid === 0) {
             return "Monster Spawner";
         } else {
+            var_dump($this->entityid);
             $type = SpawnerAPI::$mobtype;
             $eid = $type[$this->entityid];
             $name = ucfirst($eid ?? 'Monster') . 'Spawner';

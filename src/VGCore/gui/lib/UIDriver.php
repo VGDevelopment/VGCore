@@ -42,7 +42,7 @@ class UIDriver {
 	public static function handle(Plugin $plugin, int $id, $response, Player $player) {
 		$ui = self::getPluginUIs($plugin)[$id];
 		// var_dump($ui); DEVELOPER ONLY FUNCTION - use if wanting to check how you're getting the response. Not sending, but response. 
-		return $ui->handle($response, $player)??"";
+		return $ui->handle($response, $player) ?? "";
 	}
 	
 	public static function showUI(LibraryInt $ui, Player $player) {
