@@ -8,12 +8,12 @@ use VGCore\factory\tile\{
     MobSpawner
 };
 
-class TileAPI extends Tile {
+class TileAPI {
     
     const MOB_SPAWNER = "MobSpawner";
     
     public static function start() {
-        self::registerTile(MobSpawner::class);
+        Tile::registerTile(MobSpawner::class);
     }
     
 }

@@ -30,7 +30,7 @@ use VGCore\spawner\SpawnerAPI;
 
 class MonsterSpawner extends MS {
     
-    private $entityid;
+    private $entityid = 0; // giving a predifined value so it fucking reaches something.. uhh.
     
     private static $drop;
     

@@ -30,7 +30,7 @@ class Spawn extends PluginCommand {
         if ($player === null) {
             return false;
         }
-        $type = 13;
+        $type = "Chicken";
         $mobtype = SpawnerAPI::$mobtype;
         $newarray = array_flip($mobtype);
         $id = $newarray[$type];

@@ -108,7 +108,7 @@ class CustomEnchantmentListener implements Listener {
                     }
                 }
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::DISABLE);
-                if ($enchantment !== null) {
+                if ($enchantment !== null && $entity instanceof Player) {
                     $chance = mt_rand(0, 10);
                     if ($chance > 9) {
                         $this->handler->disable($entity, $entityitem, $damager);
