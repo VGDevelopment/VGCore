@@ -127,7 +127,8 @@ use VGCore\lobby\pet\entity\{
 use VGCore\factory\{
     BlockAPI,
     ItemAPI,
-    TileAPI
+    TileAPI,
+    EntityAPI
 };
 
 use VGCore\spawner\SpawnerAPI;
@@ -196,6 +197,13 @@ class SystemOS extends PluginBase {
 
     private static $toggleoff = [];
     private static $toggleon = [];
+    
+    private static $factory = [
+        EntityAPI,
+        BlockAPI,
+        TileAPI,
+        ItemAPI
+    ];
 
     // @var customenchantment
     public $enchantment = [
@@ -335,9 +343,9 @@ class SystemOS extends PluginBase {
     }
     
     public function loadFactory(): void {
-        BlockAPI::start();
-        TileAPI::start();
-        ItemAPI::start();
+        foreach (self::$factory as $class) {
+            $class::start();
+        }
     }
     
     public function loadSpawner(): void {
