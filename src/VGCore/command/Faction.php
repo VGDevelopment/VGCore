@@ -15,14 +15,14 @@ use VGCore\gui\lib\UIDriver;
 
 class Faction extends PluginCommand {
 
-  public $faction;
+  public static $faction;
 
   public function __construct($name, SystemOS $plugin) {
     parent::__construct($name, $plugin);
     $this->setDescription("Access Faction Features");
-    $this->setUsage("/faction");
+    $this->setUsage("/faction or /f");
     $this->setPermission("vgcore.faction");
-    $this->faction = new FactionSystem($plugin);
+    $this->setAliases(["f"]);
   }
 
   public function execute(CommandSender $sender, string $commandLabel, array $args) {

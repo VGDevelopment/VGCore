@@ -20,7 +20,7 @@ class EntityAPI {
         'minecraft:enderpearl'
     ];
     
-    public static function start() {
+    public static function start(): void {
         foreach (self::ENTITY as $i => $v) {
             Entity::registerEntity(self::ENTITY[$i], false, [self::MCNAME[$i], self::MCDATA[$i]]);
         }

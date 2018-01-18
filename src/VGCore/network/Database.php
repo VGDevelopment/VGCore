@@ -20,11 +20,9 @@ class Database {
 			kills FLOAT,
 			deaths FLOAT,
 			faction VARCHAR(30),
-			role VARCHAR(12),
-			invites VARCHAR(30),
-			requests VARCHAR(30),
+			factionrole VARCHAR(12),
 			ban FLOAT,
-			rank TEXT,
+			rank VARCHAR(12),
 			banid INT(5),
 			date DATE,
 			reason VARCHAR(50),
@@ -34,15 +32,28 @@ class Database {
 			return;
 		}
 		if (!$db->query("CREATE TABLE IF NOT EXISTS factions(
-			faction VARCHAR(30),
+			faction VARCHAR(30) PRIMARY KEY,
 			valid INT(1),
 			rank VARCHAR(12),
 			kills INT(5),
 			deaths INT(5),
-			power INT(5)
+			power INT(5),
+			landx1 FLOAT,
+			landz1 FLOAT,
+			landx2 FLOAT,
+			landz2 FLOAT
 			);")) {
 			$plugin->getLogger()->critical("Error creating 'factions' table: " . $db->error);
 			return;
+		}
+		if (!$db->query("CREATE TABLE IF NOT EXISTS wars(
+			serverip VARCHAR(25) PRIMARY KEY,
+			f1 VARCHAR(30),
+			f2 VARCHAR(30),
+			session INT(1),
+			result INT(1)
+			);")) {
+			$plugin->getLogger()->critical("Error creating 'wars' table: " . $db->error);	
 		}
     }
 
@@ -50,14 +61,14 @@ class Database {
 		return mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1");
     }
 
-    public static function checkUser(string $username) {
+    public static function checkUser(string $username): bool {
     	$db = self::getDatabase();
         $lowusername = strtolower($username);
 		$query = $db->query("SELECT * FROM users WHERE username='" . $db->real_escape_string($lowusername) . "'");
 		return $query->num_rows > 0 ? true:false;
     }
 
-    public static function createUser(string $user) {
+    public static function createUser(string $user): bool {
 		$check = self::checkUser($user);
         if ($check === false) {
         	$db = self::getDatabase();
@@ -74,7 +85,10 @@ class Database {
             '10'
             );");
 			if ($q === true) {
+				$q->free();
+				return true;
 			} else {
+				$q->free();
 			    return false;
 			}
         } else {

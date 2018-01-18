@@ -125,10 +125,10 @@ use VGCore\lobby\pet\entity\{
 };
 
 use VGCore\factory\{
-    BlockAPI,
-    ItemAPI,
-    TileAPI,
-    EntityAPI
+    BlockAPI as BAPI,
+    ItemAPI as IAPI,
+    TileAPI as TAPI,
+    EntityAPI as EAPI
 };
 
 use VGCore\spawner\SpawnerAPI;
@@ -197,13 +197,6 @@ class SystemOS extends PluginBase {
 
     private static $toggleoff = [];
     private static $toggleon = [];
-    
-    private static $factory = [
-        EntityAPI,
-        BlockAPI,
-        TileAPI,
-        ItemAPI
-    ];
 
     // @var customenchantment
     public $enchantment = [
@@ -343,9 +336,10 @@ class SystemOS extends PluginBase {
     }
     
     public function loadFactory(): void {
-        foreach (self::$factory as $class) {
-            $class::start();
-        }
+        IAPI::start();
+        BAPI::start();
+        EAPI::start();
+        TAPI::start();
     }
     
     public function loadSpawner(): void {
@@ -417,7 +411,7 @@ class SystemOS extends PluginBase {
         self::$uis['factionUI'] = UIDriver::addUI($this, $ui);
         // Create Faction Menu
         $ui = new CustomForm('§8CreateFaction');
-        $input = new Input('§eName your faction', 'Non-alphanumeric characters)');
+        $input = new Input('§eName your faction', 'Alphabetic Characters without numbers.');
         $ui->addElement($input);
         self::$uis['createFactionUI'] = UIDriver::addUI($this, $ui);
         // Join Faction Menu
@@ -433,6 +427,7 @@ class SystemOS extends PluginBase {
         // Check Requests Menu
         $ui = new SimpleForm('§aCheck Faction Requests', '§aClick the correct button to check that faction.');
         self::$uis['checkRequestUI'] = UIDriver::addUI($this, $ui);
+        
     }
 
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.

@@ -8,137 +8,316 @@ use VGCore\SystemOS;
 
 use VGCore\network\Database as DB;
 
+use VGCore\gui\lib\UIDriver;
+
+use VGCore\faction\FactionWar;
+
 class FactionSystem {
-
-	public $db;
-	public $plugin;
-	public $faction;
-	public $rank = ["Leader", "Officer", "Member"];
-
-	public function __construct(SystemOS $plugin) {
-		$this->plugin = $plugin;
-		$this->db = DB::getDatabase();
+	
+	const CHUNK_X = 8;
+	const CHUNK_Y = 8;
+	const CHUNK = 2;
+	
+	private static $db;
+	
+	private static $rank = [
+		"Leader",
+		"Officer",
+		"Member"
+	];
+	private static $sessionfaction = [];
+	
+	private static $os;
+	private static $server;
+	
+	public static $request = [];
+	public static $invite = [];
+	
+	// >>> onEnable()
+	
+	public static function start(SystemOS $os): void {
+		self::$db = DB::getDatabase();
+		self::$os = $os;
+		self::$server = $os->getServer();
 	}
-
-	public function factionValidate(string $faction) {
-		$result = $this->db->query("SELECT * FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
-		return $result->num_rows > 0 ? true:false;
+	
+	// >>> Get Player's Faction
+	
+	public static function getPlayerFaction(Player $player): string {
+		$playername = $player->getName();
+		return self::getIGNFaction($playername);
 	}
-
-	public function createFaction(string $faction, Player $leader) {
-		$leadername = $leader->getName();
-		$roleleader = $this->rank[0];
-		if (!$this->factionValidate($faction)) {
-			$this->db->query("INSERT INTO factions (faction, leader, kills, deaths, power, valid) VALUES ('" . $db->real_escape_string($faction) .
-		"',
-		$leadername,
-		'0000',
-		'0000',
-		'0000',
-		'0'
-		);");
-		}
-		return false;
-	}
-
-	public function disableFaction(string $faction) {
-		if ($this->factionValidate($faction)) {
-			return $this->db->query("UPDATE factions SET valid = 1 WHERE faction='" . $this->db->real_escape_string($faction) . "'");
+	
+	// >>> Subset of getPlayerFaction()
+	
+	public static function getIGNFaction(string $name): string {
+		$lowname = strtolower($name);
+		$query = self::$db->query("SELECT faction FROM users WHERE username='" . self::$db->real_escape_string($lowname) . "'");
+		if ($query !== null) {
+			$faction = $query->fetchArray()[0] ?? false;
+			if ($faction) {
+				$query->free();
+				if ($faction !== "") {
+					return $faction;
+				} else {
+					return "[/No Faction Found/]";
+				}
+			} else {
+				return "[/Internal System Error/]";
+			}
 		} else {
-			return false;
+			return "[/Internal System Error/]";
 		}
 	}
-
-	public function deleteFaction(string $faction) {
-		if ($this->factionValidate($faction)) {
-			return $this->db->query("DELETE FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
+	
+	// >>> Check if Player is in Faction
+	
+	public static function inFaction(Player $player): bool {
+		$playername = $player->getName();
+		$check = self::ignInFaction($playername);
+		if ($check === 0) {
+			return false;
 		} else {
-			return false;
+			return true;
 		}
 	}
-
-	public function invitePlayer(Player $player, string $faction){
-		if($this->factionValidate($faction)){
-			$playername = $player->getName();
-			$this->db->query("INSERT OR REPLACE INTO users (username, invites) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+	
+	// >>> Subset of inFaction()
+	
+	public static function ignInFaction(string $name): int {
+		$query = self::getIGNFaction($name);
+		if ($query === "[/No Faction Found/]" || $query === "[/Internal System Error/]") {
+			return 0;
 		} else {
-			return false;
+			return 1;
 		}
 	}
-
-	public function requestPlayer(Player $player, string $faction){
-		if($this->factionValidate($faction)){
-			$playername = $player->getName();
-			$this->db->query("INSERT OR REPLACE INTO users (username, requests) VALUES ('" . $this->db->real_escape_string($playername) . $faction . ");");
+	
+	// >>> Checks if Faction exists
+	
+	public static function validateFaction(string $faction): bool {
+		$lowerfaction = strtolower($faction);
+		if (in_array($lowerfaction, self::$sessionfaction)) {
+			return true;
 		} else {
-			return false;
-		}
-	}
-
-	public function joinFaction(Player $player, string $faction) {
-		if ($this->factionValidate($faction)) {
-			$playername = $player->getName();
-			$defrank = $this->rank[2];
-			$query = $this->db->query("UPDATE users SET faction = $faction WHERE username='" . $this->db->real_escape_string($playername) . ".");
-			$query2 = $this->db->query("UPDATE users SET role = $defrank WHERE username='" . $this->db->real_escape_string($playername) . ".");
-			if ($query === true && $query2 === true) {
+			$query = self::$db->query("SELECT * FROM factions WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
+			if ($result->num_rows > 0) {
+				self::$sessionfaction[] = $lowerfaction;
+				$query->free();
 				return true;
 			} else {
+				$query->free();
+				return false;
+			}
+		}
+	}
+	
+	// >>> Gets Data about the faction.
+	
+	public static function factionStat(string $faction): array {
+		$stat = [];
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			$reqstat =[
+				"power",
+				"kills",
+				"deaths",
+				"leader"
+			];
+			$lowerfaction = strtolower($faction);
+			foreach ($reqstat as $i) {
+				$query = self::$db->query("SELECT" . $i . "FROM factions where factions='" . self::$db->real_escape_string($lowerfaction) . "'");
+				if ($query !== null) {
+					$stat[] = $query->fetchArray[0] ?? false;
+					$query->free();
+				} else {
+					$stat[] = "[/ERROR getting DATA/]";
+					$query->free();
+				}
+			}
+			return $stat;
+		} else {
+			$i = 1;
+			while ($i < 4) {
+				$stat[] = "[/ERROR getting FACTION/]";
+				$i + 1;
+			}
+			return $stat;
+		}
+	}
+	
+	public static function createFaction(string $faction, string $leader): bool {
+		$check = self::validateFaction($faction);
+		if (!$check) {
+			$lowerfaction = strtolower($faction);
+			$lowerleader = strtolower($leader);
+			$query = self::$db->query("INSERT INTO factions (faction, leader, power, kills, deaths, valid) VALUES ('" . self::$db->real_escape_string($lowerfaction) . "',
+				" . self::$db->real_escape_string($lowerleader) . "',
+				'0000',
+				'0000',
+				'0000',
+				'0'
+			);");
+			if ($query) {
+				$query->free();
+				$query = self::$db->query("UPDATE users SET faction ='" . self::$db->real_escape_string($lowerfaction) . "' WHERE username='" . self::$db->real_escape_string($lowerleader) . "'");
+				if (!$query) {
+					$query->free();
+					return false;
+				}
+				$query->free();
+				return true;
+			} else {
+				$query->free();
 				return false;
 			}
 		} else {
 			return false;
 		}
 	}
-
-	public function getPlayerFaction(Player $player) {
-		$playername = $player->getName();
-		$dbquery = $this->db->query("SELECT faction FROM users WHERE username='".$this->db->real_escape_string($playername)."'");
-		$fac = $dbquery->fetch_array()[0] ?? false;
-		$fac->free();
-		return $fac;
+	
+	public static function createPlayerFaction(string $faction, Player $leader): bool {
+		$leadername = $leader->getName();
+		return self::createFaction($faction, $leadername);
 	}
-
-	public function isInFaction(Player $player) {
-		$playername = $player->getName();
-		$result = $this->db->query("SELECT faction FROM users WHERE username='".$this->db->real_escape_string($playername)."'");
-  	$array = $result->fetchArray()[0] ?? false;
-    return empty($array) == false;
-	}
-
-	public function getFactionStat(string $faction) {
-		if ($this->factionValidate($faction)) {
-			$stat = [];
-			$dbquery = $this->db->query("SELECT power FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
-			$stat[0] = $dbquery->fetch_array()[0] ?? false;
-			$dbquery->free();
-			$dbquery = $this->db->query("SELECT kills FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
-			$stat[1] = $dbquery->fetch_array()[0] ?? false;
-			$dbquery->free();
-			$dbquery = $this->db->query("SELECT deaths FROM factions WHERE faction='" . $this->db->real_escape_string($faction) . "'");
-			$stat[2] = $dbquery->fetch_array()[0] ?? false;
-			$dbquery->free();
-			return $stat; // returns array of stats rather than just one at a time. One issue would be time - however, with fast server connections, there shouldn't be latancy.
-		} else {
-			return false;
+	
+	public static function requestFaction(string $faction, string $name, Player $player = null): void {
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			$lowerfaction = strtolower($faction);
+			$factiondata = self::factionStat($faction);
+			$leadername = strtolower($factiondata[3]);
+			if ($player === null) {
+				$player = self::$server->getPlayer($name);
+			}
+			$leader = self::$server->getPlayer($leadername);
+			self::$request[$lowerfaction][] = $name;
+			UIDriver::showUIbyID(self::$os, SystemOS::$uis['---'], $leader);
 		}
 	}
-
-	public function newLand($faction, $x1, $z1, $x2, $z2, string $level) {
-		$this->db->query("INSERT OR REPLACE INTO factions (faction, x1, z1, x2, z2, world) VALUES ('" . $this->db->real_escape_string($faction) . $x1 . $z1 . $x2. $z2 . $level . ");");
-    }
-
-	public function claimLand(Player $player, $faction, $size = 15) {
-		$x = floor($player->x);
-		$y = floor($player->y);
-		$z = floor($player->z);
-		$level = $player->getLevel();
-		$arm = ($size - 1) / 2;
-		$block = new Snow();
-		$level->setBlock(new Vector3($x + $arm, $y, $z + $arm), $block);
-		$level->setBlock(new Vector3($x - $arm, $y, $z - $arm), $block);
-		$this->newLand($faction, $x + $arm, $z + $arm, $x - $arm, $z - $arm, $level->getName());
-        return true;
-    }
-
+	
+	public static function invitePlayer(string $faction, string $name, Player $player = null): void {
+		$check = DB::checkUser($name);
+		if ($check === true) {
+			$lowerfaction = strtolower($faction);
+			$factiondata = self::$factionStat($faction);
+			$leadername = strtolower($factiondata[3]);
+			if ($player === null) {
+				$player = self::$server->getPlayer($name);
+			}
+			$leader = self::$server->getPlayer($leadername);
+			self::$invite[$lowerfaction][] = $name;
+			UIDriver::showUIbyID(self::$os, SystemOS::$uis['---'], $player);
+		}
+	}
+	
+	public static function getInvite(string $faction): array {
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			$lowerfaction = strtolower($faction);
+			$check = array_key_exists($lowerfaction, self::$invite);
+			if ($check === true) {
+				if (empty(self::$invite[$lowerfaction])) {
+					return [182];
+				} else {
+					return self::$invite[$lowerfaction];
+				}
+			} else {
+				return [182];
+			}
+		}
+	}
+	
+	public static function getRequest(string $faction): array {
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			$lowerfaction = strtolower($faction);
+			$check = array_key_exists($lowerfaction, self::$invite);
+			if ($check === true) {
+				if (empty(self::$invite[$lowerfaction])) {
+					return [182];
+				} else {
+					return self::$invite[$lowerfaction];
+				}
+			} else {
+				return [182];
+			}
+		}
+	}
+	
+	public static function claimLand(string $faction, Player $player): void {
+		$check = self::inFaction($player);
+		if ($check === true) {
+			$pos = [];
+			$claim = [];
+			$pos["x"] = (int)$player->getX();
+			$pos["z"] = (int)$player->getZ();
+			$claim["x1"] = $pos["x"] - (self::CHUNK * self::CHUNK_X / 2);
+			$claim["x2"] = $pos["x"] + (self::CHUNK * self::CHUNK_X / 2);
+			$claim["z1"] = $pos["z"] - (self::CHUNK * self::CHUNK_Z / 2);
+			$claim["z2"] = $pos["z"] + (self::CHUNK * self::CHUNK_Z / 2);
+			$claim["pos1"] = [
+				$claim["x1"],
+				$claim["z1"],
+				1
+			];
+			$claim["pos2"] = [
+				$claim["x2"],
+				$claim["z2"],
+				256
+			];
+			$claim["loc"] = [
+				$claim["pos1"],
+				$claim["pos2"]
+			];
+			$lowerfaction = strtolower($faction);
+			self::updateLand($lowerfaction, $claim);
+		}
+	}
+	
+	public static function updateLand(string $faction, array $claim): void {
+		$loc = $claim["loc"];
+		$pos1 = $loc["pos1"];
+		$pos2 = $loc["pos2"];
+		$x1 = $pos1[0];
+		$x2 = $pos2[0];
+		$z1 = $pos1[1];
+		$z2 = $pos2[1];
+		$x = [
+			1 => $x1,
+			2 => $x2
+		];
+		$z = [
+			1 => $z1,
+			2 => $z2
+		];
+		foreach ($x as $i => $v) {
+			$query = self::$db->query("UPDATE factions SET landx" . $i . " = " . $v . " WHERE faction='" . self::$db->real_escape_string($faction) . "'");
+			$query->free();
+		}
+		foreach ($z as $i => $v) {
+			$query = self::$db->query("UPDATE factions SET landz" . $i . " = " . $v . " WHERE faction='" . self::$db->real_escape_string($faction) . "'");
+			$query->free();
+		}
+	}
+	
+	public static function getAllFactionMember(string $faction): array {
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			$lowerfaction = strtolower($faction);
+			$query = self::$db->query("SELECT username FROM users WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
+			$queryarray = $query->fetchArray();
+			foreach ($queryarray as $qa) {
+				$playerlist = [];
+				$playerlist[] = self::$server->getPlayer($qa);
+				$query->free();
+			}
+			return $playerlist;
+		}
+	}
+	
+	public function addKill(string $faction, int $kill): void {
+		$
+	}
+	
 }
