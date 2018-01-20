@@ -216,6 +216,10 @@ class SystemOS extends PluginBase {
 
     ];
 
+    //FOR TESTING PURPOSE
+    private $prod = false;
+
+
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
 
@@ -1316,6 +1320,15 @@ class SystemOS extends PluginBase {
         $pet->setDormant();
         self::$toggleon[$pet->getName()] = $player->getName();
         return false;
+    }
+
+    public function onCommand(CommandSender $player, Command $command, string $label, array $args) : bool{
+      switch(strtolower($command)){
+        case "dev":
+          if($this->prod == true) return false;
+          (new spawner\SpawnerAPI())->giveSpawner($player, 10);
+          return true;
+      }
     }
 
 }

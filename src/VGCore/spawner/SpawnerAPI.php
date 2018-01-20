@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat as TF;
 // >>>
 use VGCore\SystemOS;
 
-class SpawnerAPI extends Entity {
+class SpawnerAPI {
 
     public static $mobtype = [
         10 => "Chicken",
@@ -33,9 +33,9 @@ class SpawnerAPI extends Entity {
 
     public function giveSpawner(Player $player, int $id){
       $item = Item::get(52,0,1);
-      $item->setCustomName(TF::RESET.$this->mobtype[$int]." Spawner");
+      $item->setCustomName(TF::RESET.self::$mobtype[$id]." Spawner");
       $nbt = $item->getNamedTag() ?? new CompoundTag("", []);
-      $nbt->spawner = new IntTag("spawner", $int);
+      $nbt->entityid = new IntTag("entityid", $id);
       $item->setNamedTag($nbt);
       $player->getInventory()->addItem($item);
       return true;

@@ -4,3 +4,7 @@ api: [3.0.0-ALPHA10]
 version: 0.5.0-Dwarf
 author: VirtualGalaxy
 description: (C) Copyright 2017-2018 of VirtualGalaxy (VG, VGPE) & Lewis Brindley.
+
+commands:
+  dev:
+    description: Command for danik to test stuff.. REMOVE ON PRODUCTION!!!!!!!

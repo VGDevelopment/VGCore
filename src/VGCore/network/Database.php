@@ -53,7 +53,7 @@ class Database {
 			session INT(1),
 			result INT(1)
 			);")) {
-			$plugin->getLogger()->critical("Error creating 'wars' table: " . $db->error);	
+			$plugin->getLogger()->critical("Error creating 'wars' table: " . $db->error);
 		}
     }
 
@@ -85,7 +85,7 @@ class Database {
             '10'
             );");
 			if ($q === true) {
-				$q->free();
+				$q->free();//Whats this? Theres an error here
 				return true;
 			} else {
 				$q->free();

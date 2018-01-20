@@ -22,6 +22,7 @@ class MonsterSpawner extends \pocketmine\block\MonsterSpawner{
 	}
 
   public function onActivate(Item $item, Player $player = null): bool {
+    return false;//needs work
       if ($this->entityid === 0) {
           if ($item->getId() === Item::SPAWN_EGG) {
               $level = $this->getLevel();
@@ -45,7 +46,7 @@ class MonsterSpawner extends \pocketmine\block\MonsterSpawner{
 			new IntTag("x", $block->x),
 			new IntTag("y", $block->y),
 			new IntTag("z", $block->z),
-			new IntTag("EntityId", $item->getNamedTag()->spawner->getValue()),//set the mob id in nbt because cant save anywhere else lmao
+			new IntTag("EntityId", $item->getNamedTag()->entityid->getValue()),//set the mob id in nbt because cant save anywhere else lmao
 		]);
 		Tile::createTile('MobSpawner', $this->getLevel(), $nbt);
 		return true;
@@ -56,6 +57,7 @@ class MonsterSpawner extends \pocketmine\block\MonsterSpawner{
 	}
 
   public function getName(): string {
+    if(!isset($this->entityid)) return "";
       if ($this->entityid === 0) {
           return "Monster Spawner";
       } else {
