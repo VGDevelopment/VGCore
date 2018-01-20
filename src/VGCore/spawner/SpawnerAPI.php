@@ -3,11 +3,15 @@
 namespace VGCore\spawner;
 
 use pocketmine\entity\Entity;
+use pocketmine\Player;
+use pocketmine\nbt\tag\{CompoundTag, IntTag};
+use pocketmine\item\Item;
+use pocketmine\utils\TextFormat as TF;
 // >>>
 use VGCore\SystemOS;
 
 class SpawnerAPI extends Entity {
-    
+
     public static $mobtype = [
         10 => "Chicken",
         11 => "Cow",
@@ -22,9 +26,19 @@ class SpawnerAPI extends Entity {
         36 => "Zombie_PigMan",
         43 => "Blaze",
     ];
-    
+
     public static function start(): void {
-        // 
+        //DO YOU KNOW DA WAE IN DIS FUCTION
     }
-    
+
+    public function giveSpawner(Player $player, int $id){
+      $item = Item::get(52,0,1);
+      $item->setCustomName(TF::RESET.$this->mobtype[$int]." Spawner");
+      $nbt = $item->getNamedTag() ?? new CompoundTag("", []);
+      $nbt->spawner = new IntTag("spawner", $int);
+      $item->setNamedTag($nbt);
+      $player->getInventory()->addItem($item);
+      return true;
+    }
+
 }

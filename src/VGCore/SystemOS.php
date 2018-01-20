@@ -254,11 +254,11 @@ class SystemOS extends PluginBase {
         // Loads all VG Music
         // $this->getLogger()->info("Enabling the Virtual Galaxy Music System : Registering music files.");
         // $this->loadMusic();
-        
+
         // Loads all VG Factory
         $this->getLogger()->info("Enabling the Virtual Galaxy Factory API.");
         $this->loadFactory();
-        
+
         // Loads all VG Spawners.
         $this->getLogger()->info("Enabling the Virtual Galaxy Spawner API.");
         $this->loadSpawner();
@@ -330,18 +330,18 @@ class SystemOS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
     }
-    
+
     public function loadMusic(): void {
         MP::start($this);
     }
-    
+
     public function loadFactory(): void {
         IAPI::start();
         BAPI::start();
         EAPI::start();
         TAPI::start();
     }
-    
+
     public function loadSpawner(): void {
         SpawnerAPI::start();
     }
@@ -427,7 +427,7 @@ class SystemOS extends PluginBase {
         // Check Requests Menu
         $ui = new SimpleForm('§aCheck Faction Requests', '§aClick the correct button to check that faction.');
         self::$uis['checkRequestUI'] = UIDriver::addUI($this, $ui);
-        
+
     }
 
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.
@@ -828,8 +828,7 @@ class SystemOS extends PluginBase {
                 $rarity = CustomEnchantment::RARITY_MYTHIC;
                 break;
         }
-        $activation = CustomEnchantment::ACTIVATION_SELF;
-        $customenchantment = new CustomEnchantment($id, $info[0], $rarity, $activation, $slot);
+        $customenchantment = new CustomEnchantment($id, $info[0], $rarity, $slot, 4);
         return $customenchantment;
     }
 
