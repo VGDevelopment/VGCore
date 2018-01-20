@@ -51,6 +51,7 @@ use pocketmine\entity\{
 use VGCore\economy\EconomySystem;
 
 use VGCore\gui\lib\{
+    UIBuilder,
     UIDriver,
     element\Button,
     element\Dropdown,
@@ -103,15 +104,17 @@ use VGCore\store\{
 use VGCore\enchantment\{
     VanillaEnchantment,
     CustomEnchantment,
-    handler\Handler
+    handler\Handler,
 };
 
 use VGCore\user\UserSystem;
 
 use VGCore\sound\Sound;
 
-use VGCore\lobby\music\MusicPlayer as MP;
-use VGCore\lobby\pet\BasicPet;
+use VGCore\lobby\{
+    music\MusicPlayer as MP,
+    pet\BasicPet
+};
 use VGCore\lobby\pet\entity\{
     EnderDragonPet,
     ChickenPet,
@@ -129,6 +132,11 @@ use VGCore\factory\{
     ItemAPI as IAPI,
     TileAPI as TAPI,
     EntityAPI as EAPI
+};
+
+use VGCore\faction\{
+    FactionSystem,
+    FactionWar
 };
 
 use VGCore\spawner\SpawnerAPI;
@@ -283,6 +291,7 @@ class SystemOS extends PluginBase {
 		PacketPool::registerPacket(new ServerSettingsResponsePacket());
 
         UIDriver::resetUIs($this); // reset all the uis to scratch
+        UIBuilder::makeUI($this);
 		$this->createUIs(); // creates the forms in @var $uis [] int array.
 		$this->createFactionUI(); // creates the forms in @var $uis [] int array.
 		$this->createShopUI(); // creates the forms in @var $uis [] int array.
@@ -357,20 +366,8 @@ class SystemOS extends PluginBase {
         $ui = new CustomForm('§eVirtualGalaxy Tutorial');
         $ui->addIconUrl('https://preview.ibb.co/ioc1Zb/Pluto_Icon_with_background.png');
         self::$uis['serverSettingsUI'] = UIDriver::addUI($this, $ui);
-        // Settings
-        $ui = new SimpleForm('§cVirtualGalaxy User Settings', '§ePlease click an option.');
-        $petmenu = new Button('§cPets');
-        // $musicmenu = new Button('§cMusic');
-        $ui->addButton($petmenu);
-        // $ui->addButton($musicmenu);
-        self::$uis['settingsUI'] = UIDriver::addUI($this, $ui);
-        // Pet Menu
-        $ui = new CustomForm('§cPets');
-        $pet = new Dropdown('§eChoose your pet:', ['OFF', 'EnderDragon', 'Polar Bear', 'Baby Ghast', 'Chicken', 'Cow', 'Wolf', 'Blaze', 'Zombie', 'Zombie Pigman']);
-        $ui->addElement($pet);
-        self::$uis['petUI'] = UIDriver::addUI($this, $ui);
         // Music Menu
-        $ui = new CustomForm('§cPets');
+        $ui = new CustomForm('§cMusic');
         $music = new Dropdown('§eChoose your jam:', ['OFF', 'Radioactive', 'ShapeOfYou', 'ShapeOfYou5tick']);
         $ui->addElement($music);
         self::$uis['musicUI'] = UIDriver::addUI($this, $ui);
@@ -392,11 +389,6 @@ class SystemOS extends PluginBase {
         $ui->addElement($amount);
         $ui->addElement($sendto);
         self::$uis['sendCoinUI'] = UIDriver::addUI($this, $ui);
-        // CustomEnchantment UI
-        $ui = new CustomForm('§2CustomEnchantment');
-        $input = new Input('§eWhat enchantment should we enchant the item with?', 'ID (int)');
-        $ui->addElement($input);
-        self::$uis['customEnchantUI'] = UIDriver::addUI($this, $ui);
         // Success Modal Window
         $ui = new ModalWindow('§2Success!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
         self::$uis['successUI'] = UIDriver::addUI($this, $ui);
@@ -404,36 +396,7 @@ class SystemOS extends PluginBase {
         $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again. For further assistance, read the Tutorial or contact our support team : §esupport@vgpe.me§a.', '...', '...');
         self::$uis['errorUI'] = UIDriver::addUI($this, $ui);
     }
-
-    public function createFactionUI() {
-        // Faction Menu
-        $ui = new SimpleForm('§cFactionMenu', '§aClick the correct button to perform that action.');
-        $createfac = new Button('Create Faction');
-        $joinfac = new Button('Join Faction');
-        $ui->addButton($createfac);
-        $ui->addButton($joinfac);
-        self::$uis['factionUI'] = UIDriver::addUI($this, $ui);
-        // Create Faction Menu
-        $ui = new CustomForm('§8CreateFaction');
-        $input = new Input('§eName your faction', 'Alphabetic Characters without numbers.');
-        $ui->addElement($input);
-        self::$uis['createFactionUI'] = UIDriver::addUI($this, $ui);
-        // Join Faction Menu
-        $ui = new SimpleForm('§cJoinFaction', '§aClick the correct button to perform that action.');
-        $createfac = new Button('Check Invites');
-        $joinfac = new Button('Check Requests');
-        $ui->addButton($createfac);
-        $ui->addButton($joinfac);
-        self::$uis['joinFactionUI'] = UIDriver::addUI($this, $ui);
-        // Check Invites Menu
-        $ui = new SimpleForm('§aCheck Faction Invites', '§aClick the correct button to check that faction.');
-        self::$uis['checkInviteUI'] = UIDriver::addUI($this, $ui);
-        // Check Requests Menu
-        $ui = new SimpleForm('§aCheck Faction Requests', '§aClick the correct button to check that faction.');
-        self::$uis['checkRequestUI'] = UIDriver::addUI($this, $ui);
-
-    }
-
+    
     public function createShopUI() { // Seperated because of the sheer size of this UI collection compared to rest.
         // Shop Main Menu
         $ui = new SimpleForm('§a§lSHOP', '§ePlease select a category :');
