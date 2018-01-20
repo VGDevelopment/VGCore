@@ -35,7 +35,7 @@ class CustomEnchantment extends Enchantment {
     const ICEARROW = 111; // 10% chance to slow the enemy player upon hit of arrow
     const POISONARROW = 112; // 10% chance to make enemy get poisen
 
-    public static $customenchantment;
+    public static $customenchantment = [];
 
     public static function createEnchant($id, CustomEnchantment $enchant) {
         self::$customenchantment[$id] = $enchant;

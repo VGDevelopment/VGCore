@@ -31,14 +31,13 @@ class SpawnerAPI {
         //DO YOU KNOW DA WAE IN DIS FUCTION
     }
 
-    public function giveSpawner(Player $player, int $id){
-      $item = Item::get(52,0,1);
-      $item->setCustomName(TF::RESET.self::$mobtype[$id]." Spawner");
-      $nbt = $item->getNamedTag() ?? new CompoundTag("", []);
-      $nbt->entityid = new IntTag("entityid", $id);
-      $item->setNamedTag($nbt);
-      $player->getInventory()->addItem($item);
-      return true;
+    public static function giveSpawner(Player $player, int $id): void {
+        $item = Item::get(52, 0, 1);
+        $item->setCustomName(TF::RESET . $this->mobtype[$int] . " Spawner");
+        $nbt = $item->getNamedTag() ?? new CompoundTag("", []);
+        $nbt->entityid = new IntTag("entityid", $id);
+        $item->setNamedTag($nbt);
+        $player->getInventory()->addItem($item);
     }
 
 }

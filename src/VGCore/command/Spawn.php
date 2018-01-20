@@ -26,18 +26,7 @@ class Spawn extends PluginCommand {
     }
     
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
-        $player = $sender->getServer()->getPlayer($sender->getName());
-        if ($player === null) {
-            return false;
-        }
-        $type = "Chicken";
-        $mobtype = SpawnerAPI::$mobtype;
-        $newarray = array_flip($mobtype);
-        $id = $newarray[$type];
-        $block = Item::get(Item::MONSTER_SPAWNER, $id);
-        $block->setCustomName(ucfirst($type) . ' Spawner');
-        $player->getInventory()->addItem($block);
-        return true;
+        SpawnerAPI::giveSpawner($sender, 11);
     }
     
 }

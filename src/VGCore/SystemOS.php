@@ -799,14 +799,14 @@ class SystemOS extends PluginBase {
         return $customenchantment;
     }
 
-    public function createEnchant($id, $name, $type, $trigger, $rarity, $maxlevel) {
+    public function createEnchant($id, $name, $type, $trigger, $rarity, $maxlevel): void {
         $info = [$name, $type, $trigger, $rarity, $maxlevel];
         $enchantment[$id] = $info;
         $setinfo = $this->setInfo($id, $data);
         CustomEnchantment::createEnchant($id, $setinfo);
     }
 
-    public function getEnchantment(Item $item, $id) {
+    public function getEnchantment(Item $item, int $id) {
         if (!$item->hasEnchantments()) {
             return null;
         }
@@ -820,7 +820,7 @@ class SystemOS extends PluginBase {
         return null;
     }
 
-    public function setEnchantment(Item $item, $enchants, $levels, $check = true, $sender = null) {
+    public function setEnchantment(Item $item, $enchants, $levels, $check = true, $sender = null): Item {
         if (!is_array($enchants)) {
             $enchants = [$enchants];
         }
@@ -903,7 +903,7 @@ class SystemOS extends PluginBase {
         return $item;
     }
 
-    public function getET(CustomEnchantment $enchantment1) {
+    public function getET(CustomEnchantment $enchantment1): string {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             if ($enchantment1->getId() == $id) {
@@ -913,7 +913,7 @@ class SystemOS extends PluginBase {
         return "Unknown";
     }
 
-    public function getER(CustomEnchantment $enchantment1) {
+    public function getER(CustomEnchantment $enchantment1): string {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             if ($enchantment1->getId() == $id) {
@@ -923,7 +923,7 @@ class SystemOS extends PluginBase {
         return "Common";
     }
 
-    public function getEML(CustomEnchantment $enchantment1) {
+    public function getEML(CustomEnchantment $enchantment1): int {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             if ($enchantment1->getId() == $id) {
@@ -933,7 +933,7 @@ class SystemOS extends PluginBase {
         return 1;
     }
 
-    public function getED(CustomEnchantment $enchantment1) {
+    public function getED(CustomEnchantment $enchantment1): string {
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
             if ($enchantment1->getId() == $id) {
@@ -943,7 +943,7 @@ class SystemOS extends PluginBase {
         return "ERROR";
     }
 
-    public function sortEnchants() {
+    public function sortEnchants(): array {
         $enchantment = $this->enchantment;
         $sorted = [];
         foreach ($enchantment as $id => $info) {
@@ -957,7 +957,7 @@ class SystemOS extends PluginBase {
         return $sorted;
     }
 
-    public function getRN($int) {
+    public function getRN($int): string {
         $romanstring = "";
         while ($int > 0) {
             foreach (self::ROMAN_CONVERSION_TABLE as $rom => $arb) {
@@ -971,7 +971,7 @@ class SystemOS extends PluginBase {
         return $romanstring;
     }
 
-    public function getRC($rarity) {
+    public function getRC($rarity): ?string {
         switch ($rarity) {
             case CustomEnchantment::RARITY_COMMON:
                 return Chat::GREEN;
@@ -986,7 +986,7 @@ class SystemOS extends PluginBase {
         }
     }
 
-    public function verifyEnchant(Item $item, CustomEnchantment $enchantment, $level) {
+    public function verifyEnchant(Item $item, CustomEnchantment $enchantment, int $level): ?bool {
         $type = $this->getET($enchantment);
         if ($this->getEML($enchantment) < $level) {
             return self::MAX_LEVEL;
