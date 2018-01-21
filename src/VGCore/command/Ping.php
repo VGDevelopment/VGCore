@@ -32,12 +32,15 @@ class Ping extends PluginCommand {
             $ping = $sender->getPing();
             if ($ping > 200) {
                 $ping = Chat::RED . (string)$ping;
+                $radar = Chat::RED . "." . Chat::BLACK . ":i";
             } else if ($ping > 100 && $ping < 200) {
                 $ping = Chat::YELLOW . (string)$ping;
+                $radar = Chat::YELLOW . ".:" . Chat::BLACK . "i";
             } else {
                 $ping = Chat::GREEN . (string)$ping;
+                $radar = Chat::GREEN . ".:i";
             }
-            $sender->sendMessage(Chat::AQUA . "The server reported your ping to be:" . Chat::EOL . $ping . Chat::AQUA . "ms");
+            $sender->sendMessage(Chat::AQUA . "The server reported your ping to be:" . Chat::EOL . $ping . Chat::AQUA . "ms " . $radar);
         }
     }
     

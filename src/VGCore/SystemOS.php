@@ -359,7 +359,7 @@ class SystemOS extends PluginBase {
     }
     
     public function loadFaction(): void {
-        FactionSystem::start();
+        FactionSystem::start($this);
     }
 
     // >>> Section 1 - Chat Filter
