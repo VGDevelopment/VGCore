@@ -85,7 +85,7 @@ class Database {
             '10'
             );");
 			if ($q === true) {
-				$q->free();//Whats this? Theres an error here
+				$q->free(); // Whats this? Theres an error here
 				return true;
 			} else {
 				$q->free();
@@ -96,7 +96,7 @@ class Database {
         }
     }
 
-    public static function deleteUser(string $user) {
+    public static function deleteUser(string $user): bool {
         if ($check === true) {
         	$db = self::getDatabase();
             $lowuser = strtolower($user);
@@ -107,7 +107,6 @@ class Database {
                 return false;
             }
         }
-
     }
 
 }

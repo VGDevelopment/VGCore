@@ -18,6 +18,47 @@ class FactionSystem {
 	const CHUNK_Y = 8;
 	const CHUNK = 2;
 	
+	private static $namesuggestion1 = [
+		"Alpha",
+		"Anti",
+		"Atomic",
+		"Ant",
+		"Blizzard",
+		"Bat",
+		"Boxing",
+		"Big",
+		"Big",
+		"Cat",
+		"Cool",
+		"Catastrophic",
+		"Dangerous",
+		"Diatomic",
+		"Dinosize",
+		"Ender",
+		"Excalibur",
+		"Extreme",
+		"Easter",
+		"Eager",
+		"Flippin",
+		"Floating",
+		"Fastest",
+		"Fun",
+		"Fighting",
+		"Furious",
+		"Giga",
+	];
+	
+	private static $namesuggestion2 = [
+		"Giant",
+		"Hacker",
+		"Boys",
+		"Girls",
+		"Bunny",
+		"Lion",
+		"Dinosaur",
+		"DinoKing"
+	];
+	
 	private static $db;
 	
 	private static $rank = [
@@ -75,7 +116,7 @@ class FactionSystem {
 	public static function inFaction(Player $player): bool {
 		$playername = $player->getName();
 		$check = self::ignInFaction($playername);
-		if ($check === 0) {
+		if ($check === false) {
 			return false;
 		} else {
 			return true;
@@ -87,9 +128,9 @@ class FactionSystem {
 	public static function ignInFaction(string $name): int {
 		$query = self::getIGNFaction($name);
 		if ($query === "[/No Faction Found/]" || $query === "[/Internal System Error/]") {
-			return 0;
+			return false;
 		} else {
-			return 1;
+			return true;
 		}
 	}
 	
@@ -140,7 +181,7 @@ class FactionSystem {
 			$i = 1;
 			while ($i < 4) {
 				$stat[] = "[/ERROR getting FACTION/]";
-				$i + 1;
+				$i++;
 			}
 			return $stat;
 		}
@@ -316,8 +357,24 @@ class FactionSystem {
 		}
 	}
 	
-	public function addKill(string $faction, int $kill): void {
-		$
+	public static function addKill(string $faction, int $kill): void {
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			
+		}
+	}
+	
+	public static function getNameSuggestion(string $name): array {
+		$i = 0;
+		$namelist = [];
+		while ($i > 3) {
+			$string = self::$namesuggestion1[array_rand($namesuggestion1, 1)] . self::$namesuggestion2[array_rand($namesuggestion2, 1)];
+			if (!(self::validateFaction($string))) {
+				$namelist[] = $string;
+				$i++;
+			}
+		}
+		return $namelist;
 	}
 	
 }

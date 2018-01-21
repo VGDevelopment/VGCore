@@ -13,22 +13,23 @@ use VGCore\faction\FactionSystem;
 
 use VGCore\gui\lib\UIDriver;
 
-class Faction extends PluginCommand {
-
-  public static $faction;
-
-  public function __construct($name, SystemOS $plugin) {
-    parent::__construct($name, $plugin);
-    $this->setDescription("Access Faction Features");
-    $this->setUsage("/faction or /f");
-    $this->setPermission("vgcore.faction");
-    $this->setAliases(["f"]);
-  }
-
-  public function execute(CommandSender $sender, string $commandLabel, array $args) {
-    if(!$this->faction->isInFaction($sender)){
-      UIDriver::showUIbyID($this->getPlugin(), SystemOS::$uis['factionUI'], $sender); // returns a Menu for thos who's not in a fac yt.
+class Factions extends PluginCommand {
+    
+    private static $os = null;
+    
+    public function __construct($name, SystemOS $plugin) {
+        parent::__construct($name, $plugin);
+        self::$os = $plugin;
+        $this->setDescription("Access Economy Features");
+        $this->setUsage("/economy");
+        $this->setPermission("vgcore.economy");
+        $this->setAliases([
+            "f"    
+        ]);
     }
-  }
-
+    
+    public function execute(CommandSender $sender, string $commandLabel, array $args) {
+        UIDriver::showUIbyID(self::$os, SystemOS::$uis['fManagerUI'], $sender);
+    }
+    
 }

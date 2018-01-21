@@ -5,19 +5,19 @@ namespace VGCore\store;
 class ItemList {
     
     // natural
-    public static $dirt = [3, 0, 10];
-    public static $cobblestone = [4, 0, 30];
-    public static $normalwood = [17, 0, 20];
-    public static $ironore = [15, 0, 250];
-    public static $goldore = [14, 0, 125];
-    public static $diamondore = [56, 0, 500];
-    public static $coalore = [16, 0, 70];
+    public static $dirt = [3, 0, 10, "Dirt"];
+    public static $cobblestone = [4, 0, 30, "Cobblestone"];
+    public static $normalwood = [17, 0, 20, "Oak Wood"];
+    public static $ironore = [15, 0, 250, "Iron Ore"];
+    public static $goldore = [14, 0, 125, "Gold Ore"];
+    public static $diamondore = [56, 0, 500, "Diamond Ore"];
+    public static $coalore = [16, 0, 70, "Coal Ore"];
     
     // craft or smelt
-    public static $glass = [20, 0, 50];
-    public static $chest = [54, 0, 40];
-    public static $craftingtable = [58, 0, 20];
-    public static $furnace = [61, 0, 200];
+    public static $glass = [20, 0, 50, "Glass"];
+    public static $chest = [54, 0, 40, "Chest"];
+    public static $craftingtable = [58, 0, 20, "Crafting Table"];
+    public static $furnace = [61, 0, 200, "Furnace"];
     
     // tools and weapons
     public static $ironshovel = [256, 0, 290];
@@ -40,5 +40,21 @@ class ItemList {
     public static $diamondpickaxe = [278, 0, 2370];
     public static $diamondaxe = [279, 0, 1620];
     public static $diamondsword = [276, 0, 2400];
+    
+    public static function getAllBlock(): array {
+        return [
+            self::$dirt,
+            self::$cobblestone,
+            self::$normalwood,
+            self::$coalore,
+            self::$ironore,
+            self::$goldore,
+            self::$diamondore,
+            self::$glass,
+            self::$chest,
+            self::$craftingtable,
+            self::$furnace
+        ];
+    }
     
 }

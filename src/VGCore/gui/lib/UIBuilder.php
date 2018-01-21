@@ -21,17 +21,23 @@ use VGCore\gui\lib\{
 };
 
 use VGCore\form\{
-    EnchantUI as EUI,
-    FactionUI as FUI,
-    LobbyUI as LUI
+    EnchantUI,
+    FactionUI,
+    LobbyUI,
+    EconomyUI,
+    StoreUI,
+    BasicUI
 };
 
 abstract class UIBuilder {
     
     private static $ui = [
-        EUI::class,
-        FUI::class,
-        LUI::class
+        EnchantUI::class,
+        FactionUI::class,
+        EconomyUI::class,
+        LobbyUI::class,
+        StoreUI::class,
+        BasicUI::class
     ];
     
     abstract public static function start(SystemOS $os): void;

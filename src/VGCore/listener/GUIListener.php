@@ -10,7 +10,8 @@ use pocketmine\Server;
 use pocketmine\utils\TextFormat as Chat;
 // >>>
 use VGCore\economy\EconomySystem;
-use VGCore\faction\FactionSystem;
+
+use VGCore\faction\FactionSystem as FS;
 
 use VGCore\SystemOS;
 
@@ -31,6 +32,8 @@ use VGCore\store\Store;
 use VGCore\store\ItemList as IL;
 
 use VGCore\lobby\music\MusicPlayer;
+
+use VGCore\form\EconomyUI;
 
 class GUIListener implements Listener {
 
@@ -92,16 +95,8 @@ class GUIListener implements Listener {
 
 	public function onUIDataReceiveEvent(UIDataReceiveEvent $event) {
 		if ($event->getPlugin() !== $this->os) return; // events handled for UI only
-		$economy = new EconomySystem($event->getPlugin());
 		$player = $event->getPlayer();
 		$p = $event->getPlugin();
-		$coin = $economy->getCoin($player);
-		// Run-time UI Form (checkCoinWindowUI) @var SystemOS::$uis [] int array for ID
-		$ui = new CustomForm('§2Your §6Coins');
-        $main = new Label('§aYour total §ecoins §aare §e[C]' . $coin);
-        $ui->addElement($main);
-        SystemOS::$uis['checkCoinWindowUI'] = UIDriver::addUI($this->os, $ui);
-        // >>> RUNTIME UI END <<<
 		switch ($id = $event->getID()) {
 			case SystemOS::$uis['serverSettingsUI']: {
 				$data = $event->getData();
@@ -169,6 +164,7 @@ class GUIListener implements Listener {
 				$response = $ui->handle($data, $event->getPlayer());
 				switch ($response) {
 					case '§2Check §6Coins': {
+						EconomyUI::createShowCoinUI($player);
 						UIDriver::showUIbyID($p, SystemOS::$uis['checkCoinWindowUI'], $player);
 						break;
 					}
@@ -218,63 +214,71 @@ class GUIListener implements Listener {
 				$enchantment = $plugin->setEnchantment($playeritemhand, $string, 1, true, $player);
 				$playerinv->setItemInHand($enchantment);
 			}
-			case SystemOS::$uis['factionUI']: {
+			case SystemOS::$uis['fManagerUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
 				switch ($response) {
-					case 'Create Faction': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['createFactionUI'], $event->getPlayer());
+					case '§aJoin a §cFACTION': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['fJoinUI'], $event->getPlayer());
 						break;
 					}
-					case 'Join Faction': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['joinFactionUI'], $event->getPlayer());
+					case '§aCreate a §cFACTION': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['fCreateUI'], $event->getPlayer());
 						break;
+					}
+					case '§aManage your §cFACTION': {
+						if (FS::inFaction($player)) {
+							UIDriver::showUIbyID($p, SystemOS::$uis['fSettingsUI'], $player);
+						}
 					}
 				}
 				break;
 			}
-			case SystemOS::$uis['createFactionUI']: {
+			case SystemOS::$uis['fCreateUI']: {
 				$faction = new FactionSystem($event->getPlugin());
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				$string = $response[0];
-				$plugin = $event->getPlugin();
-				$player = $event->getPlayer();
-				if(!$this->alphanum($string)) {
-					$player->sendMessage("§cYou may only use letters and numbers.");
-					return true;
-        		}
-				if($faction->factionValidate($string)){
-					$player->sendMessage("§cThat faction already exists!");
-					return true;
+				$string = $response[1];
+				if (preg_match("~[0-9]~", $string)) {
+					$player->sendMessage(Chat::RED . "Your faction name must not include numbers.");
+					return;
 				}
-				if(strlen($string) > 30){
-					$player->sendMessage("§cThat name is too long, the limit is 30 characters.");
-					return true;
+				if (strlen($string) > 30) {
+					$player->sendMessage(Chat::RED . "Sorry, that is too long of a name. Please stay below 30 characters.");
+					return;
 				}
-				if($faction->isinFaction($player)){
-					$player->sendMesssage("§cYou're already in a faction!");
-					return true;
-				}else{
-					$faction->createFaction($string, $player);
+				if (FS::inFaction($player)) {
+					$player->sendMessage(Chat::RED . "You're already in a faction. You need to leave this one to create your own.");
+					return;
 				}
+				if (FS::validateFaction($string)) {
+					$player->sendMessage(Chat::RED . "Sorry, a faction with that name already exists.");
+					return;
+				}
+				FS::createPlayerFaction($string, $player);
 				break;
 			}
-			case SystemOS::$uis['joinFactionUI']: {
+			case SystemOS::$uis['fJoinUI']: {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				switch ($response) {
-					case 'Check Invites': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['checkInviteUI'], $event->getPlayer());
-						break;
-					}
-					case 'Check Requests': {
-						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['checkRequestUI'], $event->getPlayer());
-						break;
-					}
+				$string = $response[0];
+				if (preg_match("~[0-9]~", $string)) {
+					$player->sendMessage(Chat::RED . "Sorry, no faction name can include numbers.");
+					return;
+				}
+				if (strlen($string) > 30) {
+					$player->sendMessage(Chat::RED . "Sorry, no faction name can be longer than 30 characters");
+					return;
+				}
+				if (FS::inFaction($player)) {
+					$player->sendMessage(Chat::RED . "Sorry, but you need to leave your previous faction to join a new one.");
+					return;
+				}
+				if (FS::validateFaction($string)) {
+					FS::requestFaction($string, null, $player);
 				}
 				break;
 			}
