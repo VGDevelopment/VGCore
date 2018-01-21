@@ -93,7 +93,8 @@ use VGCore\command\{
     Economy,
     VGEnchant,
     Faction,
-    Spawn
+    Spawn,
+    Ping
 };
 
 use VGCore\store\{
@@ -104,7 +105,7 @@ use VGCore\store\{
 use VGCore\enchantment\{
     VanillaEnchantment,
     CustomEnchantment,
-    handler\Handler,
+    handler\Handler
 };
 
 use VGCore\user\UserSystem;
@@ -270,6 +271,10 @@ class SystemOS extends PluginBase {
         // Loads all VG Spawners.
         $this->getLogger()->info("Enabling the Virtual Galaxy Spawner API.");
         $this->loadSpawner();
+        
+        // Loads all Faction System Dependancies.
+        $this->getLogger()->info("Enabling the Virtual Galaxy Factions System.");
+        $this->loadFaction();
     }
 
     public function onDisable() {
@@ -304,6 +309,7 @@ class SystemOS extends PluginBase {
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
 	    $this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
 	    $this->getServer()->getCommandMap()->register("spawn", new Spawn("spawn", $this));
+	    $this->getServer()->getCommandMap()->register("ping", new Ping("ping", $this));
     }
 
     public function loadVanillaEnchant(): void {
@@ -350,6 +356,10 @@ class SystemOS extends PluginBase {
 
     public function loadSpawner(): void {
         SpawnerAPI::start();
+    }
+    
+    public function loadFaction(): void {
+        FactionSystem::start();
     }
 
     // >>> Section 1 - Chat Filter

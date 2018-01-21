@@ -13,16 +13,16 @@ use VGCore\faction\FactionSystem;
 
 use VGCore\gui\lib\UIDriver;
 
-class Factions extends PluginCommand {
+class Faction extends PluginCommand {
     
     private static $os = null;
     
     public function __construct($name, SystemOS $plugin) {
         parent::__construct($name, $plugin);
         self::$os = $plugin;
-        $this->setDescription("Access Economy Features");
-        $this->setUsage("/economy");
-        $this->setPermission("vgcore.economy");
+        $this->setDescription("Access Faction Features");
+        $this->setUsage("/f or /faction");
+        $this->setPermission("vgcore.faction");
         $this->setAliases([
             "f"    
         ]);

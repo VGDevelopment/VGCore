@@ -30,7 +30,7 @@ class StoreUI extends UIBuilder {
     
     private static $os;
     
-    public static function start(SystemOS $os) {
+    public static function start(SystemOS $os): void {
         self::$os = $os;
         self::createStoreMenu();
         self::createStoreItemMenu();

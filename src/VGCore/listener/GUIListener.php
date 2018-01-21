@@ -236,7 +236,6 @@ class GUIListener implements Listener {
 				break;
 			}
 			case SystemOS::$uis['fCreateUI']: {
-				$faction = new FactionSystem($event->getPlugin());
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
@@ -245,8 +244,8 @@ class GUIListener implements Listener {
 					$player->sendMessage(Chat::RED . "Your faction name must not include numbers.");
 					return;
 				}
-				if (strlen($string) > 30) {
-					$player->sendMessage(Chat::RED . "Sorry, that is too long of a name. Please stay below 30 characters.");
+				if (strlen($string) > 30 || strlen($string) < 5) {
+					$player->sendMessage(Chat::RED . "Sorry, that is too long/short of a name. Please stay below 30 characters and above 5.");
 					return;
 				}
 				if (FS::inFaction($player)) {

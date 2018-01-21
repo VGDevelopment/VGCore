@@ -33,7 +33,6 @@ class FactionUI extends UIBuilder {
         self::createConstructUI();
         self::createFactionManager();
         self::createInviterUI();
-        self::createRequestManagerUI();
     }
     
     private static function createManager(): void {

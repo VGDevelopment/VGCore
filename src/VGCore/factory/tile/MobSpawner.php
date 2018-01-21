@@ -65,15 +65,15 @@ class MobSpawner extends Spawnable {
 		$this->namedtag->MaxSpawnDelay->setValue($value);
 	}
 
-  public function getName(): string {
-    $eid = $this->eid();
-    if ($eid === 0) {
-        return "Monster Spawner";
-    } else {
-        $ename = ucfirst(SpawnerAPI::$mobtype[$eid] ?? 'Monster') . ' Spawner';
-        return $ename;
-    }
-  }
+	public function getName(): string {
+		$eid = $this->eid();
+		if ($eid === 0) {
+			return "Monster Spawner";
+		} else {
+			$ename = ucfirst(SpawnerAPI::$mobtype[$eid] ?? 'Monster') . ' Spawner';
+			return $ename;
+		}
+	}
 
 	public function onUpdate(): bool {
 		if ($this->closed === true) {
@@ -104,7 +104,7 @@ class MobSpawner extends Spawnable {
 						    $dtag[$i] = new DoubleTag("", $v);
 						}
 						$i = 2;
-						for ($i < 6) {
+						while ($i < 6) {
 						    $i + 1;
 						    $dtag[$i] = new DoubleTag("", 0);
 						}
@@ -118,13 +118,13 @@ class MobSpawner extends Spawnable {
 						    $dtag[4]
 						];
 						$ftagarray = [
-						    new FloatTag("", $eq1 * 360);
-						    new FloatTag("", 0);
+						    new FloatTag("", $eq1 * 360),
+						    new FloatTag("", 0)
 						];
 						$ltagarray = [
-						    "Pos" => new ListTag("Pos", $dtagarray1);
-						    "Motion" => new ListTag("Motion", $dtagarray2);
-						    "Rotation" => new ListTag("Rotation", $ftagarray);
+						    "Pos" => new ListTag("Pos", $dtagarray1),
+						    "Motion" => new ListTag("Motion", $dtagarray2),
+						    "Rotation" => new ListTag("Rotation", $ftagarray)
 						];
 						$nbt = new CompoundTag("", $ltagarray);
 						$entity = Entity::createEntity($this->getEntityId(), $this->level, $nbt);
@@ -183,15 +183,15 @@ class MobSpawner extends Spawnable {
 		return $this->namedtag["SpawnRange"];
 	}
 
-	public function setDelay(int $value): void {
+	public function setDelay(int $value): int {
 		$this->namedtag->Delay->setValue($value);
 	}
 
-	public function getMinSpawnDelay(): void {
+	public function getMinSpawnDelay(): int {
 		return $this->namedtag["MinSpawnDelay"];
 	}
 
-	public function getMaxSpawnDelay(): void {
+	public function getMaxSpawnDelay(): int {
 		return $this->namedtag["MaxSpawnDelay"];
 	}
 
