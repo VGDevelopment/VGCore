@@ -2,6 +2,24 @@
 
 namespace VGCore\form;
 
+use VGCore\SystemOS;
+
+use VGCore\gui\lib\{
+    LibraryInt,
+    UIDriver,
+    element\Button,
+    element\Dropdown,
+    element\Element,
+    element\Input,
+    element\Label,
+    element\Slider,
+    element\StepSlider,
+    element\Toggle,
+    window\SimpleForm,
+    window\ModalWindow,
+    window\CustomForm
+};
+
 use VGCore\gui\lib\UIBuilder;
 
 class FactionUI extends UIBuilder {
@@ -11,6 +29,11 @@ class FactionUI extends UIBuilder {
     public static function start(SystemOS $os): void {
         self::$os = $os;
         self::createManager();
+        self::createJoinMenu();
+        self::createConstructUI();
+        self::createFactionManager();
+        self::createInviterUI();
+        self::createRequestManagerUI();
     }
     
     private static function createManager(): void {

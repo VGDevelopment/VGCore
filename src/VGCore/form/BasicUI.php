@@ -28,6 +28,8 @@ class BasicUI extends UIBuilder {
     
     public static function start(SystemOS $os): void {
         self::$os = $os;
+        self::createTutorial();
+        self::createNotificationUI();
     }
     
     private static function createTutorial(): void {
