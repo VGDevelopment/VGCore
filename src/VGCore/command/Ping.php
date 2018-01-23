@@ -20,7 +20,7 @@ class Ping extends PluginCommand {
         parent::__construct($name, $plugin);
         self::$os = $plugin;
         $this->setDescription("Check your Ping");
-        $this->setUsage("/p /ping");
+        $this->setUsage("/p or /ping");
         $this->setPermission("vgcore.pingcheck");
         $this->setAliases([
             "p"    
