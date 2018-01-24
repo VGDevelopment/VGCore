@@ -1,14 +1,14 @@
 <?php
 namespace VGCore\factory\entity\mob;
 
-use pocketmine\entity\Monster;
+use pocketmine\entity\Animal;
 
-class Zombie_PigMan extends Monster {
+class IronGolem extends Animal {
 
-	const NETWORK_ID = self::ZOMBIE_PIGMAN;
+	const NETWORK_ID = self::IRON_GOLEM;
 
 	public function getName(): string{
-		return "Zombie Pigman";
+		return "Iron Golem";
 	}
 
 	public function getDrops() : array{
