@@ -207,6 +207,8 @@ class SystemOS extends PluginBase {
     private static $toggleoff = [];
     private static $toggleon = [];
 
+    public $localdata = [];
+
     // @var customenchantment
     public $enchantment = [
         CustomEnchantment::WARAXE => ["War Axe", "Axe", "Damage", "Common", 1, "5% chance to do 5 hearts of damage in a single hit."],
@@ -224,7 +226,7 @@ class SystemOS extends PluginBase {
         CustomEnchantment::MINIBLACKHOLE => ["Mini Black Hole", "Armor", "Damage", "Legendary", 1, "5% chance to explode and kill all near opponents."]
 
     ];
-    
+
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
 
@@ -271,7 +273,7 @@ class SystemOS extends PluginBase {
         // Loads all VG Spawners.
         $this->getLogger()->info("Enabling the Virtual Galaxy Spawner API.");
         $this->loadSpawner();
-        
+
         // Loads all Faction System Dependancies.
         $this->getLogger()->info("Enabling the Virtual Galaxy Factions System.");
         $this->loadFaction();
@@ -302,7 +304,7 @@ class SystemOS extends PluginBase {
             $this->badwords = explode(',', $this->badwords);
         }
     }
-    
+
     public function loadCommand(): void {
         $this->getServer()->getCommandMap()->register("settings", new PlayerSetting("settings", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
@@ -357,7 +359,7 @@ class SystemOS extends PluginBase {
     public function loadSpawner(): void {
         SpawnerAPI::start();
     }
-    
+
     public function loadFaction(): void {
         FactionSystem::start($this);
     }

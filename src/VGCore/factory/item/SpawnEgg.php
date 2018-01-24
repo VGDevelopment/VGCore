@@ -17,7 +17,7 @@ use pocketmine\Player;
 use VGCore\factory\block\MonsterSpawner;
 
 class SpawnEgg extends SE {
-    
+
     public function onActivate(Level $level, Player $player, Block $br, Block $bc, int $f, Vector3 $cv): bool {
         if (!($bc instanceof MonsterSpawner)) {
             $bradd = $br->add(0.5, 0, 0.5);
@@ -31,12 +31,12 @@ class SpawnEgg extends SE {
                 if ($player->isSurvival()) {
                     --$this->count;
                 }
-                $entity->spawnToAll();
+                $e->spawnToAll();
                 return true;
             }
             return false;
         }
         return false;
     }
-    
+
 }
