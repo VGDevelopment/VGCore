@@ -203,6 +203,13 @@ class SystemOS extends PluginBase {
         BlazePet::class,
         CowPet::class
     ];
+    
+    private static $factorystart = [
+        BAPI::class,
+        IAPI::class,
+        TAPI::class,
+        EAPI::class
+    ];
 
     private static $toggleoff = [];
     private static $toggleon = [];
@@ -350,10 +357,9 @@ class SystemOS extends PluginBase {
     }
 
     public function loadFactory(): void {
-        IAPI::start();
-        BAPI::start();
-        EAPI::start();
-        TAPI::start();
+        foreach (self::$factorystart as $class) {
+            $class::start();
+        }
     }
 
     public function loadSpawner(): void {
