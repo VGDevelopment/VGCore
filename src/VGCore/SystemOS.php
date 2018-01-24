@@ -294,12 +294,15 @@ class SystemOS extends PluginBase {
 
     public function loadUI(): void {
         $this->getServer()->getPluginManager()->registerEvents(new GUIListener($this), $this);
-
-        PacketPool::registerPacket(new ModalFormRequestPacket());
-		PacketPool::registerPacket(new ModalFormResponsePacket());
-		PacketPool::registerPacket(new ServerSettingsRequestPacket());
-		PacketPool::registerPacket(new ServerSettingsResponsePacket());
-
+        $packet = [
+            new ModalFormRequestPacket(),
+            new ModalFormResponsePacket(),
+            new ServerSettingsRequestPacket(),
+            new ServerSettingsResponsePacket()
+        ];
+        foreach ($packet as $p) {
+            PacketPool::registerPacket($p);
+        }
         UIDriver::resetUIs($this); // reset all the uis to scratch
         UIBuilder::makeUI($this); // Creates all Dynamic Forms.
     }
