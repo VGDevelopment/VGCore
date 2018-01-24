@@ -207,7 +207,7 @@ class SystemOS extends PluginBase {
     private static $toggleoff = [];
     private static $toggleon = [];
 
-    public $localdata = [];
+    public static $localcratedata = [];
 
     // @var customenchantment
     public $enchantment = [

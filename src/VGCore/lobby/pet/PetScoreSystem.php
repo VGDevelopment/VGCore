@@ -8,9 +8,9 @@ use pocketmine\Player;
 // >>>
 
 class PetScoreSystem {
-  const PETS = [//defines bluerpints needed to unlock
-    'Ender Dragon' = 100;
-  ]
+  const PETS = [ //defines blueprints needed to unlock
+    'Ender Dragon' => 100,
+  ];
 
   //need to somhow save the data...
 
