@@ -7,10 +7,10 @@ VGCore :
 - [x] EnderPearls
 - [x] CustomEnchantments
 - [ ] Lobby NPC
-- [ ] Lobby Crates
+- [ ] Lobby Crates [**BEING DONE** @daniktheboss ]
 - [x] Pets
 - [ ] FactionSystem [**BEING DONE** @YaBoiLewis ]
-- [ ] Spawners [**BEING DONE** @daniktheboss ]
+- [x] Spawners
 - [x] Graphical User Interface (GUI)
 - [x] Store (In-game Shop)
 
