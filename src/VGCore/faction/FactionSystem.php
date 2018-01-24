@@ -67,6 +67,7 @@ class FactionSystem {
 		"Member"
 	];
 	private static $sessionfaction = [];
+	private static $sessiondata = [];
 	
 	private static $os;
 	private static $server;
@@ -95,9 +96,10 @@ class FactionSystem {
 		$lowname = strtolower($name);
 		$query = self::$db->query("SELECT faction FROM users WHERE username='" . self::$db->real_escape_string($lowname) . "'");
 		if ($query !== null) {
-			$faction = $query->fetchArray()[0] ?? false;
+			$faction = $query->fetch_array()[0] ?? false;
 			if ($faction) {
 				$query->free();
+				var_dump($faction);
 				if ($faction !== "") {
 					return $faction;
 				} else {
@@ -125,7 +127,7 @@ class FactionSystem {
 	
 	// >>> Subset of inFaction()
 	
-	public static function ignInFaction(string $name): int {
+	public static function ignInFaction(string $name): bool {
 		$query = self::getIGNFaction($name);
 		if ($query === "[/No Faction Found/]" || $query === "[/Internal System Error/]") {
 			return false;
@@ -142,7 +144,7 @@ class FactionSystem {
 			return true;
 		} else {
 			$query = self::$db->query("SELECT * FROM factions WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
-			if ($result->num_rows > 0) {
+			if ($query->num_rows > 0) {
 				self::$sessionfaction[] = $lowerfaction;
 				$query->free();
 				return true;
@@ -166,16 +168,23 @@ class FactionSystem {
 				"leader"
 			];
 			$lowerfaction = strtolower($faction);
-			foreach ($reqstat as $i) {
+			if (array_key_exists($lowerfaction, self::$sessiondata)) {
+				foreach ($reqstat as $i => $v) {
+					$stat[] = self::$sessiondata[$lowerfaction][$i];
+				}
+				return $stat;
+			}
+			foreach ($reqstat as $i => $v) {
 				$query = self::$db->query("SELECT" . $i . "FROM factions where factions='" . self::$db->real_escape_string($lowerfaction) . "'");
 				if ($query !== null) {
-					$stat[] = $query->fetchArray[0] ?? false;
+					$stat[] = $query->fetch_array()[0] ?? false;
 					$query->free();
 				} else {
 					$stat[] = "[/ERROR getting DATA/]";
 					$query->free();
 				}
 			}
+			self::$sessiondata[$lowerfaction] = $stat;
 			return $stat;
 		} else {
 			$i = 1;
@@ -193,23 +202,23 @@ class FactionSystem {
 			$lowerfaction = strtolower($faction);
 			$lowerleader = strtolower($leader);
 			$query = self::$db->query("INSERT INTO factions (faction, leader, power, kills, deaths, valid) VALUES ('" . self::$db->real_escape_string($lowerfaction) . "',
-				" . self::$db->real_escape_string($lowerleader) . "',
+				'" . self::$db->real_escape_string($lowerleader) . "',
 				'0000',
 				'0000',
 				'0000',
 				'0'
 			);");
 			if ($query) {
-				$query->free();
+				// $query->free();
 				$query = self::$db->query("UPDATE users SET faction ='" . self::$db->real_escape_string($lowerfaction) . "' WHERE username='" . self::$db->real_escape_string($lowerleader) . "'");
 				if (!$query) {
 					$query->free();
 					return false;
 				}
-				$query->free();
+				// $query->free();
 				return true;
 			} else {
-				$query->free();
+				// $query->free();
 				return false;
 			}
 		} else {
