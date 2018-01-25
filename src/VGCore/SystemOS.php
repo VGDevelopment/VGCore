@@ -141,8 +141,8 @@ use VGCore\faction\{
 };
 
 use VGCore\cosmetic\crate\{
-  Chest,
-  Prize
+    Chest as Crate,
+    Prize
 };
 
 use VGCore\spawner\SpawnerAPI;
@@ -387,10 +387,10 @@ class SystemOS extends PluginBase {
     public function loadFaction(): void {
         FactionSystem::start($this);
     }
-
-    public function loadCrates(): void {
-      $this->getServer()->getPluginManager()->registerEvents(new Chest($this), $this);
-      Chest::start($this);
+    
+    public function loadCrate(): void {
+        $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
+        Crate::start();
     }
 
     // >>> Section 1 - Chat Filter
