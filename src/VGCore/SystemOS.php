@@ -140,6 +140,11 @@ use VGCore\faction\{
     FactionWar
 };
 
+use VGCore\cosmetic\crate\{
+  Chest,
+  Prize
+};
+
 use VGCore\spawner\SpawnerAPI;
 
 class SystemOS extends PluginBase {
@@ -203,7 +208,7 @@ class SystemOS extends PluginBase {
         BlazePet::class,
         CowPet::class
     ];
-    
+
     private static $factorystart = [
         BAPI::class,
         IAPI::class,
@@ -214,7 +219,13 @@ class SystemOS extends PluginBase {
     private static $toggleoff = [];
     private static $toggleon = [];
 
-    public static $localcratedata = [];
+    /**
+     * This saves stuff such as
+     * - Crate
+     * - Stuff that you need to save only per server load
+     * Dont remove
+     */
+    public static $localdata = [];
 
     // @var customenchantment
     public $enchantment = [
@@ -284,6 +295,10 @@ class SystemOS extends PluginBase {
         // Loads all Faction System Dependancies.
         $this->getLogger()->info("Enabling the Virtual Galaxy Factions System.");
         $this->loadFaction();
+
+        // Loads crates and stuff
+        $this->getLogger()->info("Enabling the Virtual Galaxy Crate System.");
+        $this->loadCrates();
     }
 
     public function onDisable() {
@@ -371,6 +386,11 @@ class SystemOS extends PluginBase {
 
     public function loadFaction(): void {
         FactionSystem::start($this);
+    }
+
+    public function loadCrates(): void {
+      $this->getServer()->getPluginManager()->registerEvents(new Chest($this), $this);
+      Chest::start($this);
     }
 
     // >>> Section 1 - Chat Filter

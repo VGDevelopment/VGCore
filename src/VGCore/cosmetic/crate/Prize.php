@@ -7,37 +7,30 @@ use pocketmine\utils\TextFormat as TF;
 // >>>
 
 class Prize {
-    
-    const PET_COMMON = [
-        'pet1' => '1:100'    
+
+    const COMMON_PRIZES = [
+      'pet' => ['1:100'],
+      'wing' => ["wing1"],
+      'cosmetic' => []
     ];
-    
-    const EFFECT_COMMON = [
-        'wing' => ['wing1'],
-        'trail' => ['trail1']
+
+    const RARE_PRIZES = [
+      'pet' => ['1:100'],
+      'wing' => ["wing1"],
+      'cosmetic' => []
     ];
-    
-    const COSMETIC_COMMON = [
-        // ...    
+
+    const LEGENARY_PRIZES = [
+      'pet' => ['1:100'],
+      'wing' => ["wing1"],
+      'cosmetic' => []
     ];
-    
-    public static function getPrize(string $type = null): void { // change typehint...
-        if ($string === null) {
-            return;
-        }
-        switch ($string) {
-            case "Common":
-                // ...
-                break;
-            case "Rare":
-                // ...
-                break;
-            case "Legendary":
-                // ...
-                break;
-            default:
-                break;
-        }
+
+    public static function getPrize(string $type = null): string {
+      if($type == null) return false;
+      if($type = "common") $d = self::COMMON_PRIZES[rand(0,2)]; return $d[array_rand($d)];
+      if($type = "rare") $d = self::RARE_PRIZES[rand(0,2)]; return $d[array_rand($d)];
+      if($type = "legenary") $d = self::LEGENARY_PRIZES[rand(0,2)]; return $d[array_rand($d)];
     }
-    
+
 }
