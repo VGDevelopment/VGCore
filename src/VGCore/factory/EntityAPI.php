@@ -40,7 +40,7 @@ class EntityAPI {
     ];
     
     private static $entityprojectile = [
-        "Enderpearl" => [EP::class, "minecraft:enderpearl"]
+        "EnderPearl" => [EP::class, "minecraft:enderpearl"]
     ];
     
     public static function start(): void {
