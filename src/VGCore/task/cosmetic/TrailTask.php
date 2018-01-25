@@ -1,5 +1,5 @@
 <?php
-namespace CrypticCore\Tasks;
+namespace VGCore\task\cosmetic;
 
 use pocketmine\Server;
 use pocketmine\Player;
@@ -7,7 +7,7 @@ use pocketmine\scheduler\PluginTask;
 
 use VGCore\SystemOS;
 
-class TrailsTask extends PluginTask {
+class TrailTask extends PluginTask {
 
   public function __construct(SystemOS $plugin) {
 		parent::__construct($plugin);

@@ -24,6 +24,9 @@ class FactionWar extends FactionSystem {
         $faction2 = $faction[1];
         $f1member = self::getAllFactionMember($faction1);
         $f2member = self::getAllFactionMember($faction2);
+        if (count($f1member) < 3 || count($f2member) < 3) {
+            return false;
+        }
         $top = self::chooseTop($f1member, $f2member);
         $f1player = $top[0];
         $f2player = $top[1];
@@ -77,7 +80,7 @@ class FactionWar extends FactionSystem {
             if (self::getPlayerFaction($p) === strtolower($winner)) {
                 $p->transfer("mc.vgpe.me", 19132, "WOOHOO! Good game!\nSending you back to lobby so you can have more fun!");
             } else {
-                $p->transfer("mc.vgpe.me", 19132, "Yeah.. that wasn't your best performance.\nThere is always next time.\n Sending you back to the lobby.");
+                $p->transfer("mc.vgpe.me", 19132, "Yeah.. that wasn't your best performance.\nThere is always next time.\nSending you back to the lobby.");
             }
         }
     }

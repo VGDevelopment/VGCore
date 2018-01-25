@@ -29,7 +29,7 @@ class Chest implements Listener {
     public static function resetCrate(Block $block): void {
       unset(SystemOS::$localdata[$block->getPosition()]);
       $pk = new BlockEventPacket();
-      $pk->x = $chest->getX();
+      $pk->x = $chest->getX(); // wtf is $chest ?? lmao
       $pk->y = $chest->getY();
       $pk->z = $chest->getZ();
       $pk->case1 = 1;

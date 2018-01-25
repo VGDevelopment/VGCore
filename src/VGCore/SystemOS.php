@@ -298,7 +298,7 @@ class SystemOS extends PluginBase {
 
         // Loads crates and stuff
         $this->getLogger()->info("Enabling the Virtual Galaxy Crate System.");
-        $this->loadCrates();
+        $this->loadCrate();
     }
 
     public function onDisable() {
@@ -389,7 +389,7 @@ class SystemOS extends PluginBase {
     }
     
     public function loadCrate(): void {
-        $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
+        // $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
         Crate::start();
     }
 
