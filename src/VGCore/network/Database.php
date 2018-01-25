@@ -86,10 +86,8 @@ class Database {
             '10'
             );");
 			if ($q === true) {
-				$q->free(); // Whats this? Theres an error here
 				return true;
 			} else {
-				$q->free();
 			    return false;
 			}
         } else {

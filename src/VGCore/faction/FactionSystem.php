@@ -67,7 +67,6 @@ class FactionSystem {
 		"Member"
 	];
 	private static $sessionfaction = [];
-	private static $sessiondata = [];
 	
 	private static $os;
 	private static $server;
@@ -99,7 +98,6 @@ class FactionSystem {
 			$faction = $query->fetch_array()[0] ?? false;
 			if ($faction) {
 				$query->free();
-				var_dump($faction);
 				if ($faction !== "") {
 					return $faction;
 				} else {
@@ -168,12 +166,6 @@ class FactionSystem {
 				"leader"
 			];
 			$lowerfaction = strtolower($faction);
-			if (array_key_exists($lowerfaction, self::$sessiondata)) {
-				foreach ($reqstat as $i => $v) {
-					$stat[] = self::$sessiondata[$lowerfaction][$i];
-				}
-				return $stat;
-			}
 			foreach ($reqstat as $i => $v) {
 				$query = self::$db->query("SELECT" . $i . "FROM factions where factions='" . self::$db->real_escape_string($lowerfaction) . "'");
 				if ($query !== null) {
@@ -184,7 +176,6 @@ class FactionSystem {
 					$query->free();
 				}
 			}
-			self::$sessiondata[$lowerfaction] = $stat;
 			return $stat;
 		} else {
 			$i = 1;
@@ -231,7 +222,7 @@ class FactionSystem {
 		return self::createFaction($faction, $leadername);
 	}
 	
-	public static function requestFaction(string $faction, string $name, Player $player = null): void {
+	public static function requestFaction(string $faction, string $name, Player $player = null): bool {
 		$check = self::validateFaction($faction);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
@@ -243,10 +234,11 @@ class FactionSystem {
 			$leader = self::$server->getPlayer($leadername);
 			self::$request[$lowerfaction][] = $name;
 			UIDriver::showUIbyID(self::$os, SystemOS::$uis['---'], $leader);
+			return true;
 		}
 	}
 	
-	public static function invitePlayer(string $faction, string $name, Player $player = null): void {
+	public static function invitePlayer(string $faction, string $name, Player $player = null): bool {
 		$check = DB::checkUser($name);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
@@ -258,6 +250,7 @@ class FactionSystem {
 			$leader = self::$server->getPlayer($leadername);
 			self::$invite[$lowerfaction][] = $name;
 			UIDriver::showUIbyID(self::$os, SystemOS::$uis['---'], $player);
+			return true;
 		}
 	}
 	

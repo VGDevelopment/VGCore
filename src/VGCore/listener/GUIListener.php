@@ -33,7 +33,10 @@ use VGCore\store\ItemList as IL;
 
 use VGCore\lobby\music\MusicPlayer;
 
-use VGCore\form\EconomyUI;
+use VGCore\form\{
+	EconomyUI,
+	FactionUI
+};
 
 class GUIListener implements Listener {
 
@@ -231,6 +234,7 @@ class GUIListener implements Listener {
 						if (FS::inFaction($player)) {
 							UIDriver::showUIbyID($p, SystemOS::$uis['fSettingsUI'], $player);
 						}
+						break;
 					}
 				}
 				break;
@@ -257,7 +261,7 @@ class GUIListener implements Listener {
 					return;
 				}
 				$query = FS::createPlayerFaction($string, $player);
-				if ($query) {
+				if ($query === true) {
 					$player->sendMessage(Chat::GREEN . "Your faction has been created succesfully!");
 				} else {
 					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
@@ -282,9 +286,42 @@ class GUIListener implements Listener {
 					return;
 				}
 				if (FS::validateFaction($string)) {
-					FS::requestFaction($string, null, $player);
+					$query = FS::requestFaction($string, null, $player);
+					if ($query === true) {
+						$player->sendMessage(Chat::GREEN . "You've requested " . Chat::YELLOW . $response . Chat::GREEN . " succesfully!");
+					} else {
+						$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+					}
 				}
 				break;
+			}
+			case SystemOS::$uis['fSettingsUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				switch ($response) {
+					case '§cClick to accept some' . Chat::EOL . 'join requests.': {
+						UIDriver::showUIbyID($p, SystemOS::$uis['fRequestManagerUI'], $player);
+						break;
+					}
+					case '§cClick to invite a player' . Chat::EOL . 'into your faction.': {
+						UIDriver::showUIbyID($p, SystemOS::$uis['fInviterUI'], $player);
+						break;
+					}
+					case '§cClick to view info about' . Chat::EOL . 'your faction.': {
+						if ((FS::inFaction($player)) === false) {
+							$player->sendMessage(Chat::RED . "Sadly, we can't get data about your faction if you aren't in a faction. Join or create a faction first!");
+							return;
+						}
+						$faction = FS::getPlayerFaction($player);
+						FactionUI::createFactionDataUI($faction);
+						UIDriver::showUIbyID($p, SystemOS::$uis['fInfoUI'], $player);
+						break;
+					}
+					case '§c[CRITICAL SETTINGS]' . Chat::EOL . 'Advanced Settings': {
+						break;
+					}
+				}
 			}
 			case SystemOS::$uis['shopMainMenuUI']: {
 				$data = $event->getData();

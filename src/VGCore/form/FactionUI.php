@@ -2,6 +2,10 @@
 
 namespace VGCore\form;
 
+use pocketmine\utils\TextFormat as Chat;
+
+use pocketmine\Player;
+// >>>
 use VGCore\SystemOS;
 
 use VGCore\gui\lib\{
@@ -21,6 +25,8 @@ use VGCore\gui\lib\{
 };
 
 use VGCore\gui\lib\UIBuilder;
+
+use VGCore\faction\FactionSystem as FS;
 
 class FactionUI extends UIBuilder {
     
@@ -76,10 +82,11 @@ class FactionUI extends UIBuilder {
     }
     
     private static function createFactionManager(): void {
-        $ui = new SimpleForm('§aManage your §cFACTION', '§eAccess multiple settings about your faction. Only the faction leader has access to the Advanced Settings Page. Only Faction Officers or higher ranks can ');
-        $request = new Button('§cClick to accept some join requests.');
-        $invite = new Button('§cClick to invite a player into your faction.');
-        $advanced = new Button('§c[CRITICAL SETTINGS] Advanced Settings');
+        $ui = new SimpleForm('§aManage your §cFACTION', '§eAccess multiple settings about your faction. Only the faction leader has access to the Advanced Settings Page. Only Faction Officers or higher ranks can accept requests or invite players.');
+        $info = new Button('§cClick to view info about' . Chat::EOL . 'your faction.');
+        $request = new Button('§cClick to accept some' . Chat::EOL . 'join requests.');
+        $invite = new Button('§cClick to invite a player' . Chat::EOL . 'into your faction.');
+        $advanced = new Button('§c[CRITICAL SETTINGS]' . Chat::EOL . 'Advanced Settings');
         $type = [
             $request,
             $invite,
@@ -100,13 +107,47 @@ class FactionUI extends UIBuilder {
     }
     
     public static function createRequestManagerUI(array $request): void {
-        $ui = new CustomForm('$eAccept Requests');
-        $choice = new Dropdown('§ePick the username you want to accept into your faction. This list is cleared whenever server restarts.');
+        $ui = new CustomForm('§eAccept Requests');
+        $choice = new Dropdown('§ePick the username you want to accept into your faction. This list is cleared whenever server restarts.', $request);
         $type = [
             $choice    
         ];
         $package = self::makePackage($ui, $type);
         SystemOS::$uis['fRequestManagerUI'] = UIDriver::addUI(self::$os, $package);
+    }
+    
+    public static function createFactionDataUI(string $faction, Player $player): void {
+        $data = FS::factionStat($faction);
+        $name = strtolower($faction);
+        if ($data[2] >= 1000) {
+            $deathstring = "alot of";
+        } else if ($data[2] >= 500 && $data[2] < 1000) {
+            $deathstring = "somewhat many";
+        } else if ($data[2] >= 250 && $data[2] < 500) {
+            $deathstring = "an okay amount of";
+        } else if ($data[2] >= 100 && $data[2] < 250) {
+            $deathstring = "not to many";
+        } else if ($data[2] >= 50 && $data[2] < 100) {
+            $deathstring = "very less amount of";
+        } else if ($data[2] > 0 && $data[2] < 50) {
+            $deathstring = "extremely less amount of";
+        } else if ($data[2] === 0) {
+            $deathstring = "0"
+        }
+        if (FS::getPlayerFaction($player) === $faction) {
+            $ui = new ModalForm('§eFaction Data', '§eYour §cfaction §ehas the name :§a' . $name . Chat::EOL . 
+            '§eYour §cfaction has gained §a' . (string)$data[0] . '§e power since it has been created!' . Chat::EOL . 
+            '§eYour §cfaction has killed §a' . (string)$data[1] . '§e players since it has been created!' . Chat::EOL . 
+            '§eYour §cfaction has had ' . $deathstring . ' loses since it has been created!' . Chat::EOL .
+            '§eYour §cfaction is being led by ' . (string)$data[3] . ' as of now!', '...', '...');
+        } else {
+            $ui = new ModalForm('§eFaction Data', '§eThis §cfaction §ehas the name :§a' . $name . Chat::EOL . 
+            '§eThis §cfaction has gained §a' . (string)$data[0] . '§e power since it has been created!' . Chat::EOL . 
+            '§eThis §cfaction has killed §a' . (string)$data[1] . '§e players since it has been created!' . Chat::EOL . 
+            '§eThis §cfaction has had ' . $deathstring . ' loses since it has been created!' . Chat::EOL .
+            '§eThis §cfaction is being led by ' . (string)$data[3] . ' as of now!');
+        }
+        SystemOS::$uis['fInfoUI'] = UIDriver::addUI(self::$os, $package);
     }
     
 }

@@ -43,7 +43,7 @@ class BasicUI extends UIBuilder {
         $ui = new ModalWindow('§2Success!', '§aThe §eaction §ayou were trying to perform, has been completed. You can close this window now.', '...', '...');
         SystemOS::$uis['successUI'] = UIDriver::addUI(self::$os, $ui);
         // ERROR Modal Window
-        $ui = new ModalWindow('§cERROR', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again. For further assistance, read the Tutorial or contact our support team : §esupport@vgpe.me§a.', '...', '...');
+        $ui = new ModalWindow('§cERROR!', '§eDue to an unexpected error, your task could not be completed. Please close this window and try again. For further assistance, read the Tutorial or contact our support team : §esupport@vgpe.me§a.', '...', '...');
         SystemOS::$uis['errorUI'] = UIDriver::addUI(self::$os, $ui);
     }
     

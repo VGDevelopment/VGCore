@@ -1,12 +1,12 @@
 <?php
 
-namespace VGCore\cosmetic\trails;
+namespace VGCore\cosmetic\trail;
 
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 // >>>
 
-class Trails {
+class Trail {
   const TRAILS = [
     'lightning_speed' => [5],
     'wing1' => [1]
