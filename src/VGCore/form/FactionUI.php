@@ -88,6 +88,7 @@ class FactionUI extends UIBuilder {
         $invite = new Button('§cClick to invite a player' . Chat::EOL . 'into your faction.');
         $advanced = new Button('§c[CRITICAL SETTINGS]' . Chat::EOL . 'Advanced Settings');
         $type = [
+            $info,
             $request,
             $invite,
             $advanced
@@ -132,7 +133,7 @@ class FactionUI extends UIBuilder {
         } else if ($data[2] > 0 && $data[2] < 50) {
             $deathstring = "extremely less amount of";
         } else if ($data[2] === 0) {
-            $deathstring = "0"
+            $deathstring = "0";
         }
         if (FS::getPlayerFaction($player) === $faction) {
             $ui = new ModalForm('§eFaction Data', '§eYour §cfaction §ehas the name :§a' . $name . Chat::EOL . 

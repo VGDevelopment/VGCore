@@ -167,10 +167,12 @@ class FactionSystem {
 			];
 			$lowerfaction = strtolower($faction);
 			foreach ($reqstat as $i => $v) {
-				$query = self::$db->query("SELECT" . $i . "FROM factions where factions='" . self::$db->real_escape_string($lowerfaction) . "'");
-				if ($query !== null) {
+				$query = self::$db->query("SELECT" . $v . "FROM factions where faction='" . self::$db->real_escape_string($lowerfaction) . "'");
+				if ($query !== null && $query !== false) {
 					$stat[] = $query->fetch_array()[0] ?? false;
 					$query->free();
+				} else if ($query === false){
+					$stat[] = "[/ERROR getting DATA/]";
 				} else {
 					$stat[] = "[/ERROR getting DATA/]";
 					$query->free();

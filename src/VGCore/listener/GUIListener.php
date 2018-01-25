@@ -314,7 +314,7 @@ class GUIListener implements Listener {
 							return;
 						}
 						$faction = FS::getPlayerFaction($player);
-						FactionUI::createFactionDataUI($faction);
+						FactionUI::createFactionDataUI($faction, $player);
 						UIDriver::showUIbyID($p, SystemOS::$uis['fInfoUI'], $player);
 						break;
 					}
