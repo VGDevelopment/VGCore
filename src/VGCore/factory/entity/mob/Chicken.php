@@ -1,7 +1,7 @@
 <?php
 namespace VGCore\factory\entity\mob;
 
-use pocketmine\entity\Animal;
+use VGCore\factory\entity\mob\BasicAnimal as Animal;
 
 class Chicken extends Animal {
 

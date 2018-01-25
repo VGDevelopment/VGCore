@@ -256,7 +256,12 @@ class GUIListener implements Listener {
 					$player->sendMessage(Chat::RED . "Sorry, a faction with that name already exists.");
 					return;
 				}
-				FS::createPlayerFaction($string, $player);
+				$query = FS::createPlayerFaction($string, $player);
+				if ($query) {
+					$player->sendMessage(Chat::GREEN . "Your faction has been created succesfully!");
+				} else {
+					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+				}
 				break;
 			}
 			case SystemOS::$uis['fJoinUI']: {

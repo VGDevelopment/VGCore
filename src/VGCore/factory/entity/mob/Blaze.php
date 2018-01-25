@@ -1,7 +1,7 @@
 <?php
 namespace VGCore\factory\entity\mob;
 
-use pocketmine\entity\Monster;
+use VGCore\factory\entity\mob\BasicMonster as Monster;
 
 class Blaze extends Monster {
 

@@ -33,6 +33,7 @@ class Database {
 		}
 		if (!$db->query("CREATE TABLE IF NOT EXISTS factions(
 			faction VARCHAR(30) PRIMARY KEY,
+			leader VARCHAR(30),
 			valid INT(1),
 			rank VARCHAR(12),
 			kills INT(5),

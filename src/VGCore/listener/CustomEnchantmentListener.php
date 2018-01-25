@@ -58,6 +58,11 @@ use VGCore\enchantment\handler\Handler;
 
 use VGCore\lobby\pet\BasicPet;
 
+use VGCore\factory\entity\mob\{
+    BasicAnimal,
+    BasicMonster
+};
+
 class CustomEnchantmentListener implements Listener {
     
     public $plugin;
@@ -97,7 +102,7 @@ class CustomEnchantmentListener implements Listener {
         if ($event instanceof EntityDamageByEntityEvent) {
             $damager = $event->getDamager();
             $entity = $event->getEntity();
-            if ($damager instanceof Player && !($entity instanceof BasicPet)) {
+            if ($damager instanceof Player && !($entity instanceof BasicPet) && !($entity instanceof BasicMonster) && !($entity instanceof BasicAnimal)) {
                 $damageritem = $damager->getInventory()->getItemInHand();
                 $entityitem = $entity->getInventory()->getItemInHand();
                 $enchantment = $this->plugin->getEnchantment($damageritem, CustomEnchantment::WARAXE);
