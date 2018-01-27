@@ -73,6 +73,7 @@ use VGCore\listener\{
     USListener,
     PetListener,
     RidingListener,
+    CrateListener,
     event\PetEvent,
     event\MakePetEvent,
     event\RemakePetEvent,
@@ -387,10 +388,10 @@ class SystemOS extends PluginBase {
     public function loadFaction(): void {
         FactionSystem::start($this);
     }
-    
+
     public function loadCrate(): void {
-        // $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
-        Crate::start();
+        $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
+        Crate::start($this);
     }
 
     // >>> Section 1 - Chat Filter
