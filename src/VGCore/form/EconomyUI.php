@@ -2,6 +2,8 @@
 
 namespace VGCore\form;
 
+use pocketmine\Player;
+// >>>
 use VGCore\SystemOS;
 
 use VGCore\gui\lib\{

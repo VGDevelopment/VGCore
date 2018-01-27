@@ -97,9 +97,9 @@ class GUIListener implements Listener {
 	}
 
 	public function onUIDataReceiveEvent(UIDataReceiveEvent $event) {
-		if ($event->getPlugin() !== $this->os) return; // events handled for UI only
 		$player = $event->getPlayer();
 		$p = $event->getPlugin();
+		$economy = new EconomySystem($p);
 		switch ($id = $event->getID()) {
 			case SystemOS::$uis['serverSettingsUI']: {
 				$data = $event->getData();
