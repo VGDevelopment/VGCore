@@ -31,6 +31,21 @@ class UserSystem {
         }
     }
     
+    public function isUserNew(string $xuid): bool {
+        $query = $this->db->query("SELECT * FROM users WHERE userid='" . $this->db->real_escape_string($xuid) . "'");
+        $check = $query->num_rows > 1 ? true:false;
+        if ($check === true) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public function updateUserID(string $xuid, string $newname): void {
+        $lowername = strtolower($newname);
+        $query = $this->db->query("UPDATE users SET username = '" . $this->db->real_escape_string($lowername) . "' WHERE userid='" . $this->db->real_escape_string($xuid) . "'");
+    }
+    
     public function addKill(string $user) {
         
     }
@@ -39,7 +54,7 @@ class UserSystem {
         $lowuser = strtolower($user);
         $check = DB::checkUser($user);
         if ($check === true && in_array($rank, self::rank)) {
-            return $this->db->query("UPDATE users SET rank = $rank WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
+            return $this->db->query("UPDATE users SET rank = " . $rank . " WHERE username='" . $this->db->real_escape_string($lowuser) . "'");
         } else {
             return false;
         }

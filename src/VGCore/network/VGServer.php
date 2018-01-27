@@ -33,7 +33,7 @@ class VGServer {
             return "Lobby";
         } else if (in_array($port, $this->faction)) {
             return "Faction";
-        } else if (in_array($port, $this->factionwar))
+        } else if (in_array($port, $this->factionwar)) {
             return "FactionWar";
         } else {
             return "ERROR";

@@ -14,6 +14,7 @@ class Database {
 		}
 		if (!$db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
+			userid VARCHAR(16),
 			dollars FLOAT,
 			gems FLOAT,
 			coins FLOAT,
@@ -72,12 +73,12 @@ class Database {
 		return $query->num_rows > 0 ? true:false;
     }
 
-    public static function createUser(string $user): bool {
+    public static function createUser(string $user, string $userid): bool {
 		$check = self::checkUser($user);
         if ($check === false) {
         	$db = self::getDatabase();
             $lowuser = strtolower($user);
-            $q = $db->query("INSERT INTO users (username, rank, kills, deaths, ban, coins, dollars, gems) VALUES ('"
+            $q = $db->query("INSERT INTO users (username, rank, kills, deaths, ban, coins, dollars, gems, userid) VALUES ('"
             . $db->real_escape_string($lowuser) .
             "',
             'Player',
@@ -86,7 +87,8 @@ class Database {
             '0',
             '5000',
             '0',
-            '10'
+            '10',
+            '" . $db->real_escape_string($userid) . "'
             );");
 			if ($q === true) {
 				return true;

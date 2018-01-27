@@ -35,7 +35,12 @@ class USListener implements Listener {
     public function onJoin(PlayerJoinEvent $event) {
         $player = $event->getPlayer();
         $name = $player->getName();
-        DB::createUser($name);
+        $xuid = $player->getXuid();
+        if ($this->us->isUserNew($xuid) === false) {
+            $this->us->updateUserID(string $xuid, string $name);
+            return;
+        }
+        DB::createUser($name, $xuid);
         $bancheck = $this->bs->isBan($name);
         if ($bancheck === true) {
             $banid = $this->bs->getBanID($name);
