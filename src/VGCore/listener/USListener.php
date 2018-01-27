@@ -37,7 +37,7 @@ class USListener implements Listener {
         $name = $player->getName();
         $xuid = $player->getXuid();
         if ($this->us->isUserNew($xuid) === false) {
-            $this->us->updateUserID(string $xuid, string $name);
+            $this->us->updateUserID($xuid, $name);
             return;
         }
         DB::createUser($name, $xuid);
