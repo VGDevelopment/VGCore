@@ -19,10 +19,13 @@ class CrateListener implements Listener {
     $block = $event->getBlock();
     $player = $event->getPlayer();
     $database = Database::getDatabase();
-    if(isset(self::CRATES[$block->x.":".$block->y.":".$block->z])){
+    $x = (string)$block->x;
+    $y = (string)$block->y;
+    $z = (string)$block->z;
+    if(isset(self::CRATES[$x . ":" . $y . ":" . $z])){
       //if($database->) CHECK KEY thing, and take one key out
       $event->setCancelled();
-      Chest::openCrate($player, $block, self::CRATES[$block->x.":".$block->y.":".$block->z][1]);
+      Chest::openCrate($player, $block, self::CRATES[$x . ":" . $y . ":" . $z][1]);
     }
   }
 

@@ -28,9 +28,9 @@ class Database {
 			date DATE,
 			reason VARCHAR(50),
 			admin VARCHAR(20),
-      common_key int(5),
-      rare_key int(5),
-      legendary_key int(5)
+			common_key int(5),
+			rare_key int(5),
+			legendary_key int(5)
 			);")) {
 			$plugin->getLogger()->critical("Error creating 'users' table: " . $db->error);
 			return;
