@@ -20,7 +20,7 @@ use VGCore\gui\lib\{
     element\StepSlider,
     element\Toggle,
     window\SimpleForm,
-    window\ModalWindow,
+    window\ModalWindow as ModalForm,
     window\CustomForm
 };
 
@@ -132,23 +132,23 @@ class FactionUI extends UIBuilder {
             $deathstring = "very less amount of";
         } else if ($data[2] > 0 && $data[2] < 50) {
             $deathstring = "extremely less amount of";
-        } else if ($data[2] === 0) {
+        } else if ((int)$data[2] === 0) {
             $deathstring = "0";
         }
-        if (FS::getPlayerFaction($player) === $faction) {
-            $ui = new ModalForm('§eFaction Data', '§eYour §cfaction §ehas the name :§a' . $name . Chat::EOL . 
-            '§eYour §cfaction has gained §a' . (string)$data[0] . '§e power since it has been created!' . Chat::EOL . 
-            '§eYour §cfaction has killed §a' . (string)$data[1] . '§e players since it has been created!' . Chat::EOL . 
-            '§eYour §cfaction has had ' . $deathstring . ' loses since it has been created!' . Chat::EOL .
-            '§eYour §cfaction is being led by ' . (string)$data[3] . ' as of now!', '...', '...');
+        if (FS::getPlayerFaction($player) === $name) {
+            $ui = new ModalForm('§eFaction Data', '§eYour §cfaction §ehas the name : §a' . $name . Chat::EOL . 
+            '§eYour §cfaction§e has gained §a' . $data[0] . '§e power since it has been created!' . Chat::EOL . 
+            '§eYour §cfaction§e has killed §a' . $data[1] . '§e players since it has been created!' . Chat::EOL . 
+            '§eYour §cfaction§e has had §a' . $deathstring . '§e loses since it has been created!' . Chat::EOL .
+            '§eYour §cfaction§e is being led by §a' . $data[3] . '§e as of now!', '...', '...');
         } else {
-            $ui = new ModalForm('§eFaction Data', '§eThis §cfaction §ehas the name :§a' . $name . Chat::EOL . 
-            '§eThis §cfaction has gained §a' . (string)$data[0] . '§e power since it has been created!' . Chat::EOL . 
-            '§eThis §cfaction has killed §a' . (string)$data[1] . '§e players since it has been created!' . Chat::EOL . 
-            '§eThis §cfaction has had ' . $deathstring . ' loses since it has been created!' . Chat::EOL .
-            '§eThis §cfaction is being led by ' . (string)$data[3] . ' as of now!');
+            $ui = new ModalForm('§eFaction Data', '§eThis §cfaction §ehas the name : §a' . $name . Chat::EOL . 
+            '§eThis §cfaction§e has gained §a' . $data[0] . '§e power since it has been created!' . Chat::EOL . 
+            '§eThis §cfaction§e has killed §a' . $data[1] . '§e players since it has been created!' . Chat::EOL . 
+            '§eThis §cfaction§e has had §a' . $deathstring . '§e loses since it has been created!' . Chat::EOL .
+            '§eThis §cfaction§e is being led by §a' . $data[3] . '§e as of now!');
         }
-        SystemOS::$uis['fInfoUI'] = UIDriver::addUI(self::$os, $package);
+        SystemOS::$uis['fInfoUI'] = UIDriver::addUI(self::$os, $ui);
     }
     
 }
