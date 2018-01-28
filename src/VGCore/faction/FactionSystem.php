@@ -207,7 +207,7 @@ class FactionSystem {
 				// $query->free();
 				$query = self::$db->query("UPDATE users SET faction ='" . self::$db->real_escape_string($lowerfaction) . "' WHERE username='" . self::$db->real_escape_string($lowerleader) . "'");
 				if (!$query) {
-					$query->free();
+					// $query->free();
 					return false;
 				}
 				// $query->free();
@@ -226,20 +226,43 @@ class FactionSystem {
 		return self::createFaction($faction, $leadername);
 	}
 	
-	public static function requestFaction(string $faction, string $name): bool {
+	public static function addToFaction(string $faction, string $name): bool {
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			$lowerfaction = strtolower($faction);
+			$lowername = strtolower($faction);
+			$query = self::$db->query("UPDATE users SET faction ='" . self::$db->real_escape_string($lowerfaction) . "' where username='" . self::$db->real_escape_string($lowername) . "'");
+			if ($query) {
+				$query->free();
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	public static function requestFaction(string $faction, string $name): int {
 		$check = self::validateFaction($faction);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
 			$factiondata = self::factionStat($faction);
 			$leadername = strtolower($factiondata[3]);
 			$leader = self::$server->getPlayer($leadername);
+			if (array_key_exists($lowerfaction, self::$request)) {
+				if (in_array($name, self::$request[$lowerfaction])) {
+					return 2;
+				}
+			}
 			self::$request[$lowerfaction][] = $name;
+			if ($leader === null) {
+				return true;
+			}
 			$leader->sendMessage(Chat::YELLOW . "A player using the name " . Chat::GREEN . $name . Chat::YELLOW . " has decided to request your faction." . Chat::EOL . 
 			"Do " . Chat::RED . "/f" . Chat::YELLOW . " to open up the request manager and " . Chat::GREEN . Chat::BOLD . "ACCEPT" . Chat::RESET . Chat::YELLOW . " or " . 
 			Chat::RED . Chat::BOLD .  "DENY" . Chat::RESET . Chat::EOL . Chat::YELLOW . "the request.");
-			return true;
+			return 1;
 		} else {
-			return false;
+			return 0;
 		}
 	}
 	

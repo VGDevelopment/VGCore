@@ -288,8 +288,10 @@ class GUIListener implements Listener {
 				if (FS::validateFaction($string)) {
 					$name = $player->getName();
 					$query = FS::requestFaction($string, $name);
-					if ($query === true) {
-						$player->sendMessage(Chat::GREEN . "You've requested " . Chat::YELLOW . $response . Chat::GREEN . " succesfully!");
+					if ($query === 1) {
+						$player->sendMessage(Chat::GREEN . "You've requested " . Chat::YELLOW . $string . Chat::GREEN . " succesfully!");
+					} else if ($query === 2) {
+						$player->sendMessage(Chat::RED . "Sorry, we can't allow you to spam a specific faction's inbox. Please understand.");
 					} else {
 						$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
 					}
