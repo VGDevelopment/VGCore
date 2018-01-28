@@ -3,6 +3,8 @@
 namespace VGCore\faction;
 
 use pocketmine\Player;
+
+use pocketmine\utils\TextFormat as Chat;
 // >>>
 use VGCore\SystemOS;
 
@@ -224,19 +226,20 @@ class FactionSystem {
 		return self::createFaction($faction, $leadername);
 	}
 	
-	public static function requestFaction(string $faction, string $name, Player $player = null): bool {
+	public static function requestFaction(string $faction, string $name): bool {
 		$check = self::validateFaction($faction);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
 			$factiondata = self::factionStat($faction);
 			$leadername = strtolower($factiondata[3]);
-			if ($player === null) {
-				$player = self::$server->getPlayer($name);
-			}
 			$leader = self::$server->getPlayer($leadername);
 			self::$request[$lowerfaction][] = $name;
-			UIDriver::showUIbyID(self::$os, SystemOS::$uis['---'], $leader);
+			$leader->sendMessage(Chat::YELLOW . "A player using the name " . Chat::GREEN . $name . Chat::YELLOW . " has decided to request your faction." . Chat::EOL . 
+			"Do " . Chat::RED . "/f" . Chat::YELLOW . " to open up the request manager and " . Chat::GREEN . Chat::BOLD . "ACCEPT" . Chat::RESET . Chat::YELLOW . " or " . 
+			Chat::RED . Chat::BOLD .  "DENY" . Chat::RESET . Chat::EOL . Chat::YELLOW . "the request.");
 			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -263,12 +266,12 @@ class FactionSystem {
 			$check = array_key_exists($lowerfaction, self::$invite);
 			if ($check === true) {
 				if (empty(self::$invite[$lowerfaction])) {
-					return [182];
+					return [];
 				} else {
 					return self::$invite[$lowerfaction];
 				}
 			} else {
-				return [182];
+				return [];
 			}
 		}
 	}
@@ -277,15 +280,15 @@ class FactionSystem {
 		$check = self::validateFaction($faction);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
-			$check = array_key_exists($lowerfaction, self::$invite);
+			$check = array_key_exists($lowerfaction, self::$request);
 			if ($check === true) {
-				if (empty(self::$invite[$lowerfaction])) {
-					return [182];
+				if (empty(self::$request[$lowerfaction])) {
+					return [];
 				} else {
-					return self::$invite[$lowerfaction];
+					return self::$request[$lowerfaction];
 				}
 			} else {
-				return [182];
+				return [];
 			}
 		}
 	}

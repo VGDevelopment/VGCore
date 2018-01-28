@@ -286,7 +286,8 @@ class GUIListener implements Listener {
 					return;
 				}
 				if (FS::validateFaction($string)) {
-					$query = FS::requestFaction($string, null, $player);
+					$name = $player->getName();
+					$query = FS::requestFaction($string, $name);
 					if ($query === true) {
 						$player->sendMessage(Chat::GREEN . "You've requested " . Chat::YELLOW . $response . Chat::GREEN . " succesfully!");
 					} else {
@@ -301,6 +302,8 @@ class GUIListener implements Listener {
 				$response = $ui->handle($data, $event->getPlayer());
 				switch ($response) {
 					case '§cClick to accept some' . Chat::EOL . 'join requests.': {
+						$faction = FS::getPlayerFaction($player);
+						FactionUI::createRequestManagerUI($faction);
 						UIDriver::showUIbyID($p, SystemOS::$uis['fRequestManagerUI'], $player);
 						break;
 					}
@@ -322,6 +325,14 @@ class GUIListener implements Listener {
 						break;
 					}
 				}
+				break;
+			}
+			case SystemOS::$uis['fRequestManagerUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				var_dump($response);
+				break;
 			}
 			case SystemOS::$uis['shopMainMenuUI']: {
 				$data = $event->getData();
