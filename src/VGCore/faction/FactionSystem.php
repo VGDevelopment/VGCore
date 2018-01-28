@@ -204,16 +204,12 @@ class FactionSystem {
 				'0'
 			);");
 			if ($query) {
-				// $query->free();
 				$query = self::$db->query("UPDATE users SET faction ='" . self::$db->real_escape_string($lowerfaction) . "' WHERE username='" . self::$db->real_escape_string($lowerleader) . "'");
 				if (!$query) {
-					// $query->free();
 					return false;
 				}
-				// $query->free();
 				return true;
 			} else {
-				// $query->free();
 				return false;
 			}
 		} else {
@@ -233,7 +229,16 @@ class FactionSystem {
 			$lowername = strtolower($faction);
 			$query = self::$db->query("UPDATE users SET faction ='" . self::$db->real_escape_string($lowerfaction) . "' where username='" . self::$db->real_escape_string($lowername) . "'");
 			if ($query) {
-				$query->free();
+				$factiondata = self::factionStat($faction);
+				$leadername = strtolower($factiondata[3]);
+				$leader = self::$server->getPlayer($leadername);
+				$player = self::$server->getPlayer($name);
+				$leader->sendMessage(Chat::YELLOW . "You've " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::RESET . Chat::YELLOW . " a player with the name of " . Chat::GREEN . $name . Chat::EOL . 
+				Chat::YELLOW . " into your faction.");
+				if ($player === null) {
+					return true;
+				}
+				$player->sendMessage(Chat::YELLOW . "You've been accepted into " . Chat::GREEN . $faction . Chat::YELLOW . " by " . Chat::GREEN . $leadername . Chat::YELLOW . "!");
 				return true;
 			} else {
 				return false;

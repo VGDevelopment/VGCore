@@ -113,8 +113,13 @@ class FactionUI extends UIBuilder {
     }
     
     public static function createRequestManagerUI(string $faction = null): void {
+        $request = [
+            "§ePick a name";    
+        ];
         if ($faction !== null) {
-            $request = FS::getRequest($faction);
+            foreach (FS::getRequest($faction) as $name) {
+                $request[] = $name;
+            }
         } else {
             $request = [];
         }

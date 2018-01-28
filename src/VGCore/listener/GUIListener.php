@@ -333,7 +333,18 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				var_dump($response);
+				$name = $response[0];
+				if ($name === "§ePick a name") {
+					return;
+				}
+				if (FS::ignInFaction($name)) {
+					$player->sendMessage(Chat::RED . "It looks like that player joined a faction before you could accept the request. Bad luck.");
+					return;
+				}
+				$query = FS::addToFaction($name);
+				if ($query === false) {
+					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+				}
 				break;
 			}
 			case SystemOS::$uis['shopMainMenuUI']: {
