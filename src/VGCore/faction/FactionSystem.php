@@ -290,6 +290,8 @@ class FactionSystem {
 			} else {
 				return [];
 			}
+		} else {
+			return [];
 		}
 	}
 	

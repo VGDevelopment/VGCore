@@ -39,6 +39,11 @@ class FactionUI extends UIBuilder {
         self::createConstructUI();
         self::createFactionManager();
         self::createInviterUI();
+        self::createRuntimeAbstractUIs();
+    }
+    
+    private static function createRuntimeAbstractUIs(): void {
+        self::createRequestManagerUI();
     }
     
     private static function createManager(): void {
@@ -107,7 +112,7 @@ class FactionUI extends UIBuilder {
         SystemOS::$uis['fInviterUI'] = UIDriver::addUI(self::$os, $package);
     }
     
-    public static function createRequestManagerUI(string $faction): void {
+    public static function createRequestManagerUI(string $faction = ""): void {
         $request = FS::getRequest($faction);
         $ui = new CustomForm('§eAccept Requests');
         $choice = new Dropdown('§ePick the username you want to accept into your faction. This list is cleared whenever server restarts.', $request);
