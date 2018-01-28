@@ -341,7 +341,8 @@ class GUIListener implements Listener {
 					$player->sendMessage(Chat::RED . "It looks like that player joined a faction before you could accept the request. Bad luck.");
 					return;
 				}
-				$query = FS::addToFaction($name);
+				$faction = FS::getPlayerFaction($player);
+				$query = FS::addToFaction($faction, $name);
 				if ($query === false) {
 					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
 				}
