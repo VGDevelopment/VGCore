@@ -145,6 +145,8 @@ use VGCore\cosmetic\crate\{
     Prize
 };
 
+use VGCore\factory\entity\NPC;
+
 use VGCore\spawner\SpawnerAPI;
 
 class SystemOS extends PluginBase {
@@ -260,6 +262,7 @@ class SystemOS extends PluginBase {
         $i = $this->loadSpawner();
         $j = $this->loadFaction();
         $k = $this->loadCrate();
+        $l = $this->loadNPC();
         $dep = [
             "UI" => $a,
             "Command" => $b,
@@ -271,7 +274,8 @@ class SystemOS extends PluginBase {
             "Factory" => $h,
             "Spawner" => $i,
             "FS" => $j,
-            "CS" => $k
+            "CS" => $k,
+            "NPC" => $k
         ];
         foreach ($dep as $i => $v) {
             if ($v === true) {
@@ -384,6 +388,12 @@ class SystemOS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
         Crate::start($this);
         return true;
+    }
+
+    private function loadNPC(): bool {
+      $this->getServer()->getPluginManager()->registerEvents(new NPC($this), $this);
+      NPC::start($this);
+      return true;
     }
 
     // >>> CustomEnchantment
