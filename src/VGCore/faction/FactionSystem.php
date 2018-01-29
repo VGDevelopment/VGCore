@@ -243,8 +243,8 @@ class FactionSystem {
 						break;
 					case 1:
 						$message["leader"] = Chat::YELLOW . "A player with the name " . Chat::GREEN . $name . Chat::YELLOW . " has " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::EOL . 
-						Chat::RESET . Chat::YELLOW . " your invitation to join your faction.";
-						$message["player"] = Chat::YELLOW . "You've succesfully " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::RESET . Chat::Yellow . " the faction invitation sent to you by " . Chat::EOL . 
+						Chat::RESET . Chat::YELLOW . "your invitation to join your faction.";
+						$message["player"] = Chat::YELLOW . "You've succesfully " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::RESET . Chat::YELLOW . " the faction invitation sent to you by " . Chat::EOL . 
 						Chat::GREEN . $lowerfaction . Chat::YELLOW . "!";
 						break;
 				}
@@ -297,9 +297,10 @@ class FactionSystem {
 			$lowerfaction = strtolower($faction);
 			$factiondata = self::factionStat($faction);
 			$leadername = strtolower($factiondata[3]);
+			$lowername = strtolower($name);
 			$player = self::$server->getPlayer($name);
-			if (array_key_exists($name, self::$invite)) {
-				if (in_array($lowerfaction, self::$invite[$name])) {
+			if (array_key_exists($lowername, self::$invite)) {
+				if (in_array($lowerfaction, self::$invite[$lowername])) {
 					return 2;
 				}
 			}
@@ -307,7 +308,7 @@ class FactionSystem {
 			if ($check === true) {
 				return 3;
 			}
-			self::$invite[$name][] = $lowerfaction;
+			self::$invite[$lowername][] = $lowerfaction;
 			if ($player === null) {
 				return 1;
 			}
@@ -321,14 +322,15 @@ class FactionSystem {
 	}
 	
 	public static function getInvite(string $name): array {
-		$check = DB::checkUser($user);
+		$check = DB::checkUser($name);
 		if ($check === true) {
-			$check = array_key_exists($name, self::$invite);
+			$lowername = strtolower($name);
+			$check = array_key_exists($lowername, self::$invite);
 			if ($check === true) {
-				if (empty(self::$invite[$name])) {
+				if (empty(self::$invite[$lowername])) {
 					return [];
 				} else {
-					return self::$invite[$name];
+					return self::$invite[$lowername];
 				}
 			} else {
 				return [];

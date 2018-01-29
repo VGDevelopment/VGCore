@@ -44,7 +44,7 @@ class FactionUI extends UIBuilder {
     
     private static function createRuntimeAbstractUIs(): void {
         self::createRequestManagerUI();
-        self::createUserInviteManager();
+        self::createUserInviteManagerUI();
     }
     
     private static function createManager(): void {
@@ -52,10 +52,12 @@ class FactionUI extends UIBuilder {
         $join = new Button('§aJoin a §cFACTION');
         $create = new Button('§aCreate a §cFACTION');
         $manage = new Button('§aManage your §cFACTION');
+        $invitemanager = new Button('§aAccept Invites');
         $type = [
             $join,
             $create,
-            $manage
+            $manage,
+            $invitemanager
         ];
         $package = self::makePackage($ui, $type);
         SystemOS::$uis['fManagerUI'] = UIDriver::addUI(self::$os, $package);
@@ -131,12 +133,12 @@ class FactionUI extends UIBuilder {
         SystemOS::$uis['fRequestManagerUI'] = UIDriver::addUI(self::$os, $package);
     }
     
-    public static function createUserInviteManager(string $name = null): void {
+    public static function createUserInviteManagerUI(string $name = null): void {
         $invite = [
             "§ePick a name"    
         ];
         if ($name !== null) {
-            foreach(FS::getInvite($name) as $faction) {
+            foreach (FS::getInvite($name) as $faction) {
                 $invite[] = $faction;
             }
         }

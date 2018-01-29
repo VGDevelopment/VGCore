@@ -238,6 +238,15 @@ class GUIListener implements Listener {
 						}
 						break;
 					}
+					case '§aAccept Invites': {
+						if (FS::inFaction($player)) {
+							$player->sendMessage(Chat::RED . "Sorry, invites are disabled if you're in a faction.");
+							return;
+						}
+						$name = $player->getName();
+						FactionUI::createUserInviteManagerUI($name);
+						UIDriver::showUIbyID($p, SystemOS::$uis['fInviteManagerUI'], $player);
+					}
 				}
 				break;
 			}
