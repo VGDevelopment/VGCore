@@ -222,23 +222,43 @@ class FactionSystem {
 		return self::createFaction($faction, $leadername);
 	}
 	
-	public static function addToFaction(string $faction, string $name): bool {
+	public static function addToFaction(string $faction, string $name, int $type = 0): bool {
 		$check = self::validateFaction($faction);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
-			$lowername = strtolower($faction);
-			$query = self::$db->query("UPDATE users SET faction ='" . self::$db->real_escape_string($lowerfaction) . "' where username='" . self::$db->real_escape_string($lowername) . "'");
+			$lowername = strtolower($name);
+			$query = self::$db->query("UPDATE users SET faction = '" . self::$db->real_escape_string($lowerfaction) . "' where username='" . self::$db->real_escape_string($lowername) . "'");
 			if ($query) {
 				$factiondata = self::factionStat($faction);
 				$leadername = strtolower($factiondata[3]);
 				$leader = self::$server->getPlayer($leadername);
 				$player = self::$server->getPlayer($name);
-				$leader->sendMessage(Chat::YELLOW . "You've " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::RESET . Chat::YELLOW . " a player with the name of " . Chat::GREEN . $name . Chat::EOL . 
-				Chat::YELLOW . " into your faction.");
+				$message = [];
+				switch ($type) {
+					case 0:
+						$message["leader"] = Chat::YELLOW . "You've " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::RESET . Chat::YELLOW . " a player with the name of " . Chat::GREEN . $name . Chat::EOL . 
+						Chat::YELLOW . " into your faction.";
+						$message["player"] = Chat::YELLOW . "You've been " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::RESET . Chat::YELLOW . " into " . Chat::GREEN . $lowerfaction . Chat::YELLOW . " by " . 
+						Chat::GREEN . $leadername . Chat::YELLOW . "!";
+						break;
+					case 1:
+						$message["leader"] = Chat::YELLOW . "A player with the name " . Chat::GREEN . $name . Chat::YELLOW . " has " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::EOL . 
+						Chat::RESET . Chat::YELLOW . " your invitation to join your faction.";
+						$message["player"] = Chat::YELLOW . "You've succesfully " . Chat::GREEN . Chat::BOLD . "ACCEPTED" . Chat::RESET . Chat::Yellow . " the faction invitation sent to you by " . Chat::EOL . 
+						Chat::GREEN . $lowerfaction . Chat::YELLOW . "!";
+						break;
+				}
+				if (array_key_exists($lowerfaction, self::$request)) {
+					if (in_array($name, self::$request[$lowerfaction])) {
+						$key = array_search($name, self::$request[$lowerfaction]);
+						unset(self::$request[$lowerfaction][$key]);
+					}
+				}
+				$leader->sendMessage($message["leader"]);
 				if ($player === null) {
 					return true;
 				}
-				$player->sendMessage(Chat::YELLOW . "You've been accepted into " . Chat::GREEN . $faction . Chat::YELLOW . " by " . Chat::GREEN . $leadername . Chat::YELLOW . "!");
+				$player->sendMessage($message["player"]);
 				return true;
 			} else {
 				return false;
@@ -260,7 +280,7 @@ class FactionSystem {
 			}
 			self::$request[$lowerfaction][] = $name;
 			if ($leader === null) {
-				return true;
+				return 1;
 			}
 			$leader->sendMessage(Chat::YELLOW . "A player using the name " . Chat::GREEN . $name . Chat::YELLOW . " has decided to request your faction." . Chat::EOL . 
 			"Do " . Chat::RED . "/f" . Chat::YELLOW . " to open up the request manager and " . Chat::GREEN . Chat::BOLD . "ACCEPT" . Chat::RESET . Chat::YELLOW . " or " . 
@@ -271,36 +291,50 @@ class FactionSystem {
 		}
 	}
 	
-	public static function invitePlayer(string $faction, string $name, Player $player = null): bool {
+	public static function invitePlayer(string $faction, string $name): int {
 		$check = DB::checkUser($name);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
-			$factiondata = self::$factionStat($faction);
+			$factiondata = self::factionStat($faction);
 			$leadername = strtolower($factiondata[3]);
-			if ($player === null) {
-				$player = self::$server->getPlayer($name);
+			$player = self::$server->getPlayer($name);
+			if (array_key_exists($name, self::$invite)) {
+				if (in_array($lowerfaction, self::$invite[$name])) {
+					return 2;
+				}
 			}
-			$leader = self::$server->getPlayer($leadername);
-			self::$invite[$lowerfaction][] = $name;
-			UIDriver::showUIbyID(self::$os, SystemOS::$uis['---'], $player);
-			return true;
+			$check = self::ignInFaction($name);
+			if ($check === true) {
+				return 3;
+			}
+			self::$invite[$name][] = $lowerfaction;
+			if ($player === null) {
+				return 1;
+			}
+			$player->sendMessage(Chat::YELLOW . "A faction going by the name " . Chat::GREEN . $lowerfaction . Chat::YELLOW . " has decided to invite you into your faction." . Chat::EOL . 
+			"Do " . Chat::RED . "/f" . Chat::YELLOW . " to open up the faction user invite manager and " . Chat::GREEN . Chat::BOLD . "ACCEPT" . Chat::RESET . cHAT::YELLOW . " or " . 
+			Chat::RED  . Chat::BOLD . "DENY" . Chat::RESET . Chat::EOL . Chat::YELLOW . "the invitation.");
+			return 1;
+		} else {
+			return 0;
 		}
 	}
 	
-	public static function getInvite(string $faction): array {
-		$check = self::validateFaction($faction);
+	public static function getInvite(string $name): array {
+		$check = DB::checkUser($user);
 		if ($check === true) {
-			$lowerfaction = strtolower($faction);
-			$check = array_key_exists($lowerfaction, self::$invite);
+			$check = array_key_exists($name, self::$invite);
 			if ($check === true) {
-				if (empty(self::$invite[$lowerfaction])) {
+				if (empty(self::$invite[$name])) {
 					return [];
 				} else {
-					return self::$invite[$lowerfaction];
+					return self::$invite[$name];
 				}
 			} else {
 				return [];
 			}
+		} else {
+			return [];
 		}
 	}
 	

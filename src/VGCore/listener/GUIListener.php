@@ -233,6 +233,8 @@ class GUIListener implements Listener {
 					case '§aManage your §cFACTION': {
 						if (FS::inFaction($player)) {
 							UIDriver::showUIbyID($p, SystemOS::$uis['fSettingsUI'], $player);
+						} else {
+							$player->sendMessage(Chat::RED . "Sorry, to access that, you need to be in a faction.");
 						}
 						break;
 					}
@@ -263,8 +265,10 @@ class GUIListener implements Listener {
 				$query = FS::createPlayerFaction($string, $player);
 				if ($query === true) {
 					$player->sendMessage(Chat::GREEN . "Your faction has been created succesfully!");
+					return;
 				} else {
 					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+					returnl
 				}
 				break;
 			}
@@ -290,10 +294,13 @@ class GUIListener implements Listener {
 					$query = FS::requestFaction($string, $name);
 					if ($query === 1) {
 						$player->sendMessage(Chat::GREEN . "You've requested " . Chat::YELLOW . $string . Chat::GREEN . " succesfully!");
+						return;
 					} else if ($query === 2) {
 						$player->sendMessage(Chat::RED . "Sorry, we can't allow you to spam a specific faction's inbox. Please understand.");
+						return;
 					} else {
 						$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+						return;
 					}
 				}
 				break;
@@ -314,7 +321,7 @@ class GUIListener implements Listener {
 						break;
 					}
 					case '§cClick to view info about' . Chat::EOL . 'your faction.': {
-						if ((FS::inFaction($player)) === false) {
+						if (FS::inFaction($player) === false) {
 							$player->sendMessage(Chat::RED . "Sadly, we can't get data about your faction if you aren't in a faction. Join or create a faction first!");
 							return;
 						}
@@ -345,6 +352,57 @@ class GUIListener implements Listener {
 				$query = FS::addToFaction($faction, $name);
 				if ($query === false) {
 					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+					return;
+				}
+				break;
+			}
+			case SystemOS::$uis['fInviterUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$name = $response[0];
+				if (strlen($name) > 20) {
+					$player->sendMessage(Chat::RED . "Sorry, no username name can be longer than 20 characters");
+					return;
+				}
+				$check = DB::checkUser($name);
+				if ($check === false) {
+					$player->sendMessage(Chat::RED . "Sorry, no user with that username exists in our database.");
+					return;
+				}
+				$faction = FS::getPlayerFaction($player);
+				$query = FS::invitePlayer($faction, $name);
+				if ($query === 1) {
+					$player->sendMessage(Chat::GREEN . "You've invited " . Chat::YELLOW . $name . Chat::GREEN . " succesfully!");
+					return;
+				} else if ($query === 2) {
+					$player->sendMessage(Chat::RED . "Sorry, we can't allow you to spam a specific user's inbox. Please understand.");
+					return;
+				} else if ($query === 3) {
+					$player->sendMessage(Chat::RED . "Looks like that player already belongs to a faction. Invites have been disabled for him.");
+					return;
+				} else {
+					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+					return;
+				}
+			}
+			case SystemOS::$uis['fInviteManagerUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$username = $player->getName();
+				$faction = $response[0];
+				if ($faction === "§ePick a name") {
+					return;
+				}
+				if (FS::ignInFaction($username)) {
+					$player->sendMessage(Chat::RED . "It looks like you got to this page by a mistake. Please notify support.");
+					return;
+				}
+				$query = FS::addToFaction($faction, $username, 1);
+				if ($query === false) {
+					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+					return;
 				}
 				break;
 			}

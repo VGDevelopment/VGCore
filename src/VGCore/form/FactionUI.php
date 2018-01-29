@@ -44,6 +44,7 @@ class FactionUI extends UIBuilder {
     
     private static function createRuntimeAbstractUIs(): void {
         self::createRequestManagerUI();
+        self::createUserInviteManager();
     }
     
     private static function createManager(): void {
@@ -114,14 +115,12 @@ class FactionUI extends UIBuilder {
     
     public static function createRequestManagerUI(string $faction = null): void {
         $request = [
-            "§ePick a name";    
+            "§ePick a name"
         ];
         if ($faction !== null) {
             foreach (FS::getRequest($faction) as $name) {
                 $request[] = $name;
             }
-        } else {
-            $request = [];
         }
         $ui = new CustomForm('§eAccept Requests');
         $choice = new Dropdown('§ePick the username you want to accept into your faction. This list is cleared whenever server restarts.', $request);
@@ -130,6 +129,24 @@ class FactionUI extends UIBuilder {
         ];
         $package = self::makePackage($ui, $type);
         SystemOS::$uis['fRequestManagerUI'] = UIDriver::addUI(self::$os, $package);
+    }
+    
+    public static function createUserInviteManager(string $name = null): void {
+        $invite = [
+            "§ePick a name"    
+        ];
+        if ($name !== null) {
+            foreach(FS::getInvite($name) as $faction) {
+                $invite[] = $faction;
+            }
+        }
+        $ui = new CustomForm('§eAccept Invites');
+        $choice = new Dropdown('§ePick the faction you want to accept the invite from. This list is cleared whenever the server restarts.', $invite);
+        $type = [
+            $choice    
+        ];
+        $package = self::makePackage($ui, $type);
+        SystemOS::$uis['fInviteManagerUI'] = UIDriver::addUI(self::$os, $package);
     }
     
     public static function createFactionDataUI(string $faction, Player $player): void {
