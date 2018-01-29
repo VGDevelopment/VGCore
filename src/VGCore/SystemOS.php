@@ -67,7 +67,6 @@ use VGCore\gui\lib\{
 };
 
 use VGCore\listener\{
-    ChatFilterListener,
     GUIListener,
     CustomEnchantmentListener,
     USListener,
@@ -248,58 +247,47 @@ class SystemOS extends PluginBase {
 
     public function onEnable() {
         $this->getLogger()->info("Starting Virtual Galaxy Operating System (SystemOS)... Loading start.");
-
-        // enables UI - make comment line to disable UI. May cause extreme failures if disabled.
-        $this->getLogger()->info("Enabling the Virtual Galaxy Graphical User Interface Program.");
-        $this->loadUI();
-
-        // enables Chat Filter - make comment line to disable Chat Filter. Some failures may be caused. # Made comment line because Mojang Chat Filter is on.
-        // $this->getLogger()->info("Enabling the Virtual Galaxy Chat Filter (Microsoft Live API also implemented. STATUS : UNVERIFIED).");
-        // $this->loadFilter();
-
-        // enables in-game commands - please don't make comment line to disable. Many extreme failures will be caused!
-        $this->getLogger()->info("Enabling the Virtual Galaxy in-game Commands.");
-        $this->loadCommand();
-
-        // Enables Vanilla Enchants
-        $this->getLogger()->info("Enabling the Virtual Galaxy VANILLA Enchants.");
-        $this->loadVanillaEnchant();
-
-        // Enables Custom Enchants
-        $this->getLogger()->info("Enabling the Virtual Galaxy CUSTOM Enchants.");
-        $this->loadCustomEnchant();
-
-        // Enables User Manager
-        $this->getLogger()->info("Enabling the Virtual Galaxy User System.");
-        $this->loadUserSystem();
-
-        // Starts Database connection - Centralises everything. DO NOT DISABLE!
-        $this->getLogger()->info("Enabling the Virtual Galaxy Database API.");
-        $this->loadDatabaseAPI();
-
-        // Loads all Lobby Features
-        $this->getLogger()->info("Enabling the Virtual Galaxy Pet System.");
-        $this->loadPet();
-
-        // Loads all VG Music
-        // $this->getLogger()->info("Enabling the Virtual Galaxy Music System : Registering music files.");
-        // $this->loadMusic();
-
-        // Loads all VG Factory
-        $this->getLogger()->info("Enabling the Virtual Galaxy Factory API.");
-        $this->loadFactory();
-
-        // Loads all VG Spawners.
-        $this->getLogger()->info("Enabling the Virtual Galaxy Spawner API.");
-        $this->loadSpawner();
-
-        // Loads all Faction System Dependancies.
-        $this->getLogger()->info("Enabling the Virtual Galaxy Factions System.");
-        $this->loadFaction();
-
-        // Loads crates and stuff
-        $this->getLogger()->info("Enabling the Virtual Galaxy Crate System.");
-        $this->loadCrate();
+        $on = [];
+        $off = [];
+        $a = $this->loadUI();
+        $b = $this->loadCommand();
+        $c = $this->loadVanillaEnchant();
+        $d = $this->loadCustomEnchant();
+        $e = $this->loadUserSystem();
+        $f = $this->loadDatabaseAPI();
+        $g = $this->loadPet();
+        $h = $this->loadFactory();
+        $i = $this->loadSpawner();
+        $j = $this->loadFaction();
+        $k = $this->loadCrate();
+        $dep = [
+            "UI" => $a,
+            "Command" => $b,
+            "VE" => $c,
+            "CE" => $d,
+            "US" => $e,
+            "DB" => $f,
+            "PS" => $g,
+            "Factory" => $h,
+            "Spawner" => $i,
+            "FS" => $j,
+            "CS" => $k
+        ];
+        foreach ($dep as $i => $v) {
+            if ($v === true) {
+                $on[] = $i;
+            } else if ($v !== true) {
+                $off[] = $i;
+            }
+        }
+        $onstring = implode(", ", $on);
+        $offstring = implode(", ", $off);
+        if (count($on) > 0) {
+            $this->getLogger()->info("Enabled (" . $onstring . ") successfully!");
+        }
+        if (count($off) > 0) {
+            $this->getLogger()->info("Had an error enabling (" . $offstring . "). Please fix errors and try again.");
+        }
     }
 
     public function onDisable() {
@@ -308,7 +296,7 @@ class SystemOS extends PluginBase {
 
     // Load & Unload Base Section
 
-    public function loadUI(): void {
+    private function loadUI(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new GUIListener($this), $this);
         $packet = [
             new ModalFormRequestPacket(),
@@ -321,31 +309,26 @@ class SystemOS extends PluginBase {
         }
         UIDriver::resetUIs($this); // reset all the uis to scratch
         UIBuilder::makeUI($this); // Creates all Dynamic Forms.
+        return true;
     }
 
-    public function loadFilter(): void {
-        $this->getServer()->getPluginManager()->registerEvents(new ChatFilterListener($this), $this);
-        $this->badwords = $this->getConfig()->get("badwords");
-        if (!is_array($this->badwords)) {
-            $this->badwords = explode(',', $this->badwords);
-        }
-    }
-
-    public function loadCommand(): void {
+    private function loadCommand(): bool {
         $this->getServer()->getCommandMap()->register("settings", new PlayerSetting("settings", $this));
         $this->getServer()->getCommandMap()->register("economy", new Economy("economy", $this));
         $this->getServer()->getCommandMap()->register("vgenchant", new VGEnchant("vgenchant", $this));
 	    $this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
 	    $this->getServer()->getCommandMap()->register("spawn", new Spawn("spawn", $this));
 	    $this->getServer()->getCommandMap()->register("ping", new Ping("ping", $this));
+	    return true;
     }
 
-    public function loadVanillaEnchant(): void {
+    private function loadVanillaEnchant(): bool {
         $system = new VanillaEnchantment($this);
         $system->registerEnchant();
+        return true;
     }
 
-    public function loadCustomEnchant(): void {
+    private function loadCustomEnchant(): bool {
         CustomEnchantment::init();
         $enchantment = $this->enchantment;
         foreach ($enchantment as $id => $info) {
@@ -353,83 +336,53 @@ class SystemOS extends PluginBase {
             CustomEnchantment::createEnchant($id, $setinfo);
         }
         $this->getServer()->getPluginManager()->registerEvents(new CustomEnchantmentListener($this), $this);
+        return true;
     }
 
-    public function loadUserSystem(): void {
+    private function loadUserSystem(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this);
+        return true;
     }
 
-    public function loadDatabaseAPI(): void {
+    private function loadDatabaseAPI(): bool {
         DB::createRecord($this);
+        return true;
     }
 
-    public function loadPet(): void {
+    private function loadPet(): bool {
         foreach($this->petclass as $class) {
             Entity::registerEntity($class, true);
         }
         $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
+        return true;
     }
 
-    public function loadMusic(): void {
+    private function loadMusic(): bool {
         MP::start($this);
+        return true;
     }
 
-    public function loadFactory(): void {
+    private function loadFactory(): bool {
         foreach (self::$factorystart as $class) {
             $class::start();
         }
+        return true;
     }
 
-    public function loadSpawner(): void {
+    private function loadSpawner(): bool {
         SpawnerAPI::start();
+        return true;
     }
 
-    public function loadFaction(): void {
+    private function loadFaction(): bool {
         FactionSystem::start($this);
+        return true;
     }
 
-    public function loadCrate(): void {
+    private function loadCrate(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
         Crate::start($this);
-    }
-
-    // >>> Section 1 - Chat Filter
-
-    public function getBadWordsArray(): array {
-        return $this->badwords;
-    }
-
-    public function getMessages(): Config {
-        return $this->messages;
-    }
-
-    public function checkText($string, array $found): bool {
-        if (strpos(strtolower($string), $found) !== false) {
-            return true;
-        }
-    }
-
-    public function checkUserMessage(Player $player, string $message): bool {
-        $player->lastMessage = $message;
-        $player->timeofmessage = new \DateTime();
-        $player->timeofmessage = $player->timeofmessage->add(new \DateInterval("PT" . $this->getConfig()->get("waitingtime") . "S"));
-        if ($this->checkText($message, $this->getBadWordsArray())) {
-            $player->sendMessage(Chat::YELLOW . "Your message was blocked for violating one of our in-game chat rules. If you think this is a bug, notify support team with the error code #001.");
-            return false;
-        }
-        if (isset($player->lastmessage)) {
-            if ($player->lastmessage == $message) {
-                $player->sendMessage(Chat::YELLOW . "Your message was considered as spam and has been blocked. If you think this is a bug, notify support team with the error code #002.");
-                return false;
-            }
-        }
-        if (isset($player->timeofmessage)) {
-            if ($player->timeofmessage > new \DateTime()) {
-                $player->sendMessage(Chat::YELLOW . "Your message was considered as spam and has been blocked. If you think this is a bug, notify support team with the error code #003.");
-                return false;
-            }
-        }
         return true;
     }
 
