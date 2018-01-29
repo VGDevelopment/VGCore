@@ -268,7 +268,7 @@ class GUIListener implements Listener {
 					return;
 				} else {
 					$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
-					returnl
+					return;
 				}
 				break;
 			}
