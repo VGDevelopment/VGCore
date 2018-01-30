@@ -73,6 +73,7 @@ use VGCore\listener\{
     PetListener,
     RidingListener,
     CrateListener,
+    NPCListener,
     event\PetEvent,
     event\MakePetEvent,
     event\RemakePetEvent,
@@ -144,8 +145,6 @@ use VGCore\cosmetic\crate\{
     Chest as Crate,
     Prize
 };
-
-use VGCore\factory\entity\NPC;
 
 use VGCore\spawner\SpawnerAPI;
 
@@ -275,7 +274,7 @@ class SystemOS extends PluginBase {
             "Spawner" => $i,
             "FS" => $j,
             "CS" => $k,
-            "NPC" => $k
+            "NPC" => $l
         ];
         foreach ($dep as $i => $v) {
             if ($v === true) {
@@ -391,9 +390,8 @@ class SystemOS extends PluginBase {
     }
 
     private function loadNPC(): bool {
-      $this->getServer()->getPluginManager()->registerEvents(new NPC($this), $this);
-      NPC::start($this);
-      return true;
+        $this->getServer()->getPluginManager()->registerEvents(new NPCListener($this), $this);
+        return true;
     }
 
     // >>> CustomEnchantment

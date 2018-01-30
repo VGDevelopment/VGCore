@@ -1,5 +1,5 @@
 <?php
-namespace VGCore\factory\entity;
+namespace VGCore\listener;
 
 use pocketmine\event\Listener;
 use pocketmine\Player;
@@ -29,15 +29,15 @@ use pocketmine\item\{
 // >>>
 use VGCore\SystemOS;
 
-class NPC implements Listener{
+class NPCListener implements Listener{
   private static $plugin;
   private static $spawned = [];
 
   const NPC = [
-    'test' => ["command" => 'say works', "position" => '259:71:259', "world" => 'world', "skin" => null]
+    'test' => ["command" => 'say works', "position" => '162:7:119', "world" => 'world', "skin" => null]
   ];
 
-  public static function start($plugin){
+  public function __construct(SystemOS $plugin) {
     self::$plugin = $plugin;
   }
 
