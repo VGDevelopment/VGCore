@@ -15,7 +15,6 @@ class Database {
 		if (!$db->query("CREATE TABLE IF NOT EXISTS users(
 			username VARCHAR(20) PRIMARY KEY,
 			userid VARCHAR(16),
-			ip VARCHAR(16),
 			dollars FLOAT,
 			gems FLOAT,
 			coins FLOAT,
