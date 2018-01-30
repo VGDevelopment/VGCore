@@ -34,7 +34,7 @@ class NPCListener implements Listener{
   private static $spawned = [];
 
   const NPC = [
-    'test' => ["command" => 'say works', "position" => '162:7:119', "world" => 'world', "skin" => null]
+    'test' => ["command" => 'say works', "position" => '162:7:119', "world" => 'Sam2', "skin" => null]
   ];
 
   public function __construct(SystemOS $plugin) {
@@ -44,7 +44,8 @@ class NPCListener implements Listener{
   public function PlayerMoveEvent(PlayerMoveEvent $event){
     $player = $event->getPlayer();
     foreach(self::$spawned as $name => $data){
-      $position = explode(":", self::NPC[$name]["position"]); $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
+      $position = explode(":", self::NPC[$name]["position"]); 
+      $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
       $this->lookAtPlayer(self::$spawned[$name]["eid"], $position, $player);
     }
   }

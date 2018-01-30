@@ -7,6 +7,8 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\PluginCommand;
 
 use pocketmine\Player;
+
+use pocketmine\utils\TextFormat as Chat;
 // >>>
 use VGCore\SystemOS;
 use VGCore\faction\FactionSystem;
@@ -29,6 +31,21 @@ class Faction extends PluginCommand {
     }
     
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
+        if ($args[0] === "claim") {
+            $check = FS::inFaction($sender);
+            if ($check === true) {
+                $faction = FS::getPlayerFaction($sender);
+                $query = FS::claimLand($faction, $sender);
+                if ($query === true) {
+                    $sender->sendMessage(Chat::GREEN . "Land claimed succesfully.");
+                } else {
+                    $sender->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+                }
+            } else {
+                $sender->sendMessage(Chat::RED . "Sorry, to use " . Chat::YELLOW . "/f claim" . Chat::RED . ", you need to be in a faction and a leader");
+            }
+            return;
+        }
         UIDriver::showUIbyID(self::$os, SystemOS::$uis['fManagerUI'], $sender);
     }
     

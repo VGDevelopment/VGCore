@@ -74,6 +74,7 @@ use VGCore\listener\{
     RidingListener,
     CrateListener,
     NPCListener,
+    FactionListener,
     event\PetEvent,
     event\MakePetEvent,
     event\RemakePetEvent,
@@ -379,6 +380,7 @@ class SystemOS extends PluginBase {
     }
 
     private function loadFaction(): bool {
+        $this->getServer()->getPluginManager()->registerEvents(new FactionListener($this), $this);
         FactionSystem::start($this);
         return true;
     }

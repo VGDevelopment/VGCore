@@ -16,8 +16,6 @@ use VGCore\faction\FactionWar;
 
 class FactionSystem {
 	
-	const CHUNK_X = 8;
-	const CHUNK_Y = 8;
 	const CHUNK = 2;
 	
 	private static $namesuggestion1 = [
@@ -359,59 +357,58 @@ class FactionSystem {
 		}
 	}
 	
-	public static function claimLand(string $faction, Player $player): void {
+	public static function claimLand(string $faction, Player $player): bool {
 		$check = self::inFaction($player);
 		if ($check === true) {
+			$data = self::getLand();
+			if (count($data) > 0) {
+				
+			}
 			$pos = [];
-			$claim = [];
-			$pos["x"] = (int)$player->getX();
-			$pos["z"] = (int)$player->getZ();
-			$claim["x1"] = $pos["x"] - (self::CHUNK * self::CHUNK_X / 2);
-			$claim["x2"] = $pos["x"] + (self::CHUNK * self::CHUNK_X / 2);
-			$claim["z1"] = $pos["z"] - (self::CHUNK * self::CHUNK_Z / 2);
-			$claim["z2"] = $pos["z"] + (self::CHUNK * self::CHUNK_Z / 2);
-			$claim["pos1"] = [
-				$claim["x1"],
-				$claim["z1"],
-				1
-			];
-			$claim["pos2"] = [
-				$claim["x2"],
-				$claim["z2"],
-				256
-			];
-			$claim["loc"] = [
-				$claim["pos1"],
-				$claim["pos2"]
+			$size = 8 * self::CHUNK;
+			$vectorcalc = $size / 2;
+			$pos["x1"] = $player->x + $vectorcalc;
+			$pos["x2"] = $player->x - $vectorcalc;
+			$pos["z1"] = $player->z + $vectorcalc;
+			$pos["z2"] = $player->z - $vectorcalc;
+			$claim = [
+				(string)$pos["x1"] . ":" . (string)$pos["z1"],
+				(string)$pos["x2"] . ":" . (string)$pos["z2"]
 			];
 			$lowerfaction = strtolower($faction);
-			self::updateLand($lowerfaction, $claim);
+			return self::updateLand($lowerfaction, $claim);
 		}
 	}
 	
-	public static function updateLand(string $faction, array $claim): void {
-		$loc = $claim["loc"];
-		$pos1 = $loc["pos1"];
-		$pos2 = $loc["pos2"];
-		$x1 = $pos1[0];
-		$x2 = $pos2[0];
-		$z1 = $pos1[1];
-		$z2 = $pos2[1];
-		$x = [
-			1 => $x1,
-			2 => $x2
-		];
-		$z = [
-			1 => $z1,
-			2 => $z2
-		];
-		foreach ($x as $i => $v) {
-			$query = self::$db->query("UPDATE factions SET landx" . $i . " = " . $v . " WHERE faction='" . self::$db->real_escape_string($faction) . "'");
-			$query->free();
+	public static function updateLand(string $faction, array $claim): bool {
+		$data = implode(", ", $claim);
+		$query = self::$db->query("UPDATE factions SET ldata = '" . self::$db->real_escape_string($data) . "' WHERE faction='" . self::$db->real_escape_string($faction) . "'");
+		if ($query === true) {
+			return true;
+		} else {
+			return false;
 		}
-		foreach ($z as $i => $v) {
-			$query = self::$db->query("UPDATE factions SET landz" . $i . " = " . $v . " WHERE faction='" . self::$db->real_escape_string($faction) . "'");
+	}
+	
+	public static function getLand(string $faction = null): array {
+		$check = false;
+		if ($faction !== null) {
+			$check = self::validateFaction($faction);
+		}
+		if ($check === true || $faction === null) {
+			if ($faction !== null) {
+				$lowerfaction = strtolower($faction);
+				$query = self::$db->query("SELECT ldata FROM factions WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
+			} else {
+				$query = self::$db->query("SELECT ldata FROM factions");
+			}
+			$result = $query->fetchArray();
 			$query->free();
+			$rarray = [];
+			foreach ($result as $i => $v) {
+				$rarray[$i] = explode(", ", $v);
+			}
+			return $rarray;
 		}
 	}
 	

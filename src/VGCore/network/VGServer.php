@@ -8,6 +8,7 @@ class VGServer {
     
     private $lobby = [19132];
     private $faction = [29838];
+    private $factionwild = [19283];
     private $factionwar = [19832];
     private $plugin;
     
@@ -27,16 +28,18 @@ class VGServer {
         return $this->factionwar;
     }
     
-    public function checkServer(): string {
+    public function checkServer(): int {
         $port = $this->plugin->getServer()->getPort();
         if (in_array($port, $this->lobby)) {
-            return "Lobby";
+            return 0;
         } else if (in_array($port, $this->faction)) {
-            return "Faction";
+            return 1;
         } else if (in_array($port, $this->factionwar)) {
-            return "FactionWar";
+            return 2;
+        } else if (in_array($port, $this->factionwild)) {
+            return 3;
         } else {
-            return "ERROR";
+            return 999;
         }
     }
     
