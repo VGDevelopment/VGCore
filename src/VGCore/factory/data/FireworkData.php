@@ -4,15 +4,12 @@ namespace VGCore\factory\data;
 
 class FireworkData {
     
-    public static $flight = 1;
-    public static $explosion = [];
+    public $flight = 1;
+    public $explosion = [];
     
-    public static function setFlight(int $flight): void {
-        self::$flight = $flight;
-    }
-    
-    public static function setExplosion(array $noe): void {
-        self::$explosion = $noe;
+    public function __construct(int $flight = 1, array $explosion = []) {
+        $this->flight = $flight;
+        $this->explosion = $explosion;
     }
     
 }

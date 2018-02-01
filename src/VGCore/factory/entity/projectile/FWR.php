@@ -50,13 +50,13 @@ class FWR extends Projectile {
     }
     
     // took this from Steadfast2 and joined up with the custom SetEntityDataPacket Object available in VGCore\network
-    public function sendData($entity, array $data = null): void {
+    public function sendData($entity, array $data = null) {
         if (!is_array($data)) {
             $entity = [$entity];
         }
         $pk = new SetEntityDataPacket();
-        $pk->entityruntimeid = $this->getId();
-        $pk->md = $data ?? $this->dataProperties;
+        $pk->entityRuntimeId = $this->getId();
+        $pk->metadata = $data ?? $this->dataProperties;
         foreach ($entity as $player) {
             if ($player === $this) {
                 continue;
@@ -107,6 +107,7 @@ class FWR extends Projectile {
             }
         } catch (Exception $exception) {
             self::$exceptionlog = $exception;
+            $this->server->getLogger()->critical(self::$exceptionlog);
         }
         $rint = [
             $random->nextBoundedInt(5),

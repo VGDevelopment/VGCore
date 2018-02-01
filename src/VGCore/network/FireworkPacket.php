@@ -46,7 +46,7 @@ abstract class FireworkPacket extends DataPacket {
                         0 => $entity->getId(),
                         1 => $entity->getCount(),
                         2 => $entity->getDamage(),
-                        3 => $item->getCompoundTag()
+                        3 => $entity->getCompoundTag()
                     ];
                     break;
                 case ENTITY::DATA_TYPE_POS:
@@ -70,7 +70,7 @@ abstract class FireworkPacket extends DataPacket {
                     // so $v !== null
                     $v = [];
             }
-            if ($type = true) {
+            if ($type === true) {
                 $data[$i] = [$t, $v];
             } else {
                 $data[$i] = $v;
@@ -108,7 +108,7 @@ abstract class FireworkPacket extends DataPacket {
                     break;
                 case ENTITY::DATA_TYPE_SLOT:
                     // thanks @gurun 
-                    $entity = ItemFactory::get($v[1][0], $v[1][1], $v[1][2], $v[1][3] ?? ""); // should be ID, DAMAGE, COUNT, NBT
+                    $entity = ItemFactory::get($v[1][0], $v[1][2], $v[1][1], $v[1][3] ?? ""); // should be ID, DAMAGE, COUNT, NBT
                     $this->putSlot($entity);
                     break;
                 case ENTITY::DATA_TYPE_POS:

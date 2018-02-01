@@ -13,19 +13,19 @@ class SetEntityDataPacket extends FireworkPacket {
     
     public const NETWORK_ID = PI::SET_ENTITY_DATA_PACKET;
     
-    public $entityruntimeid;
-    public $md;
+    public $entityRuntimeId; // int
+    public $metadata; // array
     
     protected function encodePayload() {
-        $this->putEntityRuntimeId($this->entityruntimeid);
-        $this->setMetaDataOfEntity($this->md);
+        $this->putEntityRuntimeId($this->entityRuntimeId);
+        $this->setMetaDataOfEntity($this->metadata);
         var_dump($this->entityruntimeid);
         var_dump($this->md);
     }
     
     protected function decodePayload() {
-        $this->entityruntimeid = $this->getEntityRuntimeId();
-        $this->md = $this->getMetaDataOfEntity();
+        $this->entityRuntimeId = $this->getEntityRuntimeId();
+        $this->metadata = $this->getMetaDataOfEntity();
     }
     
     public function handle(NetworkSession $session): bool {
