@@ -9,7 +9,8 @@ use pocketmine\item\{
 // >>>
 use VGCore\factory\item\{
     SpawnEgg,
-    EnderPearl
+    EnderPearl,
+    Firework
 };
 
 class ItemAPI {
@@ -20,7 +21,8 @@ class ItemAPI {
     public static function setItem(): void {
         self::$itemclass = [
             new SpawnEgg(),
-            new EnderPearl()
+            new EnderPearl(),
+            new Firework()
         ];
         self::$critem = [
             Item::ENDER_PEARL   
@@ -32,6 +34,7 @@ class ItemAPI {
         foreach (self::$itemclass as $item) {
             ItemFactory::registerItem($item, true);
         }
+        Item::initCreativeItems();
         foreach (self::$critem as $item) {
             $critem = Item::get($item);
             Item::addCreativeItem($critem);

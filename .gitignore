@@ -1,0 +1,4 @@
+# php build library used for pocketnet/pmmp software development
+
+bin*/*
+php-build-scripts*/*

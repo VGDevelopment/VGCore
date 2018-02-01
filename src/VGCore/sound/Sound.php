@@ -2,6 +2,8 @@
 
 namespace VGCore\sound;
 
+use pocketmine\entity\Entity;
+
 use pocketmine\level\Position;
 use pocketmine\level\Level;
 use pocketmine\level\sound\GenericSound;
@@ -10,7 +12,7 @@ use VGCore\SystemOS;
 
 class Sound {
 	
-	public static function playSound(array $entity, string $soundstring) {
+	public static function playSound(array $entity, string $soundstring): void {
 	    switch ($soundstring) {
 	        case "Click":
 	            $sound = new GenericSound($entity[0], 1000, 0);
@@ -113,7 +115,17 @@ class Sound {
 	            $level->addSound($sound, $entity);
 	            break;
 	    }
-	    
+	}
+	
+	public static function playLevelWideSound(Entity $entity, Level $level, string $sound): void {
+		switch ($sound) {
+			case "Launch":
+				$level->broadcastLevelSoundEvent($entity, 55);
+				break;
+			case "Blast":
+				$level->broadcastLevelSoundEvent($entity, 56);
+				break;
+		}
 	}
     
 }

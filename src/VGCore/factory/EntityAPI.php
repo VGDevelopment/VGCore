@@ -5,7 +5,8 @@ namespace VGCore\factory;
 use pocketmine\entity\Entity;
 // >>>
 use VGCore\factory\entity\projectile\{
-    EP
+    EP,
+    FWR
 };
 use VGCore\factory\entity\mob\{
   Blaze,
@@ -40,7 +41,11 @@ class EntityAPI {
     ];
 
     private static $entityprojectile = [
-        "EnderPearl" => [EP::class, "minecraft:enderpearl"]
+        "EnderPearl" => [EP::class, "minecraft:enderpearl"],
+    ];
+    
+    private static $fireworkentity = [
+        FWR::class    
     ];
 
     public static function start(): void {
@@ -49,6 +54,9 @@ class EntityAPI {
         }
         foreach (self::$entityprojectile as $name => $data) {
             Entity::registerEntity($data[0], false, [$name, $data[1]]);
+        }
+        foreach (self::$fireworkentity as $data) {
+            Entity::registerEntity($data, true);
         }
     }
 
