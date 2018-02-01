@@ -10,7 +10,7 @@ class FireworkExplosion {
     public $trail = false;
     public $type = -1;
     
-    public function __construct(array $color = [], array $fade = [], bool $switch = false, bool $trail = false, int $type = -1) {
+    public function __construct(array $color = [], array $fade = [], bool $flicker = false, bool $trail = false, int $type = -1) {
         $this->color = $color;
         $this->fade = $fade;
         $this->flicker = $flicker;

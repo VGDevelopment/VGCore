@@ -31,7 +31,7 @@ class Faction extends PluginCommand {
     }
     
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
-        if ($args[0] === "claim") {
+        if (!(empty($args)) && $args[0] === "claim") {
             $check = FS::inFaction($sender);
             if ($check === true) {
                 $faction = FS::getPlayerFaction($sender);

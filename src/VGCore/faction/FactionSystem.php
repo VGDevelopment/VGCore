@@ -252,6 +252,12 @@ class FactionSystem {
 						unset(self::$request[$lowerfaction][$key]);
 					}
 				}
+				if (array_key_exists($lowername, self::$invite)) {
+					if (in_array($lowerfaction, self::$invite[$lowername])) {
+						$key = array_search($lowerfaction, self::$invite[$lowername]);
+						unset(self::$invite[$lowername][$key]);
+					}
+				}
 				$leader->sendMessage($message["leader"]);
 				if ($player === null) {
 					return true;

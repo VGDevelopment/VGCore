@@ -52,15 +52,12 @@ class Firework extends Item {
         }
         // finished NBT
         $rocket = new FWR($level, $nbt, $player, $this, $random);
-        $server = $player->getServer();
-        $server->getLogger()->info($rocket);
         $level->addEntity($rocket);
         if ($rocket instanceof Entity) {
             if ($player->isSurvival()) {
                 // take item from inv
                 --$this->count;
             }
-            var_dump(1);
             $rocket->spawnToAll();
             return true;
         }
@@ -71,21 +68,21 @@ class Firework extends Item {
     public static function sendToNBT(FireworkData $data): CompoundTag {
         $nbt = new CompoundTag();
         $v = [];
-        foreach ($data->$explosion as $e) {
+        foreach ($data->explosion as $e) {
             $sample = new CompoundTag();
-            $strvalcolor = strval($e->$color[0]);
-            $strvalfade = strval($e->$fade[0]);
-            $flicker = $e->$flicker ? 1 : 0;
-            $trail = $e->$trail ? 1 : 0;
+            $strvalcolor = strval($e->color[0]);
+            $strvalfade = strval($e->fade[0]);
+            $flicker = $e->flicker ? 1 : 0;
+            $trail = $e->trail ? 1 : 0;
             $sample->setByteArray("FireworkColor", $strvalcolor);
             $sample->setByteArray("FireworkFade", $strvalfade);
             $sample->setByte("FireworkFlicker", $flicker);
             $sample->setByte("FireworkTrail", $trail);
-            $sample->setByte("FireworkType", $e->$type);
+            $sample->setByte("FireworkType", $e->type);
             $v[] = $sample;
         }
         $explosion = new ListTag("Explosion", $v, NBT::TAG_Compound); // TAG_Compound = 10
-        $flight = new ByteTag("Flight", $data->$flight);
+        $flight = new ByteTag("Flight", $data->flight);
         $tarray = [
             $explosion,
             $flight
