@@ -1,4 +1,4 @@
-# php build library used for pocketnet/pmmp software development
+# Files/Dir for GIT to ignore.
 
 bin*/*
-php-build-scripts*/*
+test*/*

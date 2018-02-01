@@ -8,7 +8,10 @@ use pocketmine\utils\TextFormat as Chat;
 // >>>
 use VGCore\SystemOS;
 
-use VGCore\network\Database as DB;
+use VGCore\network\{
+	Database as DB,
+	Slack
+};
 
 use VGCore\gui\lib\UIDriver;
 
@@ -206,6 +209,12 @@ class FactionSystem {
 				if (!$query) {
 					return false;
 				}
+				$query = self::$db->query("UPDATE users SET factionrole ='" . self::$rank[0] . "' WHERE username='" . self::$db->real_escape_string($lowerleader) . "'");
+				if (!$query) {
+					return false;
+				}
+				$slackmessage = "A faction with name " . $lowerfaction . " has been created by a player using the gamertag " . $lowerleader . ".";
+				Slack::sendTextMessage($slackmessage);
 				return true;
 			} else {
 				return false;
