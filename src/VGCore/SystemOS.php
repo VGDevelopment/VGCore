@@ -324,7 +324,7 @@ class SystemOS extends PluginBase {
 	    $this->getServer()->getCommandMap()->register("faction", new Faction("faction", $this));
 	    $this->getServer()->getCommandMap()->register("spawn", new Spawn("spawn", $this));
 	    $this->getServer()->getCommandMap()->register("ping", new Ping("ping", $this));
-	    $this->getServer()->getCommandMap()->register("firework", new Firework("firework"), $this);
+	    $this->getServer()->getCommandMap()->register("firework", new Firework("firework", $this));
 	    return true;
     }
 

@@ -19,6 +19,8 @@ class SetEntityDataPacket extends FireworkPacket {
     protected function encodePayload() {
         $this->putEntityRuntimeId($this->entityruntimeid);
         $this->setMetaDataOfEntity($this->md);
+        var_dump($this->entityruntimeid);
+        var_dump($this->md);
     }
     
     protected function decodePayload() {

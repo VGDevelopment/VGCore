@@ -52,12 +52,15 @@ class Firework extends Item {
         }
         // finished NBT
         $rocket = new FWR($level, $nbt, $player, $this, $random);
+        $server = $player->getServer();
+        $server->getLogger()->info($rocket);
         $level->addEntity($rocket);
         if ($rocket instanceof Entity) {
             if ($player->isSurvival()) {
                 // take item from inv
                 --$this->count;
             }
+            var_dump(1);
             $rocket->spawnToAll();
             return true;
         }
@@ -87,7 +90,7 @@ class Firework extends Item {
             $explosion,
             $flight
         ];
-        $firework = new CompoundTag("Firework", $tarray);
+        $firework = new CompoundTag("Fireworks", $tarray);
         $nbt->setTag($firework);
         return $nbt;
     }

@@ -74,6 +74,7 @@ class FWR extends Projectile {
         $this->setMotion($dvector);
         $sound = "Launch";
         Sound::playLevelWideSound($this, $this->level, $sound);
+        parent::spawnTo($player);
     }
     
     public function despawnFromAll() {

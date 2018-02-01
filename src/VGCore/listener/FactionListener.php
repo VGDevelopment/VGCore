@@ -70,6 +70,7 @@ class FactionListener implements Listener {
     }
     
     public function onChat(PlayerChatEvent $event) {
+        $player = $event->getPlayer();
         $check = FS::inFaction($player);
         if ($check === true) {
             $message = $event->getMessage();
