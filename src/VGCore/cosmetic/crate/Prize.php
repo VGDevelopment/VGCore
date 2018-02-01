@@ -33,4 +33,9 @@ class Prize {
       if($type = "legenary") $d = self::LEGENARY_PRIZES[rand(0,2)]; return $d[array_rand($d)];
     }
 
+    public function prizes(): string{
+      $names = [TF::RED."Red".TF::WHITE."Wings", TF::AQUA."Pet Dragon ".TF::GOLD."\nX5", TF::LIGHT_PURPLE."Redstone Trails", TF::BLUE."Throwable TNT", TF::YELLOW."Ridable Mob"];
+      return $names[array_rand($names)];
+    }
+
 }

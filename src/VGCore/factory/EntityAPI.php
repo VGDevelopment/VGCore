@@ -23,7 +23,7 @@ use VGCore\factory\entity\mob\{
 };
 
 class EntityAPI {
-    
+
     private static $entity = [
         "Blaze" => [Blaze::class, "minecraft:blaze"],
         "Chicken" => [Chicken::class, "minecraft:chicken"],
@@ -38,11 +38,11 @@ class EntityAPI {
         "Zombie Pigman" => [ZombiePigman::class, "minecraft:zombiepigman"],
         "Zombie" => [Zombie::class, "minecraft:zombie"]
     ];
-    
+
     private static $entityprojectile = [
         "EnderPearl" => [EP::class, "minecraft:enderpearl"]
     ];
-    
+
     public static function start(): void {
         foreach (self::$entity as $name => $data) {
             Entity::registerEntity($data[0], false, [$name, $data[1]]);

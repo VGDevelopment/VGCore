@@ -21,12 +21,11 @@ class CrateTask extends PluginTask {
     print(SystemOS::$localdata[$this->pos]["Tick"]."\n");
     SystemOS::$localdata[$this->pos]["Tick"]++;
     Chest::spawnText(SystemOS::$localdata[$this->pos]["Block"]);
-    if(SystemOS::$localdata[$this->pos]["Tick"] == 10) $this->lowerSpeed(4);
-    if(SystemOS::$localdata[$this->pos]["Tick"] == 20) $this->lowerSpeed(6);
+    if(SystemOS::$localdata[$this->pos]["Tick"] == 20) $this->lowerSpeed(4);
+    if(SystemOS::$localdata[$this->pos]["Tick"] == 25) $this->lowerSpeed(6);
     if(SystemOS::$localdata[$this->pos]["Tick"] == 30) $this->lowerSpeed(11);
-    if(SystemOS::$localdata[$this->pos]["Tick"] == 40) $this->lowerSpeed(14);
-    if(SystemOS::$localdata[$this->pos]["Tick"] == 50) $this->lowerSpeed(17);
-    if(SystemOS::$localdata[$this->pos]["Tick"] == 55) {$this->plugin->getServer()->getScheduler()->cancelTask($this->getTaskId()); Chest::resetCrate(SystemOS::$localdata[$this->pos]["Block"]);};
+    if(SystemOS::$localdata[$this->pos]["Tick"] == 40) {};
+    if(SystemOS::$localdata[$this->pos]["Tick"] == 47) {$this->plugin->getServer()->getScheduler()->cancelTask($this->getTaskId()); Chest::resetCrate(SystemOS::$localdata[$this->pos]["Block"]);};
   }
 
   public function lowerSpeed(int $speed){

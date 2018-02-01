@@ -11,29 +11,72 @@ use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\{BlockEventPacket, RemoveEntityPacket};
 use pocketmine\utils\UUID;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
+use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\entity\Item as ItemEntity;
 use pocketmine\entity\Entity;
 use pocketmine\math\Vector3;
-use pocketmine\level\sound\ClickSound;
 // >>>
 use VGCore\SystemOS;
 use VGCore\task\cosmetic\CrateTask;
 
 class Chest {
     private static $plugin;
+    const CRATES = [
+        '259:71:259' => ["crate1", 'common'],
+        '0:0:0' => ["crate2", 'rare'],
+        '0:0:0' => ["crate3", 'legendary']
+    ];
 
     public static function start($plugin){
       self::$plugin = $plugin;
     }
 
+    public function onJoin(PlayerJoinEvent $event) {
+      $player = $event->getPlayer();
+      if($player instanceof Player) {
+        foreach(self::CRATES as $pos => $data){
+          $pos = explode(":", $pos);
+          self::spawnText($player->getLevel()->getBlock(new Vector3((int) $pos[0], (int) $pos[1], (int) $pos[2])), TF::GOLD.$data[0]."\n".TF::AQUA.$data[1]);
+        }
+      }
+    }
+
+    public function EntityLevelChangeEvent(EntityLevelChangeEvent $event){
+      $player = $event->getEntity();
+      if($player instanceof Player) {
+        foreach(self::CRATES as $pos => $data){
+          $pos = explode(":", $pos);
+          self::spawnText($player->getLevel()->getBlock(new Vector3((int) $pos[0], (int) $pos[1], (int) $pos[2])), TF::GOLD.$data[0]."\n".TF::AQUA.$data[1]);
+        }
+      }
+    }
+
     public static function resetCrate(Block $block): void {
-      unset(SystemOS::$localdata[json_encode($block->asVector3())]);
       $pk = new BlockEventPacket();
-      $pk->x = $block->getX();
-      $pk->y = $block->getY();
-      $pk->z = $block->getZ();
-      $pk->case1 = 1;
-      $pk->case2 = 0;
+  		$pk->x = $block->x;
+  		$pk->y = $block->y;
+  		$pk->z = $block->z;
+  		$pk->eventType = 1;
+  		$pk->eventData = 0;
+      foreach(self::$plugin->getServer()->getOnlinePlayers() as $player){
+        $player->dataPacket($pk);
+      }
+      self::despawnText($block);
+      unset(SystemOS::$localdata[json_encode($block->asVector3())]);
+      foreach(self::CRATES as $pos => $data){
+        $pos = explode(":", $pos);
+        self::spawnText($player->getLevel()->getBlock(new Vector3((int) $pos[0], (int) $pos[1], (int) $pos[2])), TF::GOLD.$data[0]."\n".TF::AQUA.$data[1]);
+      }
+    }
+
+    public static function openChest(Block $block): void {
+      $pk = new BlockEventPacket();
+  		$pk->x = $block->x;
+  		$pk->y = $block->y;
+  		$pk->z = $block->z;
+  		$pk->eventType = 1;
+  		$pk->eventData = 1;
       foreach(self::$plugin->getServer()->getOnlinePlayers() as $player){
         $player->dataPacket($pk);
       }
@@ -55,18 +98,20 @@ class Chest {
             SystemOS::$localdata = $blockdata;//to resave...
             $task = new CrateTask(self::$plugin, json_encode($pos));
             self::$plugin->getServer()->getScheduler()->scheduleRepeatingTask($task, 1);
+            self::openChest($block);
             return true;
         }
     }
 
-    public static function spawnText(Block $block){
+    public static function spawnText(Block $block, string $text = null): void{
+      if($text == null) $text = (new Prize())->prizes();
       self::despawnText($block);
       $pk = new AddPlayerPacket();
-      $uuid = UUID::fromRandom();
-      $pk->uuid = $uuid;
-      SystemOS::$localdata[json_encode($block->asVector3())]["floating_tag"] = $uuid;
+      $pk->uuid = UUID::fromRandom();
       $pk->username = "Crate";
-      $pk->entityRuntimeId = Entity::$entityCount++;
+      $eid = Entity::$entityCount++;
+      $pk->entityRuntimeId = $eid;
+      SystemOS::$localdata[json_encode($block->asVector3())]["floating_tag"] = $eid;
       $pk->position = new Vector3($block->x+.5,$block->y+1.2,$block->z+.5);
       $pk->item = Item::get(0,0,0);
       $flags = (
@@ -76,7 +121,7 @@ class Chest {
       );
       $pk->metadata = [
         Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, $flags],
-        Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, "Testing"],
+        Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $text],
         Entity::DATA_SCALE => [Entity::DATA_TYPE_FLOAT, 0],
       ];
       foreach(self::$plugin->getServer()->getOnlinePlayers() as $player){
@@ -84,7 +129,7 @@ class Chest {
       }
     }
 
-    public static function despawnText(Block $block){
+    public static function despawnText(Block $block): void{
       if(isset(SystemOS::$localdata[json_encode($block->asVector3())]["floating_tag"])){
         $pk = new RemoveEntityPacket();
         $pk->entityUniqueId = SystemOS::$localdata[json_encode($block->asVector3())]["floating_tag"];

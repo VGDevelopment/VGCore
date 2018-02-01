@@ -8,10 +8,7 @@ use pocketmine\utils\{
   TextFormat as TF
 };
 
-use pocketmine\event\player\{
-  PlayerJoinEvent,
-  PlayerMoveEvent
-};
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\math\Vector3;
@@ -34,6 +31,9 @@ class NPCListener implements Listener{
   private static $spawned = [];
 
   const NPC = [
+    /**
+     * NPC skin is set from player who joins
+     */
     'test' => ["command" => 'say works', "position" => '162:7:119', "world" => 'Sam2', "skin" => null]
   ];
 
@@ -41,19 +41,10 @@ class NPCListener implements Listener{
     self::$plugin = $plugin;
   }
 
-  public function PlayerMoveEvent(PlayerMoveEvent $event){
-    $player = $event->getPlayer();
-    foreach(self::$spawned as $name => $data){
-      $position = explode(":", self::NPC[$name]["position"]); 
-      $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
-      $this->lookAtPlayer(self::$spawned[$name]["eid"], $position, $player);
-    }
-  }
-
-  public function lookAtPlayer($eid, Vector3 $entity, Player $player){
-    $x=$entity->x-$player->x;
-    $y=$entity->y-$player->y;
-    $z=$entity->z-$player->z;
+  public static function lookAtSpawn($eid, Vector3 $entity, Player $player){
+    $x=$entity->x-$player->level->getSpawnLocation()->x;
+    $y=$entity->y-$player->level->getSpawnLocation()->y;
+    $z=$entity->z-$player->level->getSpawnLocation()->z;
     if(sqrt($x*$x+$z*$z)==0 || sqrt($x*$x+$z*$z+$y*$y)==0) return true;
     $yaw=asin($x/sqrt($x*$x+$z*$z))/3.14*180;
     $pitch=round(asin($y/sqrt($x*$x+$z*$z+$y*$y))/3.14*180);
@@ -69,8 +60,8 @@ class NPCListener implements Listener{
     return true;
   }
 
-  public static function spawnNPC(Vector3 $position, string $name, string $command){
-    if(isset(self::$spawned[$name])) return;
+  public static function spawnNPC(Vector3 $position, string $name, string $command, Player $player){
+    //if(isset(self::$spawned[$name])) return;
     self::$spawned[$name]["eid"] = Entity::$entityCount++;
     self::$spawned[$name]["command"] = $command;
     $pk = new AddPlayerPacket();
@@ -81,10 +72,11 @@ class NPCListener implements Listener{
     $pk->item = ItemFactory::get(Item::AIR, 0, 0);
     $skinPk = new PlayerSkinPacket();
 		$skinPk->uuid = $pk->uuid;
-		//$skinPk->skin = set skin here;
+		//$skinPk->skin = new Skin("Standard_Custom", $skindata);
 
     self::$plugin->getServer()->broadcastPacket(self::$plugin->getServer()->getOnlinePlayers(), $pk);
     //self::$plugin->getServer()->broadcastPacket(self::$plugin->getServer()->getOnlinePlayers(), $skinPk);
+    self::lookAtSpawn(self::$spawned[$name]["eid"], $position, $player);
   }
 
   public function EntityLevelChangeEvent(EntityLevelChangeEvent $event){
@@ -93,7 +85,7 @@ class NPCListener implements Listener{
       foreach(self::NPC as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
           $position = explode(":", $data["position"]); $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
-          $this->spawnNPC($position, $name, $data["command"]);
+          $this->spawnNPC($position, $name, $data["command"], $player);
         }
       }
     }
@@ -105,7 +97,7 @@ class NPCListener implements Listener{
       foreach(self::NPC as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
           $position = explode(":", $data["position"]); $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
-          $this->spawnNPC($position, $name, $data["command"]);
+          $this->spawnNPC($position, $name, $data["command"], $player);
         }
       }
     }
