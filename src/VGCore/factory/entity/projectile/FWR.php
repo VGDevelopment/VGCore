@@ -45,19 +45,19 @@ class FWR extends Projectile {
     
     public function __construct(Level $level, CompoundTag $nbt, Entity $shooter = null, Firework $item = null, Random $random = null) {
         self::$random = $random;
-        self::$firework = $firework;
+        self::$firework = $item;
         parent::__construct($level, $nbt, $shooter);
     }
     
     // took this from Steadfast2 and joined up with the custom SetEntityDataPacket Object available in VGCore\network
     public function sendData($entity, array $data = null): void {
         if (!is_array($data)) {
-            $client = [$entity];
+            $entity = [$entity];
         }
         $pk = new SetEntityDataPacket();
         $pk->entityruntimeid = $this->getId();
         $pk->md = $data ?? $this->dataProperties;
-        foreach ($client as $player) {
+        foreach ($entity as $player) {
             if ($player === $this) {
                 continue;
             }
@@ -111,7 +111,7 @@ class FWR extends Projectile {
             $random->nextBoundedInt(5),
             $random->nextBoundedInt(7)
         ];
-        self::$lifetime = 20 * $fly * $rint[0] + $rint[1];
+        $this->lifetime = 20 * $fly * $rint[0] + $rint[1];
     }
     
     public function entityBaseTick(int $tickDiff = 1): bool {

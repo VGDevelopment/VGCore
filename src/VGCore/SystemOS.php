@@ -386,9 +386,9 @@ class SystemOS extends PluginBase {
     }
 
     private function loadCrate(): bool {
-        $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
-        Crate::start($this);
-        return true;
+        // $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
+        // Crate::start($this);
+        return false;
     }
 
     private function loadNPC(): bool {

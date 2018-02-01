@@ -9,7 +9,7 @@ use pocketmine\network\mcpe\{
     protocol\DataPacket
 };
 
-abstract class FirworkPacket extends DataPacket {
+abstract class FireworkPacket extends DataPacket {
     
     abstract public function handle(NetworkSession $session): bool;
     
