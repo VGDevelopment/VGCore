@@ -6,7 +6,7 @@ VGCore :
 
 - [x] EnderPearls
 - [x] CustomEnchantments
-- [ ] Lobby NPC
+- [x] Lobby NPC
 - [ ] Lobby Crates [**BEING DONE** @daniktheboss ]
 - [x] Pets
 - [ ] FactionSystem [**BEING DONE** @YaBoiLewis ]
