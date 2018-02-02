@@ -36,9 +36,9 @@ class Faction extends PluginCommand {
             if ($check === true) {
                 $faction = FS::getPlayerFaction($sender);
                 $query = FS::claimLand($faction, $sender);
-                if ($query === true) {
+                if ($query === 1) {
                     $sender->sendMessage(Chat::GREEN . "Land claimed succesfully.");
-                } else {
+                } else if ($query === 0) {
                     $sender->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
                 }
             } else {

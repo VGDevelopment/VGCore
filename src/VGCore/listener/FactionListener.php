@@ -34,8 +34,8 @@ class FactionListener implements Listener {
             return;
         }
         $player = $event->getPlayer();
-        $x = $block->x;
-        $z = $block->z;
+        $x = round($block->x);
+        $z = round($block->z);
         $data = FS::getLand();
         if (count($data) <= 0) {
             return;
@@ -56,11 +56,13 @@ class FactionListener implements Listener {
             foreach ($data as $i => $v) {
                 list($x1, $z1) = explode(":", $v[0], 2);
                 list($x2, $z2) = explode(":", $v[1], 2);
-                if ($x < $x1 && $x > $x2) {
-                    if ($z < $z1 && $z > $z2) {
+                if ($x <= $x1 && $x >= $x2) {
+                    if ($z <= $z1 && $z >= $z2) {
                         $event->setCancelled(false);
                         return;
                     }
+                } else {
+                    $player->sendMessage(Chat::RED . "Sorry, you've can't build in a land claimed by any other faction. Please understand.");
                 }
             }
         } else {

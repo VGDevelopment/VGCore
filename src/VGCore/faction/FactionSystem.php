@@ -5,6 +5,10 @@ namespace VGCore\faction;
 use pocketmine\Player;
 
 use pocketmine\utils\TextFormat as Chat;
+
+use pocketmine\level\particle\FlameParticle as FP;
+
+use pocketmine\math\Vector3 as Scaler;
 // >>>
 use VGCore\SystemOS;
 
@@ -234,6 +238,10 @@ class FactionSystem {
 			$lowername = strtolower($name);
 			$query = self::$db->query("UPDATE users SET faction = '" . self::$db->real_escape_string($lowerfaction) . "' where username='" . self::$db->real_escape_string($lowername) . "'");
 			if ($query) {
+				self::$db->query("UPDATE users SET factionrole = '" . self::$rank[0] . "' WHERE username='" . self::$db->real_escape_string($lowername) . "'");
+				if (!$query) {
+					return false;
+				}
 				$factiondata = self::factionStat($faction);
 				$leadername = strtolower($factiondata[3]);
 				$leader = self::$server->getPlayer($leadername);
@@ -370,26 +378,72 @@ class FactionSystem {
 		}
 	}
 	
-	public static function claimLand(string $faction, Player $player): bool {
+	public static function claimLand(string $faction, Player $player): int {
 		$check = self::inFaction($player);
 		if ($check === true) {
 			$data = self::getLand();
-			if (count($data) > 0) {
-				
-			}
 			$pos = [];
 			$size = 8 * self::CHUNK;
 			$vectorcalc = $size / 2;
-			$pos["x1"] = $player->x + $vectorcalc;
-			$pos["x2"] = $player->x - $vectorcalc;
-			$pos["z1"] = $player->z + $vectorcalc;
-			$pos["z2"] = $player->z - $vectorcalc;
+			$round = [
+				round($player->x),
+				round($player->z),
+				round($player->y)
+			];
+			$pos["x1"] = $round[0] + $vectorcalc;
+			$pos["x2"] = $round[0] - $vectorcalc;
+			$pos["z1"] = $round[1] + $vectorcalc;
+			$pos["z2"] = $round[1] - $vectorcalc;
+			if (count($data) > 0) {
+				foreach ($data as $i => $v) {
+					list($x1, $z1) = explode(":", $v[0], 2);
+					list($x2, $z2) = explode(":", $v[1], 2);
+					if ($pos["x1"] <= $x1 && $pos["x2"] >= $x2) {
+						if ($pos["z1"] <= $z1 && $pos["z2"] >= $z2) {
+							$player->sendMessage(Chat::RED . "Sorry, what you're claiming is part of the land that has been previously claimed.");
+							return 2;
+						}
+					}
+				}	
+			}
+			$line1 = range($pos["x1"], $pos["x2"]);
+			$line2 = range($pos["z1"], $pos["z2"]);
+			$min = [ // wait can't I just use $pos["x2", "z2"] 
+				"z" => min($line2),
+				"x" => min($line1)
+			];
+			$max = [ // wait can't I just use $pos["x1", "z1"]
+				"z" => max($line2),
+				"x" => max($line1)
+			];
+			$particle = [];
+			foreach ($line1 as $v) {
+				$pos = new Scaler($v, $round[2], $min["z"]);
+				$particle[] = new FP($pos);
+				$pos = new Scaler($v, $round[2], $max["z"]);
+				$particle[] = new FP($pos);
+			}
+			foreach ($line2 as $v) {
+				$pos = new Scaler($v, $round[2], $min["x"]);
+				$particle[] = new FP($pos);
+				$pos = new Scaler($v, $round[2], $max["x"]);
+				$particle[] = new FP($pos);
+			}
+			$level = $player->getLevel();
+			foreach ($particle as $p) {
+				$level->addParticle($p);
+			}
 			$claim = [
 				(string)$pos["x1"] . ":" . (string)$pos["z1"],
 				(string)$pos["x2"] . ":" . (string)$pos["z2"]
 			];
 			$lowerfaction = strtolower($faction);
-			return self::updateLand($lowerfaction, $claim);
+			$query = self::updateLand($lowerfaction, $claim);
+			if ($query === true) {
+				return 1;
+			} else {
+				return 0;
+			}
 		}
 	}
 	
