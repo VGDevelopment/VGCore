@@ -415,7 +415,7 @@ class FactionSystem {
 			} else {
 				$query = self::$db->query("SELECT ldata FROM factions");
 			}
-			$result = $query->fetchArray();
+			$result = $query->fetch_array();
 			$query->free();
 			$rarray = [];
 			foreach ($result as $i => $v) {
@@ -430,7 +430,7 @@ class FactionSystem {
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
 			$query = self::$db->query("SELECT username FROM users WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
-			$queryarray = $query->fetchArray();
+			$queryarray = $query->fetch_array();
 			foreach ($queryarray as $qa) {
 				$playerlist = [];
 				$playerlist[] = self::$server->getPlayer($qa);

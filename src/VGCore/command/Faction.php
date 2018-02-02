@@ -11,7 +11,7 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat as Chat;
 // >>>
 use VGCore\SystemOS;
-use VGCore\faction\FactionSystem;
+use VGCore\faction\FactionSystem as FS;
 
 use VGCore\gui\lib\UIDriver;
 

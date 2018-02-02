@@ -77,7 +77,7 @@ class FactionListener implements Listener {
             $player = $event->getPlayer();
             $faction = FS::getPlayerFaction($player);
             $newmessage = Chat::GREEN . "<" . Chat::RED . $faction . Chat::GREEN . "> " . Chat::RESET . $message;
-            $event->setMessage($message);
+            $event->setMessage($newmessage);
         }
     }
     

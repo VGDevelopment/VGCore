@@ -6,6 +6,8 @@ use pocketmine\item\{
     Item,
     ItemFactory
 };
+
+use pocketmine\utils\Config;
 // >>>
 use VGCore\factory\item\{
     SpawnEgg,
@@ -13,9 +15,14 @@ use VGCore\factory\item\{
     Firework
 };
 
-class ItemAPI {
+use VGCore\factory\data\{
+    ItemData
+};
+
+class ItemAPI implements ItemData {
     
     private static $itemclass = [];
+    private static $critemclass = [];
     private static $critem = [];
     
     public static function setItem(): void {
@@ -25,9 +32,13 @@ class ItemAPI {
             new Firework()
         ];
         self::$critem = [
-            Item::ENDER_PEARL,
-            Item::FIREWORKS
+            Item::ENDER_PEARL
         ];
+        
+        foreach (self::FIREWORK_ITEM_DATA as $data) {
+            $item = Item::jsonDeserialize($data);
+            self::$critemclass[] = $item;
+        }
     }
     
     public static function start(): void {
@@ -38,6 +49,9 @@ class ItemAPI {
         foreach (self::$critem as $item) {
             $critem = Item::get($item);
             Item::addCreativeItem($critem);
+        }
+        foreach (self::$critemclass as $item) {
+            Item::addCreativeItem($item);
         }
     }
     
