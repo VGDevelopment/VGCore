@@ -25,7 +25,8 @@ class ItemAPI {
             new Firework()
         ];
         self::$critem = [
-            Item::ENDER_PEARL   
+            Item::ENDER_PEARL,
+            Item::FIREWORKS
         ];
     }
     
@@ -34,7 +35,6 @@ class ItemAPI {
         foreach (self::$itemclass as $item) {
             ItemFactory::registerItem($item, true);
         }
-        Item::initCreativeItems();
         foreach (self::$critem as $item) {
             $critem = Item::get($item);
             Item::addCreativeItem($critem);
