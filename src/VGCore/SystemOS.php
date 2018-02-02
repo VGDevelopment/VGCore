@@ -261,8 +261,8 @@ class SystemOS extends PluginBase {
         $h = $this->loadFactory();
         $i = $this->loadSpawner();
         $j = $this->loadFaction();
-        // $k = $this->loadCrate();
-        // $l = $this->loadNPC();
+        $k = $this->loadCrate();
+        $l = $this->loadNPC();
         $dep = [
             "UI" => $a,
             "Command" => $b,
@@ -273,9 +273,9 @@ class SystemOS extends PluginBase {
             "PS" => $g,
             "Factory" => $h,
             "Spawner" => $i,
-            "FS" => $j
-            // "CS" => $k
-            // "NPC" => $l
+            "FS" => $j,
+            "CS" => $k,
+            "NPC" => $l
         ];
         foreach ($dep as $i => $v) {
             if ($v === true) {
@@ -389,7 +389,7 @@ class SystemOS extends PluginBase {
     private function loadCrate(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new CrateListener($this), $this);
         Crate::start($this);
-        return false;
+        return true;
     }
 
     private function loadNPC(): bool {
