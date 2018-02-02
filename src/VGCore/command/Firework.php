@@ -33,9 +33,9 @@ class Firework extends PluginCommand {
     
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
         if ($sender instanceof Player) {
-            $color = [1, 2, 3];
-            $fade = [3, 2, 1];
-            $explosion = new FE($color, $fade);
+            $color = [4, 4, 4];
+            $fade = [5, 5, 5];
+            $explosion = new FE($color, $fade, false, false, 4);
             $data = new FireworkData(1, [$explosion]);
             $firework = new FItem();
             $nbt = $firework::sendToNBT($data);
