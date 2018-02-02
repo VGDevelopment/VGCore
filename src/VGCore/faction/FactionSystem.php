@@ -213,8 +213,6 @@ class FactionSystem {
 				if (!$query) {
 					return false;
 				}
-				$slackmessage = "A faction with name " . $lowerfaction . " has been created by a player using the gamertag " . $lowerleader . ".";
-				Slack::sendTextMessage($slackmessage);
 				return true;
 			} else {
 				return false;
