@@ -10,9 +10,9 @@ use pocketmine\network\mcpe\{
 };
 
 abstract class FireworkPacket extends DataPacket {
-    
+
     abstract public function handle(NetworkSession $session): bool;
-    
+
     public function getMetaDataOfEntity(bool $type = true): array {
         $data = [];
         $noe = $this->getUnsignedVarInt();
@@ -40,7 +40,7 @@ abstract class FireworkPacket extends DataPacket {
                     $v = $this->getVarLong();
                     break;
                 case ENTITY::DATA_TYPE_SLOT:
-                    // thanks @gurun 
+                    // thanks @gurun
                     $entity = $this->getSlot();
                     $v = [
                         0 => $entity->getId(),
@@ -78,7 +78,7 @@ abstract class FireworkPacket extends DataPacket {
         }
         return $data;
     }
-    
+
     public function setMetaDataOfEntity(array $md): void {
         $c = count($md);
         $this->putUnsignedVarInt($c);
@@ -121,5 +121,5 @@ abstract class FireworkPacket extends DataPacket {
             }
         }
     }
-    
+
 }

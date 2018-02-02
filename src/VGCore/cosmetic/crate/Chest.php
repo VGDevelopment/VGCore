@@ -16,6 +16,19 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\entity\Item as ItemEntity;
 use pocketmine\entity\Entity;
 use pocketmine\math\Vector3;
+use pocketmine\nbt\{
+    NBT,
+    tag\ByteTag,
+    tag\CompoundTag,
+    tag\ListTag
+};
+use pocketmine\utils\Random;
+use VGCore\factory\{
+    data\FireworkData,
+    entity\projectile\FWR,
+    item\Firework as FItem,
+    particle\explosion\FireworkExplosion as FE
+};
 // >>>
 use VGCore\SystemOS;
 use VGCore\task\cosmetic\CrateTask;
@@ -62,6 +75,28 @@ class Chest {
       foreach(self::$plugin->getServer()->getOnlinePlayers() as $player){
         $player->dataPacket($pk);
       }
+
+      $random = new Random();
+      $yaw = $random->nextBoundedInt(360);
+      $f = $random->nextFloat();
+      $d = 5.0;
+      $vectorcalc = 90 + ($f * $d - $d / 2);
+      $pitch = -1 * (float)$vectorcalc;
+      $nbt = Entity::createBaseNBT($block, null, $yaw, $pitch);
+
+      $color = [1, 2, 3];
+      $fade = [3, 2, 1];
+      $ex = new FE($color, $fade, false, true, 4);
+      $data = new FireworkData(1, [$ex]);
+      $firework = new FItem();
+      $firework = $firework::sendToNBT($data);
+
+      $nbt->setTag($firework);
+      $rocket = new FWR($block->level, $nbt);
+      $rocket->setMotion($block->asVector3()->add(10,10,10));
+      $block->level->addEntity($rocket);
+      $rocket->spawnToAll();
+
       self::despawnText($block);
       unset(SystemOS::$localdata[json_encode($block->asVector3())]);
       foreach(self::CRATES as $pos => $data){
