@@ -83,20 +83,16 @@ class Chest {
       $vectorcalc = 90 + ($f * $d - $d / 2);
       $pitch = -1 * (float)$vectorcalc;
       $nbt = Entity::createBaseNBT($block, null, $yaw, $pitch);
-
-      $color = [1, 2, 3];
-      $fade = [3, 2, 1];
-      $ex = new FE($color, $fade, false, true, 4);
+      $color = [4, 4, 4];
+      $fade = [5, 5, 5];
+      $ex = new FE($color, $fade, true, false, 4);
       $data = new FireworkData(1, [$ex]);
       $firework = new FItem();
-      $firework = $firework::sendToNBT($data);
-
-      $nbt->setTag($firework);
-      $rocket = new FWR($block->level, $nbt);
-      $rocket->setMotion($block->asVector3()->add(10,10,10));
+      $customnbt = $firework::sendToNBT($data);
+      $nbt->setNamedTag($customnbt);
+      $rocket = new FWR($block->level, $nbt, null, $firework, null);
       $block->level->addEntity($rocket);
       $rocket->spawnToAll();
-
       self::despawnText($block);
       unset(SystemOS::$localdata[json_encode($block->asVector3())]);
       foreach(self::CRATES as $pos => $data){
