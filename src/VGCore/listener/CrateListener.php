@@ -14,10 +14,8 @@ class CrateListener implements Listener {
   public function PlayerInteractEvent(PlayerInteractEvent $event){
     $block = $event->getBlock();
     $player = $event->getPlayer();
-    var_dump($event->getItem());
     $database = Database::getDatabase();
     $x = $block->x; $y = $block->y; $z = $block->z;
-    print($x . ":" . $y . ":" . $z."\n");
     if($block->getId() != 54) return;
     if(isset(Chest::CRATES[$x . ":" . $y . ":" . $z])){
       //if($database->) CHECK KEY thing, and take one key out
