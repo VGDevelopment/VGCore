@@ -23,7 +23,7 @@ use VGCore\faction\FactionWar;
 
 class FactionSystem {
 	
-	const CHUNK = 2;
+	const CHUNK = 4;
 	
 	private static $namesuggestion1 = [
 		"Alpha",
@@ -80,6 +80,9 @@ class FactionSystem {
 	
 	public static $request = [];
 	public static $invite = [];
+	
+	public static $fackill = [];
+	public static $facdeath = [];
 	
 	// >>> onEnable()
 	
@@ -388,14 +391,15 @@ class FactionSystem {
 			$round = [
 				round($player->x),
 				round($player->z),
-				round($player->y)
+				round($player->y + 4)
 			];
 			$pos["x1"] = $round[0] + $vectorcalc;
 			$pos["x2"] = $round[0] - $vectorcalc;
 			$pos["z1"] = $round[1] + $vectorcalc;
 			$pos["z2"] = $round[1] - $vectorcalc;
-			if (count($data) > 0) {
-				foreach ($data as $i => $v) {
+			if (count($data["ldata"]) > 0 && $data["ldata"][0] !== "") {
+				var_dump($data);
+				foreach ($data["ldata"] as $i => $v) {
 					list($x1, $z1) = explode(":", $v[0], 2);
 					list($x2, $z2) = explode(":", $v[1], 2);
 					if ($pos["x1"] <= $x1 && $pos["x2"] >= $x2) {
@@ -418,16 +422,16 @@ class FactionSystem {
 			];
 			$particle = [];
 			foreach ($line1 as $v) {
-				$pos = new Scaler($v, $round[2], $min["z"]);
-				$particle[] = new FP($pos);
-				$pos = new Scaler($v, $round[2], $max["z"]);
-				$particle[] = new FP($pos);
+				$ppos = new Scaler($v, $round[2], $min["z"]);
+				$particle[] = new FP($ppos);
+				$ppos = new Scaler($v, $round[2], $max["z"]);
+				$particle[] = new FP($ppos);
 			}
 			foreach ($line2 as $v) {
-				$pos = new Scaler($v, $round[2], $min["x"]);
-				$particle[] = new FP($pos);
-				$pos = new Scaler($v, $round[2], $max["x"]);
-				$particle[] = new FP($pos);
+				$ppos = new Scaler($min["x"], $round[2], $v);
+				$particle[] = new FP($ppos);
+				$ppos = new Scaler($max["x"], $round[2], $v);
+				$particle[] = new FP($ppos);
 			}
 			$level = $player->getLevel();
 			foreach ($particle as $p) {

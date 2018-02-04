@@ -40,6 +40,8 @@ class Faction extends PluginCommand {
                     $sender->sendMessage(Chat::GREEN . "Land claimed succesfully.");
                 } else if ($query === 0) {
                     $sender->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+                } else {
+                    
                 }
             } else {
                 $sender->sendMessage(Chat::RED . "Sorry, to use " . Chat::YELLOW . "/f claim" . Chat::RED . ", you need to be in a faction and a leader");

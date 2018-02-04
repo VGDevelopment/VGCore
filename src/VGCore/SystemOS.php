@@ -87,7 +87,8 @@ use VGCore\network\{
     ServerSettingsRequestPacket,
     ServerSettingsResponsePacket,
     VGServer,
-    Database as DB
+    Database as DB,
+    Slack
 };
 
 use VGCore\command\{
@@ -288,6 +289,7 @@ class SystemOS extends PluginBase {
         $offstring = implode(", ", $off);
         if (count($on) > 0) {
             $this->getLogger()->info("Enabled (" . $onstring . ") successfully!");
+            Slack::sendTextMessage("The host said they fixed the bug with certification validation. Let's test. :D");
         }
         if (count($off) > 0) {
             $this->getLogger()->info("Had an error enabling (" . $offstring . "). Please fix errors and try again.");
