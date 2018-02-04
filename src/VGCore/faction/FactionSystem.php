@@ -397,11 +397,12 @@ class FactionSystem {
 			$pos["x2"] = $round[0] - $vectorcalc;
 			$pos["z1"] = $round[1] + $vectorcalc;
 			$pos["z2"] = $round[1] - $vectorcalc;
-			if (count($data["ldata"]) > 0 && $data["ldata"][0] !== "") {
-				var_dump($data);
-				foreach ($data["ldata"] as $i => $v) {
+			if (count($data) > 0 && $data[0] !== "") {
+				foreach ($data as $i => $v) {
 					list($x1, $z1) = explode(":", $v[0], 2);
 					list($x2, $z2) = explode(":", $v[1], 2);
+					var_dump([$x1, $x2, $pos["x1"], $pos["x2"]]);
+					var_dump([$z1, $z2, $pos["z1"], $pos["z2"]]);
 					if ($pos["x1"] <= $x1 && $pos["x2"] >= $x2) {
 						if ($pos["z1"] <= $z1 && $pos["z2"] >= $z2) {
 							$player->sendMessage(Chat::RED . "Sorry, what you're claiming is part of the land that has been previously claimed.");
@@ -477,6 +478,9 @@ class FactionSystem {
 			$query->free();
 			$rarray = [];
 			foreach ($result as $i => $v) {
+				if ($i === "ldata") {
+					continue;
+				}
 				$rarray[$i] = explode(", ", $v);
 			}
 			return $rarray;
