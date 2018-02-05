@@ -9,7 +9,7 @@ class VGServer {
     private static $lobby = [19132];
     private static $faction = [29838];
     private static $factionwild = [19283];
-    private static $factionwar = [19832];
+    private static $factionwar = [19832, 19833];
     
     public static function getLobby(): array {
         return self::$lobby;
