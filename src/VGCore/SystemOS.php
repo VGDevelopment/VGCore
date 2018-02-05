@@ -468,8 +468,18 @@ class SystemOS extends PluginBase {
         }
         return null;
     }
-
-    public function setEnchantment(Item $item, $enchants, $levels, $check = true, $sender = null): Item {
+    
+    /**
+     * Sets the enchantment on an item that you give.
+     *
+     * @param Item $item
+     * @param [type] $enchants
+     * @param [type] $levels
+     * @param boolean $check
+     * @param [type] $sender
+     * @return Item
+     */
+    public function setEnchantment(Item $item, $enchants, $levels, bool $check = true, $sender = null): Item {
         if (!is_array($enchants)) {
             $enchants = [$enchants];
         }
@@ -722,6 +732,16 @@ class SystemOS extends PluginBase {
         return false;
     }
 
+    /**
+     * Makes the pet entity of the specific configuration. 
+     *
+     * @param string $entityname
+     * @param Player $player
+     * @param string $petname
+     * @param float $scale
+     * @param boolean $baby
+     * @return BasicPet|null
+     */
     public function makePet(string $entityname, Player $player, string $petname, float $scale = 1.0, bool $baby = false): ?BasicPet {
         $server = new VGServer($this);
         $servercheck = $server->checkServer();
