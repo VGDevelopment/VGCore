@@ -52,7 +52,7 @@ class USListener implements Listener {
         Sets show Coordinates to true in GameRules.
         */
         $pk = new GameRulesChangePacket();
-        $pk->gamerules["showcoordinates"] = true;
+        $pk->gamerules["showcoordinates"] = [1, true];
         $player->dataPacket($pk);
     }
     
