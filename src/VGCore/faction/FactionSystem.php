@@ -397,19 +397,24 @@ class FactionSystem {
 			$pos["x2"] = $round[0] - $vectorcalc;
 			$pos["z1"] = $round[1] + $vectorcalc;
 			$pos["z2"] = $round[1] - $vectorcalc;
-			if (count($data) > 0 && $data[0] !== "") {
-				foreach ($data as $i => $v) {
+			if (count($data[0]) > 0 && $data[0][0] !== "") {
+				foreach ($data[0] as $i => $v) {
+					var_dump($v);
 					list($x1, $z1) = explode(":", $v[0], 2);
-					list($x2, $z2) = explode(":", $v[1], 2);
+					list($x2, $z2) = explode(":", $v[0], 2);
 					var_dump([$x1, $x2, $pos["x1"], $pos["x2"]]);
 					var_dump([$z1, $z2, $pos["z1"], $pos["z2"]]);
-					if ($pos["x1"] <= $x1 && $pos["x2"] >= $x2) {
-						if ($pos["z1"] <= $z1 && $pos["z2"] >= $z2) {
-							$player->sendMessage(Chat::RED . "Sorry, what you're claiming is part of the land that has been previously claimed.");
-							return 2;
-						}
+					$compare = [
+						"x1" => $x1,
+						"x2" => $x2,
+						"z1" => $z1,
+						"z2" => $z2
+					];
+					$landcheck = self::checkPossibleMatch($pos, $compare);
+					if ($landcheck === true) {
+						$player->sendMessage(Chat::RED . "Sorry, your land includes part of a land that's been claimed before");
 					}
-				}	
+				}
 			}
 			$line1 = range($pos["x1"], $pos["x2"]);
 			$line2 = range($pos["z1"], $pos["z2"]);
@@ -449,6 +454,65 @@ class FactionSystem {
 			} else {
 				return 0;
 			}
+		}
+	}
+
+	public static function checkPossibleMatch(array $main, array $compare): bool {
+		$mainx1 = $main["x1"];
+		$mainx2 = $main["x2"];
+		$mainz1 = $main["z1"];
+		$mainz2 = $main["z2"];
+		$comparex1 = $compare["x1"];
+		$comparex2 = $compare["x2"];
+		$comparez1 = $compare["z1"];
+		$comparez2 = $compare["z2"];
+		$flag = 1; // true - possible values 0 : false, 1 : true
+		if ($mainx1 <= $comparex1 && $mainx1 >= $comparex2) {
+			$flag = 0;
+			$z1 = [
+				"z1" => $mainz1,
+				"z1" => $mainz2
+			];
+			$z2 = [
+				"z1" => $comparez1,
+				"z2" => $comparez2
+			];
+			$secondarycheck = self::compareZPos($z1, $z2);
+			if ($secondarycheck === true) {
+				$flag = 0;
+			}
+		}
+		if ($mainx2 <= $comparex1 && $mainx2 >= $comparex2) {
+			$flag = 0;
+			$z1 = [
+				"z1" => $mainz1,
+				"z1" => $mainz2
+			];
+			$z2 = [
+				"z1" => $comparez1,
+				"z2" => $comparez2
+			];
+			$secondarycheck = self::compareZPos($z1, $z2);
+			if ($secondarycheck === true) {
+				$flag = 0;
+			}
+		}
+		if ($flag === 0) {
+			return true;
+		} else if ($flag === 1) {
+			return false;
+		} else {
+			return false;
+		}
+	}
+
+	public static function compareZPos(array $z, array $z2): bool {
+		if ($z["z1"] <= $z2["z1"] && $z["z1"] >= $z2["z2"]) {
+			return true;
+		} else if ($z["z2"] <= $z2["z1"] && $z["z2"] >= $z2["z2"]) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -505,7 +569,7 @@ class FactionSystem {
 	public static function addKill(string $faction, int $kill): void {
 		$check = self::validateFaction($faction);
 		if ($check === true) {
-			
+			//
 		}
 	}
 	
@@ -520,6 +584,13 @@ class FactionSystem {
 			}
 		}
 		return $namelist;
+	}
+
+	public static function subtractKill(string $faction, int $death): void {
+		$check = self::validateFaction($faction);
+		if ($check === true) {
+			//
+		}
 	}
 	
 }

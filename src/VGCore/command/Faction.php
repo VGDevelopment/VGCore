@@ -44,7 +44,8 @@ class Faction extends PluginCommand {
                     
                 }
             } else {
-                $sender->sendMessage(Chat::RED . "Sorry, to use " . Chat::YELLOW . "/f claim" . Chat::RED . ", you need to be in a faction and a leader");
+                $sender->sendMessage(Chat::RED . "Sorry, to use " . Chat::YELLOW . "/f claim" . Chat::RED . ", you need to be in a faction and be the leader." . Chat::EOL . Chat::YELLOW . "If you're leader has gone inactive, raise an issue at " . Chat::GREEN . Chat::BOLD . "support@vgpe.me" . 
+                Chat::RESET . Chat::YELLOW . " to become the leader.");
             }
             return;
         }
