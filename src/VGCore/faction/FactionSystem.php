@@ -603,10 +603,13 @@ class FactionSystem {
 			$lowerfaction = strtolower($faction);
 			$query = self::$db->query("SELECT username FROM users WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
 			$queryarray = $query->fetch_array();
+			$query->free();
+			$playerlist = [];
 			foreach ($queryarray as $qa) {
-				$playerlist = [];
-				$playerlist[] = self::$server->getPlayer($qa);
-				$query->free();
+				$player = self::$server->getPlayer($qa);
+				if ($player !== null) {
+					$playerlist[] = $player;
+				}
 			}
 			return $playerlist;
 		}
