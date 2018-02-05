@@ -36,7 +36,7 @@ class FactionListener implements Listener {
      */
     public function onBuild(BlockPlaceEvent $event) {
         $check = VGS::checkServer(self::$os);
-        if ($check !== 3) {
+        if ($check !== 1) {
             return;
         }
         $player = $event->getPlayer();

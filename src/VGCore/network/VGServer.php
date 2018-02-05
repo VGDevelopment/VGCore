@@ -7,8 +7,7 @@ use VGCore\SystemOS;
 class VGServer {
     
     private static $lobby = [19132];
-    private static $faction = [29838];
-    private static $factionwild = [19283];
+    private static $faction = [19283];
     private static $factionwar = [19832, 19833];
     
     public static function getLobby(): array {
@@ -21,10 +20,6 @@ class VGServer {
     
     public static function getFactionWar(): array {
         return self::$factionwar;
-    }
-
-    public static function getFactionWild(): array {
-        return self::$factionwild;
     }
     
     /**
@@ -41,8 +36,6 @@ class VGServer {
             return 1;
         } else if (in_array($port, self::$factionwar)) {
             return 2;
-        } else if (in_array($port, self::$factionwild)) {
-            return 3;
         } else {
             return 999;
         }
