@@ -12,15 +12,19 @@ class VGServer {
     private static $factionwar = [19832];
     
     public static function getLobby(): array {
-        return $this->lobby;
+        return self::$lobby;
     }
     
     public static function getFaction(): array {
-        return $this->faction;
+        return self::$faction;
     }
     
     public static function getFactionWar(): array {
-        return $this->factionwar;
+        return self::$factionwar;
+    }
+
+    public static function getFactionWild(): array {
+        return self::$factionwild;
     }
     
     /**

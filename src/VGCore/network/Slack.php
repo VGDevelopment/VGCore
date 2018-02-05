@@ -8,7 +8,7 @@ class Slack {
     const HEADER = "Content-Type: application/x-www-form-urlencoded";
     const DEFAULT_CHANNEL = "bot";
     
-    public static function convertStringToSlackJSON(string $string): string {
+    private static function convertStringToSlackJSON(string $string): string {
         $replace = [
             '"' => "\""   
         ];
@@ -16,14 +16,21 @@ class Slack {
         return $slackjson;
     }
     
-    public static function sendTextMessage(string $text, $channel = self::DEFAULT_CHANNEL): bool {
+    /**
+     * Sends text messages to a slack channel. Default parameter for $channel is set to self::DEFAULT_CHANNEL . 
+     *
+     * @param string $text
+     * @param string $channel
+     * @return boolean
+     */
+    public static function sendTextMessage(string $text, string $channel = self::DEFAULT_CHANNEL): bool {
         $post = '"text": "' . $text . '"';
         $string = self::convertStringToSlackJSON($post);
         $config = self::makeConfig($string, $channel);
         return self::sendCURLRequest($config);
     }
     
-    public static function makeConfig(string $post, string $channel): array {
+    private static function makeConfig(string $post, string $channel): array {
         return [
             "URL" => self::URL,
             "Header" => self::HEADER,
@@ -32,7 +39,7 @@ class Slack {
         ];
     }
     
-    public static function sendCURLRequest(array $config): bool {
+    private static function sendCURLRequest(array $config): bool {
         $format = self::formatEOL([$config["Post"], "---", $config["Channel"]]);
         $package = self::makeJSONPackage($format);
         $curl = curl_init();
@@ -52,13 +59,13 @@ class Slack {
         return false;
     }
     
-    public static function makeJSONPackage(string $convert): string {
+    private static function makeJSONPackage(string $convert): string {
         return "{
                     " . $convert .
                 "}";
     }
     
-    public static function formatEOL(array $los): string {
+    private static function formatEOL(array $los): string {
         $string = implode($los);
         $eol = [
             "---" => ",
