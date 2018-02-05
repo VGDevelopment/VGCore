@@ -397,13 +397,28 @@ class FactionSystem {
 			$pos["x2"] = $round[0] - $vectorcalc;
 			$pos["z1"] = $round[1] + $vectorcalc;
 			$pos["z2"] = $round[1] - $vectorcalc;
-			if (count($data[0]) > 0 && $data[0][0] !== "") {
-				foreach ($data[0] as $i => $v) {
-					var_dump($v);
-					list($x1, $z1) = explode(":", $v[0], 2);
-					list($x2, $z2) = explode(":", $v[0], 2);
-					var_dump([$x1, $x2, $pos["x1"], $pos["x2"]]);
-					var_dump([$z1, $z2, $pos["z1"], $pos["z2"]]);
+			if (count($data) > 0) {
+				foreach ($data as $i => $v) {
+					/*
+					Psudeo Array Visualisation to help code.
+					Makes variabling easy.
+
+					array = [
+						0 => array = [
+							0 => string1,
+							1 => string2
+						],
+						1 => array = [
+							0 => string1,
+							1 => string2
+						]
+					]
+					*/
+					if ($v === null) {
+						continue;
+					}
+					list($x1, $z1) = explode(":", $v[0]);
+					list($x2, $z2) = explode(":", $v[1]);
 					$compare = [
 						"x1" => $x1,
 						"x2" => $x2,
@@ -412,7 +427,8 @@ class FactionSystem {
 					];
 					$landcheck = self::checkPossibleMatch($pos, $compare);
 					if ($landcheck === true) {
-						$player->sendMessage(Chat::RED . "Sorry, your land includes part of a land that's been claimed before");
+						$player->sendMessage(Chat::RED . "Sorry, the land you're trying to claim contains part of a land that has been claimed. Please venture out further");
+						return 2;
 					}
 				}
 			}
@@ -458,6 +474,22 @@ class FactionSystem {
 	}
 
 	public static function checkPossibleMatch(array $main, array $compare): bool {
+		/*
+		Psudeo Array Visualisation
+
+		main (array) = [
+			x1,
+			x2,
+			z1,
+			z2
+		]
+		compare (array) = [
+			x1,
+			x2,
+			z1,
+			z2
+		]
+		*/
 		$mainx1 = $main["x1"];
 		$mainx2 = $main["x2"];
 		$mainz1 = $main["z1"];
@@ -467,33 +499,30 @@ class FactionSystem {
 		$comparez1 = $compare["z1"];
 		$comparez2 = $compare["z2"];
 		$flag = 1; // true - possible values 0 : false, 1 : true
-		if ($mainx1 <= $comparex1 && $mainx1 >= $comparex2) {
-			$flag = 0;
-			$z1 = [
-				"z1" => $mainz1,
-				"z1" => $mainz2
-			];
-			$z2 = [
-				"z1" => $comparez1,
-				"z2" => $comparez2
-			];
-			$secondarycheck = self::compareZPos($z1, $z2);
-			if ($secondarycheck === true) {
-				$flag = 0;
-			}
-		}
-		if ($mainx2 <= $comparex1 && $mainx2 >= $comparex2) {
-			$flag = 0;
-			$z1 = [
-				"z1" => $mainz1,
-				"z1" => $mainz2
-			];
-			$z2 = [
-				"z1" => $comparez1,
-				"z2" => $comparez2
-			];
-			$secondarycheck = self::compareZPos($z1, $z2);
-			if ($secondarycheck === true) {
+		/*
+		Max 4 points
+		(x1, z1),
+		(x2, z1),
+		(x1, z2),
+		(x2, z2)
+		*/
+		$point = [
+			(string)$mainx1 . ", " . (string)$mainz1,
+			(string)$mainx2 . ", " . (string)$mainz1,
+			(string)$mainx1 . ", " . (string)$mainz2,
+			(string)$mainx2 . ", " . (string)$mainz2
+		];
+		/*
+		point (array) = [
+			123, 272
+			153, 272
+			123, 302
+			153, 302
+		]
+		*/
+		foreach ($point as $v) {
+			$check = self::pointInGraph($v, $compare);
+			if ($check === true && $flag !== 0) {
 				$flag = 0;
 			}
 		}
@@ -506,15 +535,19 @@ class FactionSystem {
 		}
 	}
 
-	public static function compareZPos(array $z, array $z2): bool {
-		if ($z["z1"] <= $z2["z1"] && $z["z1"] >= $z2["z2"]) {
-			return true;
-		} else if ($z["z2"] <= $z2["z1"] && $z["z2"] >= $z2["z2"]) {
-			return true;
-		} else {
-			return false;
+	public static function pointInGraph(string $point, array $graph): bool {
+		list($x, $z) = explode(", ", $point);
+		$graphx1 = $graph["x1"];
+		$graphx2 = $graph["x2"];
+		$graphz1 = $graph["z1"];
+		$graphz2 = $graph["z2"];
+		if ($x <= $graphx1 && $x >= $graphx2) {
+			if ($z <= $graphz1 && $z >= $graphz2) {
+				return true;
+			}
 		}
-	}
+		return false;
+	} 
 	
 	public static function updateLand(string $faction, array $claim): bool {
 		$data = implode(", ", $claim);
@@ -535,17 +568,23 @@ class FactionSystem {
 			if ($faction !== null) {
 				$lowerfaction = strtolower($faction);
 				$query = self::$db->query("SELECT ldata FROM factions WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
+				$result = $query->fetch_array()[0];
 			} else {
 				$query = self::$db->query("SELECT ldata FROM factions");
+				$result = $query->fetch_all();
 			}
-			$result = $query->fetch_array();
 			$query->free();
 			$rarray = [];
 			foreach ($result as $i => $v) {
+				if ($v === null) {
+					continue;
+				}
 				if ($i === "ldata") {
 					continue;
 				}
-				$rarray[$i] = explode(", ", $v);
+				foreach ($v as $i2 => $v2) {
+					$rarray[$i] = explode(", ", $v2);
+				}
 			}
 			return $rarray;
 		}
