@@ -6,7 +6,7 @@ use pocketmine\event\{
     Listener,
     block\BlockPlaceEvent,
     player\PlayerChatEvent,
-    player\PlayerKillEvent
+    entity\EntityDamageEvent
 };
 
 use pocketmine\utils\TextFormat as Chat;
@@ -93,7 +93,7 @@ class FactionListener implements Listener {
         return;
     }
 
-    public function onKill(PlayerKillEvent $event) {
+    public function onKill(EntityDamageEvent $event) {
         
     }
     
