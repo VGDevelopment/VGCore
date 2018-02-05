@@ -40,13 +40,22 @@ class FactionListener implements Listener {
         if (count($data) <= 0) {
             return;
         }
+        $point = (string)$x . ", " . (string)$z;
         foreach ($data as $i => $v) {
-            list($x1, $z1) = explode(":", $v[0], 2);
-            list($x2, $z2) = explode(":", $v[1], 2);
-            if ($x < $x1 && $x > $x2) {
-                if ($z < $z1 && $z > $z2) {
-                    $event->setCancelled(true);
-                }
+            if ($v[0] === "") {
+                continue;
+            }
+            list($x1, $z1) = explode(":", $v[0]);
+            list($x2, $z2) = explode(":", $v[1]);
+            $graph = [
+                "x1" => $x1,
+                "x2" => $x2,
+                "z1" => $z1,
+                "z2" => $z2
+            ];
+            $check = FS::pointInGraph($point, $graph);
+            if ($check === true) {
+                $event->setCancelled(true);
             }
         }
         $check = FS::inFaction($player);
@@ -54,21 +63,27 @@ class FactionListener implements Listener {
             $faction = FS::getPlayerFaction($player);
             $data = FS::getLand($faction);
             foreach ($data as $i => $v) {
-                list($x1, $z1) = explode(":", $v[0], 2);
-                list($x2, $z2) = explode(":", $v[1], 2);
-                if ($x <= $x1 && $x >= $x2) {
-                    if ($z <= $z1 && $z >= $z2) {
-                        $event->setCancelled(false);
-                        return;
-                    }
-                } else {
-                    $player->sendMessage(Chat::RED . "Sorry, you've can't build in a land claimed by any other faction. Please understand.");
+                if ($v[0] === "") {
+                    continue;
+                }
+                list($x1, $z1) = explode(":", $v[0]);
+                list($x2, $z2) = explode(":", $v[1]);
+                $graph = [
+                    "x1" => $x1,
+                    "x2" => $x2,
+                    "z1" => $z1,
+                    "z2" => $z2
+                ];
+                $check = FS::pointInGraph($point, $graph);
+                if ($check === true) {
+                    $event->setCancelled(false);
                 }
             }
         } else {
             $player->sendMessage(Chat::RED . "Sorry, you've can't build in a land claimed by any other faction. Please understand.");
             return;
         }
+        return;
     }
     
     public function onChat(PlayerChatEvent $event) {

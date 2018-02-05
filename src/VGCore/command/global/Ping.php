@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\command;
+namespace VGCore\command\global;
 
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;

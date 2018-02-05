@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\command;
+namespace VGCore\command\admin;
 
 use pocketmine\command\{
     CommandSender,

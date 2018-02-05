@@ -413,8 +413,13 @@ class FactionSystem {
 							1 => string2
 						]
 					]
+
+					In case one of the values is NULL, it outputs : 
+					v = array = [
+						0 => string = ""
+					]
 					*/
-					if ($v === null) {
+					if ($v[0] === "") {
 						continue;
 					}
 					list($x1, $z1) = explode(":", $v[0]);
