@@ -131,6 +131,13 @@ class FactionListener implements Listener {
                 if (FS::$fchat[$lowername] === true) {
                     $faction = FS::getPlayerFaction($player);
                     $memberlist = FS::getAllFactionMember($faction);
+                    /*
+                    To stop duplication of message when sending. Recipents also include the player itself which is set by PM by default. Thus, it would duplicate the message in the player chat log.
+                    */
+                    if (in_array($player, $memberlist)) {
+                        $i = array_search($player, $memberlist);
+                        unset($memberlist[$i]);
+                    }
                     $event->setRecipients($memberlist);
                     return;
                 }

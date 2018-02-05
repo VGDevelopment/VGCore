@@ -396,6 +396,7 @@ class SystemOS extends PluginBase {
 
     private function loadNPC(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new NPCListener($this), $this);
+        NPCListener::start();
         return true;
     }
 

@@ -30,12 +30,24 @@ class NPCListener implements Listener{
   private static $plugin;
   private static $spawned = [];
 
-  const NPC = [
-    /**
-     * NPC skin is set from player who joins
-     */
-    'test' => ["command" => 'say works', "position" => '162:7:119', "world" => 'Sam2', "skin" => null]
-  ];
+  private static $npc = [];
+
+  /**
+   * Sets nametag of NPCs and their commands onEnable().
+   *
+   * @return void
+   */
+  public static function start(): void {
+    $npcfaction = TF::YELLOW . "Click me to play" . TF::EOL . TF::BOLD . TF::GREEN . "FACTIONS " . TF::RED . "[ALPHA] v0.0.1";
+    self::$npc = [
+      $npcfaction => [
+        "command" => "transfer i.vgpe.me 29838",
+        "position" => "162:7:192",
+        "world" => "Sam2",
+        "skin" => null
+      ]
+    ];
+  }
 
   public function __construct(SystemOS $plugin) {
     self::$plugin = $plugin;
@@ -82,7 +94,7 @@ class NPCListener implements Listener{
   public function EntityLevelChangeEvent(EntityLevelChangeEvent $event){
     $player = $event->getEntity();
     if($player instanceof Player) {
-      foreach(self::NPC as $name => $data){
+      foreach(self::$npc as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
           $position = explode(":", $data["position"]); $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
           $this->spawnNPC($position, $name, $data["command"], $player);
@@ -94,7 +106,7 @@ class NPCListener implements Listener{
   public function onJoin(PlayerJoinEvent $event) {
     $player = $event->getPlayer();
     if($player instanceof Player) {
-      foreach(self::NPC as $name => $data){
+      foreach(self::$npc as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
           $position = explode(":", $data["position"]); $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
           $this->spawnNPC($position, $name, $data["command"], $player);

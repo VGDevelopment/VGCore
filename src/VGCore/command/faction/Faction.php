@@ -40,18 +40,19 @@ class Faction extends PluginCommand {
                 if (array_key_exists($lowername, FS::$fchat)) {
                     if (FS::$fchat[$lowername] === true) {
                         FS::$fchat[$lowername] = false;
-                        $checkstring[0] = "DISABLED";
+                        $checkstring[0] = Chat::RED . "DISABLED";
                         $checkstring[1] = "enable";
                     } else {
                         FS::$fchat[$lowername] = true;
-                        $checkstring[0] = "ENABLED";
+                        $checkstring[0] = Chat::GREEN . "ENABLED";
                         $checkstring[1] = "disable";
                     }
                 } else {
-                    $checkstring[0] = "ENABLED";
+                    FS::$fchat[$lowername] = true;
+                    $checkstring[0] = Chat::GREEN . "ENABLED";
                     $checkstring[1] = "disable";
                 }
-                $player->sendMessage(Chat::YELLOW . "Faction Chat has been " . Chat::GREEN . Chat::BOLD . $checkstring[0] . Chat::RESET . Chat::YELLOW . "!" . Chat::EOL . 
+                $sender->sendMessage(Chat::YELLOW . "Faction Chat has been " . Chat::BOLD . $checkstring[0] . Chat::RESET . Chat::YELLOW . "!" . Chat::EOL . 
                 Chat::YELLOW . "To " . $checkstring[1] . " Faction Chat, please use the same command again.");
             }
             return;
