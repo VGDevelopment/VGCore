@@ -5,6 +5,8 @@ namespace VGCore\listener;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+
+use pocketmine\network\mcpe\protocol\GameRulesChangePacket;
 // >>>
 use VGCore\SystemOS;
 
@@ -46,6 +48,12 @@ class USListener implements Listener {
             $banid = $this->bs->getBanID($name);
             $player->close("", "§cYou are banned from the §dVGNetwork§c. Appeal by emailing §asupport@vgpe.me§c - BAN ID : §e#" . $banid);
         }
+        /*
+        Sets show Coordinates to true in GameRules.
+        */
+        $pk = new GameRulesChangePacket();
+        $pk->gamerules["showcoordinates"] = true;
+        $player->dataPacket($pk);
     }
     
 }

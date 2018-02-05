@@ -6,37 +6,38 @@ use VGCore\SystemOS;
 
 class VGServer {
     
-    private $lobby = [19132];
-    private $faction = [29838];
-    private $factionwild = [19283];
-    private $factionwar = [19832];
-    private $plugin;
+    private static $lobby = [19132];
+    private static $faction = [29838];
+    private static $factionwild = [19283];
+    private static $factionwar = [19832];
     
-    public function __construct(SystemOS $plugin) {
-        $this->plugin = $plugin;
-    }
-    
-    public function getLobby(): array {
+    public static function getLobby(): array {
         return $this->lobby;
     }
     
-    public function getFaction(): array {
+    public static function getFaction(): array {
         return $this->faction;
     }
     
-    public function getFactionWar(): array {
+    public static function getFactionWar(): array {
         return $this->factionwar;
     }
     
-    public function checkServer(): int {
-        $port = $this->plugin->getServer()->getPort();
-        if (in_array($port, $this->lobby)) {
+    /**
+     * Checks the server port and matches it with static arrays above. The matched value gives the correct integer return.
+     *
+     * @param SystemOS $os
+     * @return integer
+     */
+    public static function checkServer(SystemOS $os): int {
+        $port = $os->getServer()->getPort();
+        if (in_array($port, self::$lobby)) {
             return 0;
-        } else if (in_array($port, $this->faction)) {
+        } else if (in_array($port, self::$faction)) {
             return 1;
-        } else if (in_array($port, $this->factionwar)) {
+        } else if (in_array($port, self::$factionwar)) {
             return 2;
-        } else if (in_array($port, $this->factionwild)) {
+        } else if (in_array($port, self::$factionwild)) {
             return 3;
         } else {
             return 999;

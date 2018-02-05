@@ -34,7 +34,6 @@ class ItemAPI implements ItemData {
         self::$critem = [
             Item::ENDER_PEARL
         ];
-        
         foreach (self::FIREWORK_ITEM_DATA as $data) {
             $item = Item::jsonDeserialize($data);
             self::$critemclass[] = $item;
