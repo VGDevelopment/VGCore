@@ -92,13 +92,13 @@ use VGCore\network\{
 };
 
 use VGCore\command\{
-    lobby\PlayerSetting,
-    economy\Economy,
-    admin\VGEnchant,
-    faction\Faction,
+    admin\Firework,
     admin\Spawn,
-    globa\Ping,
-    admin\Firework
+    admin\VGEnchant,
+    economy\Economy,
+    faction\Faction,
+    lobby\PlayerSetting,
+    Ping
 };
 
 use VGCore\store\{

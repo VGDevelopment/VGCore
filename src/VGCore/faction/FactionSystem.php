@@ -80,6 +80,8 @@ class FactionSystem {
 	
 	public static $request = [];
 	public static $invite = [];
+
+	public static $fchat = [];
 	
 	public static $fackill = [];
 	public static $facdeath = [];

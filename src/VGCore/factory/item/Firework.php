@@ -36,6 +36,17 @@ class Firework extends Item {
         parent::__construct(self::FIREWORKS, $meta, "Fireworks");
     }
     
+    /**
+     * Called when player touches ground with item.
+     *
+     * @param Level $level
+     * @param Player $player
+     * @param Block $br
+     * @param Block $bc
+     * @param integer $f
+     * @param Vector3 $cv
+     * @return boolean
+     */
     public function onActivate(Level $level, Player $player, Block $br, Block $bc, int $f, Vector3 $cv): bool {
         $random = new Random();
         $yaw = $random->nextBoundedInt(360);

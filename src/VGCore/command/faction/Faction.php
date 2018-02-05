@@ -26,11 +26,19 @@ class Faction extends PluginCommand {
         $this->setUsage("/f or /faction");
         $this->setPermission("vgcore.faction");
         $this->setAliases([
-            "f"    
+            "f"
         ]);
     }
     
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
+        if (!(empty($args)) && $args[0] === "chat") {
+            $check = FS::inFaction($sender);
+            if ($check === true) {
+                $name = $sender->getName();
+                $lowername = strtolower($name);
+                FS::$fchat[$lowername] = true;
+            }
+        }
         if (!(empty($args)) && $args[0] === "claim") {
             $check = FS::inFaction($sender);
             if ($check === true) {
@@ -38,10 +46,10 @@ class Faction extends PluginCommand {
                 $query = FS::claimLand($faction, $sender);
                 if ($query === 1) {
                     $sender->sendMessage(Chat::GREEN . "Land claimed succesfully.");
+                    return;
                 } else if ($query === 0) {
                     $sender->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
-                } else {
-                    
+                    return;
                 }
             } else {
                 $sender->sendMessage(Chat::RED . "Sorry, to use " . Chat::YELLOW . "/f claim" . Chat::RED . ", you need to be in a faction and be the leader." . Chat::EOL . Chat::YELLOW . "If you're leader has gone inactive, raise an issue at " . Chat::GREEN . Chat::BOLD . "support@vgpe.me" . 

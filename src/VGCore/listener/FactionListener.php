@@ -5,7 +5,8 @@ namespace VGCore\listener;
 use pocketmine\event\{
     Listener,
     block\BlockPlaceEvent,
-    player\PlayerChatEvent
+    player\PlayerChatEvent,
+    player\PlayerKillEvent
 };
 
 use pocketmine\utils\TextFormat as Chat;
@@ -27,6 +28,12 @@ class FactionListener implements Listener {
         self::$os = $os;
     }
     
+    /**
+     * To stop players from building on other player's claimed lands.
+     *
+     * @param BlockPlaceEvent $event
+     * @return void
+     */
     public function onBuild(BlockPlaceEvent $event) {
         $server = new VGS(self::$os);
         $check = $server->checkServer();
@@ -85,7 +92,17 @@ class FactionListener implements Listener {
         }
         return;
     }
+
+    public function onKill(PlayerKillEvent $event) {
+        
+    }
     
+    /**
+     * To add the <faction> prefix to chat messages.
+     *
+     * @param PlayerChatEvent $event
+     * @return void
+     */
     public function onChat(PlayerChatEvent $event) {
         $player = $event->getPlayer();
         $check = FS::inFaction($player);
@@ -96,6 +113,30 @@ class FactionListener implements Listener {
             $newmessage = Chat::GREEN . "<" . Chat::RED . $faction . Chat::GREEN . "> " . Chat::RESET . $message;
             $event->setMessage($newmessage);
         }
+    }
+
+    /**
+     * To set custom recipents per FactionChat.
+     *
+     * @param PlayerChatEvent $event
+     * @return void
+     */
+    public function onFChat(PlayerChatEvent $event) {
+        $player = $event->getPlayer();
+        $check = FS::inFaction($player);
+        if ($check === true) {
+            $name = $player->getName();
+            $lowername = strtolower($name);
+            if (array_key_exists($lowername, FS::$fchat)) {
+                if (FS::$fchat[$lowername] === true) {
+                    $faction = FS::getPlayerFaction($player);
+                    $memberlist = FS::getAllFactionMember($faction);
+                    $event->setRecipients($memberlist);
+                    return;
+                }
+            }
+        }
+        return;
     }
     
 }
