@@ -6,10 +6,13 @@ use pocketmine\event\{
     Listener,
     block\BlockPlaceEvent,
     player\PlayerChatEvent,
+    player\PlayerJoinEvent,
     entity\EntityDamageEvent
 };
 
 use pocketmine\utils\TextFormat as Chat;
+
+use VGCore\math\Vector3 as Scaler;
 // >>>
 use VGCore\SystemOS;
 
@@ -18,11 +21,39 @@ use VGCore\faction\{
     FactionWar as FW
 };
 
+use VGCore\listener\event\{
+    PreWarEvent
+};
+
 use VGCore\network\VGServer as VGS;
 
+use VGCore\task\TaskManager;
+
 class FactionListener implements Listener {
+
+    /*
+    Needs to be filled...
+    */
+    const RANDOM_LOCATION = [
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z",
+        "x:y:z"
+    ];
     
     private static $os;
+    private static $ptp = [];
+    private static $fp = 1;
+    private static $timerun;
     
     public function __construct(SystemOS $os) {
         self::$os = $os;
@@ -95,6 +126,48 @@ class FactionListener implements Listener {
     public function onKill(EntityDamageEvent $event) {
         
     }
+
+    /**
+     * To stop players from moving until timer has ended.
+     *
+     * @param PlayerMoveEvent $event
+     * @return void
+     */
+    public function onWarMove(PlayerMoveEvent $event) {
+        if (self::$timerun !== 2) {
+            $player = $event->getPlayer();
+            $player->sendMessage(Chat::RED . "Sorry, the war hasn't started yet. We'll let you know when it does.");
+            $event->setCancelled(true);
+        }
+        return;
+    }
+
+    /**
+     * To teleport players to correct locations to make a balanced war.
+     *
+     * @param PreWarEvent $event
+     * @return void
+     */
+    public function onPreWar(PreWarEvent $event) {
+        $location = array_rand(self::RANDOM_LOCATION, 1);
+        if (count(self::$playertp > 0)) {
+            foreach(self::$playertp as $s) {
+                if ($location === $s) {
+                    $this->onPreWar($event);
+                    return;
+                }
+            }
+        }
+        $player = $event->getPlayer();
+        list($x, $y, $z) = explode(":", $location);
+        $scaler = new Scaler($x, $y, $z);
+        $player->teleport($scaler);
+        if (self::$fp !== 0) {
+            self::$fp = 0;
+            TaskManager::startTask("WarTimerTask");
+        }
+        return;
+    }
     
     /**
      * To add the <faction> prefix to chat messages.
@@ -112,6 +185,7 @@ class FactionListener implements Listener {
             $newmessage = Chat::GREEN . "<" . Chat::RED . $faction . Chat::GREEN . "> " . Chat::RESET . $message;
             $event->setMessage($newmessage);
         }
+        return;
     }
 
     /**
@@ -121,7 +195,7 @@ class FactionListener implements Listener {
      * @return void
      */
     public function onFChat(PlayerChatEvent $event) {
-        $player = $event->getPlayer();
+        $player =  $event->getPlayer();
         $check = FS::inFaction($player);
         if ($check === true) {
             $name = $player->getName();
@@ -141,6 +215,24 @@ class FactionListener implements Listener {
                     return;
                 }
             }
+        }
+        return;
+    }
+
+    /**
+     * To check stuff related to faction on PlayerJoinEvent.
+     *
+     * @param PlayerJoinEvent $event
+     * @return void
+     */
+    public function onJoin(PlayerJoinEvent $event) {
+        $check = VGS::checkServer();
+        if ($check === 2) {
+            $player = $event->getPlayer();
+            $server = self::$os->getServer();
+            $pmanager = $server->getPluginManager();
+            $swe = new PreWarEvent($player);
+            $pmanager->callEvent($swe);
         }
         return;
     }

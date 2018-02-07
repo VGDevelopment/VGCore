@@ -149,6 +149,8 @@ use VGCore\cosmetic\crate\{
     Prize
 };
 
+use VGCore\task\TaskManager;
+
 use VGCore\spawner\SpawnerAPI;
 
 class SystemOS extends PluginBase {
@@ -397,6 +399,11 @@ class SystemOS extends PluginBase {
     private function loadNPC(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new NPCListener($this), $this);
         NPCListener::start();
+        return true;
+    }
+
+    private function loadTaskManager(): bool {
+        TaskManager::start($this);
         return true;
     }
 

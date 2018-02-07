@@ -48,12 +48,21 @@ class Database {
 			$plugin->getLogger()->critical("Error creating 'factions' table: " . $db->error);
 			return;
 		}
+		/*
+		To save the amount of players being sent to other server in a record of binary. 1 for true, 0 for false
+		Format for all players = 
+		t1 => 1:1:1
+		t2 => 1:1:1
+		as in true:true:true, true:true:true.
+		*/
 		if (!$db->query("CREATE TABLE IF NOT EXISTS wars(
 			serverip VARCHAR(25) PRIMARY KEY,
 			f1 VARCHAR(30),
 			f2 VARCHAR(30),
-			session INT(1),
-			result INT(1)
+			valid INT(1),
+			result INT(1),
+			t1 VARCHAR(5),
+			t2 VARCHAR(5)
 			);")) {
 			$plugin->getLogger()->critical("Error creating 'wars' table: " . $db->error);
 		}

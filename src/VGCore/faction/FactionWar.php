@@ -30,17 +30,33 @@ class FactionWar extends FactionSystem {
         $top = self::chooseTop($f1member, $f2member);
         $f1player = $top[0];
         $f2player = $top[1];
+        $a1 = [];
+        $a2 = [];
         foreach ($f1player as $i => $v) {
+            if ($f1player[$i] === null) {
+                $a1[] = null;
+                continue;
+            }
+            if ($f2player[$i] === null) {
+                $a2[] = null;
+                continue;
+            }
             $f1player[$i]->transfer($ip, 19832, "Transferring your faction's top players\n to a suitable location for WAR!");
+            $a1[] = $f1player[$i];
             $f2player[$i]->transfer($ip, 19832, "Transferring your faction's top players\n to a suitable location for WAR!");
+            $a2[] = $f2player[$i];
         }
+        /*
+        Should I setPlayerValueForNetwork() before transferring the player's for safe reach? @daniktheboss
+        */
+        self::setPlayerValueForNetwork($ip, $a1, $a2);
         self::turnSessionOn($ip);
         return true;
     }
     
     public static function getNonSessionIP(): string {
         foreach (self::$warip as $i => $v) {
-            $query = self::$db->query("SELECT session FROM wars WHERE serverip='" . self::$db->real_escape_string($v) . "'");
+            $query = self::$db->query("SELECT valid FROM wars WHERE serverip='" . self::$db->real_escape_string($v) . "'");
             $session = [];
             $session[$i] = $query->fetchArray()[0] ?? false;
         }
@@ -53,11 +69,62 @@ class FactionWar extends FactionSystem {
     }
     
     public static function turnSessionOn(string $ip): void {
-        self::$db->query("UPDATE wars SET session = 1 WHERE serverip='" . self::$db->real_escape_string($ip) . "'");
+        self::$db->query("UPDATE wars SET valid = 1 WHERE serverip='" . self::$db->real_escape_string($ip) . "'");
     }
     
     public static function turnSessionOff(string $ip): void {
-        self::$db->query("UPDATE wars SET session = 0 WHERE serverip='" . self::$db->real_escape_string($ip) . "'");
+        self::$db->query("UPDATE wars SET valid = 0 WHERE serverip='" . self::$db->real_escape_string($ip) . "'");
+    }
+
+    /**
+     * Sets the player value to send to a war server.
+     *
+     * @param array $t1
+     * @param array $t2
+     * @return boolean
+     */
+    public static function setPlayerValueForNetwork(string $serverip, array $t1, array $t2): bool {
+        /*
+        0 => false,
+        1 => true
+        */
+        $ut1 = self::formatPlayerNetworkArray($t1);
+        $ut2 = self::formatPlayerNetworkArray($t2);
+        $string = [
+            implode(":", $ut1),
+            implode(":", $ut2)
+        ];
+        $checklist = [];
+        foreach($string as $param) {
+            $query = self::$db->query("UPDATE wars SET t1 = '" . self::$db->real_escape_string($param) . "' WHERE serverip='" . self::$db->real_escape_string($serverip) . "'");
+            if ($query === true) {
+                $checklist[] = true;
+                continue;
+            }
+            $checklist[] = false;
+        }
+        if ($checklist[0] === true && $checklist[1] === true) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Formats the player array to 0s and 1s for setPlayerValueForNetwork()
+     *
+     * @param array $array
+     * @return array
+     */
+    public static function formatPlayerNetworkArray(array $array): array {
+        $basearray = [];
+        foreach ($array as $i => $v) {
+            if ($v === null) {
+                $basearray[] = 0;
+                continue;
+            }
+            $basearray[] = 1;
+        }
+        return $basearray;
     }
     
     public static function isWarOver(): bool {
