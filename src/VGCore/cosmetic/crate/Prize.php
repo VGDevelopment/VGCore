@@ -9,28 +9,55 @@ use pocketmine\utils\TextFormat as TF;
 class Prize {
 
     const COMMON_PRIZES = [
-      'pet' => ['1:100'],
-      'wing' => ["wing1"],
-      'cosmetic' => []
+      'pet' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ],
+      'wing' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ],
+      'cosmetic' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ]
     ];
 
     const RARE_PRIZES = [
-      'pet' => ['1:100'],
-      'wing' => ["wing1"],
-      'cosmetic' => []
+      'pet' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ],
+      'wing' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ],
+      'cosmetic' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ]
     ];
 
     const LEGENARY_PRIZES = [
-      'pet' => ['1:100'],
-      'wing' => ["wing1"],
-      'cosmetic' => []
+      'pet' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ],
+      'wing' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ],
+      'cosmetic' => [
+        'command' => 'givepet {player} {type} {amount}',
+        'prizes' = ['whatver']
+      ]
     ];
 
     public static function getPrize(string $type = null): string {
       if($type == null) return false;
-      if($type = "common") $d = self::COMMON_PRIZES[rand(0,2)]; return $d[array_rand($d)];
-      if($type = "rare") $d = self::RARE_PRIZES[rand(0,2)]; return $d[array_rand($d)];
-      if($type = "legenary") $d = self::LEGENARY_PRIZES[rand(0,2)]; return $d[array_rand($d)];
+      if($type = "common") $d = self::COMMON_PRIZES["prizes"][rand(0,2)]; return $d[array_rand($d)];
+      if($type = "rare") $d = self::RARE_PRIZES["prizes"][rand(0,2)]; return $d[array_rand($d)];
+      if($type = "legenary") $d = self::LEGENARY_PRIZES["prizes"][rand(0,2)]; return $d[array_rand($d)];
     }
 
     public function prizes(): string{

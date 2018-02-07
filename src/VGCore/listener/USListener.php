@@ -21,19 +21,19 @@ use VGCore\network\Database as DB;
 use VGCore\lobby\crate\Crate;
 
 class USListener implements Listener {
-    
+
     public $plugin;
     public $us;
     public $bs;
     public $es;
-    
+
     public function __construct(SystemOS $plugin) {
         $this->plugin = $plugin;
         $this->us = new US($this->plugin);
         $this->bs = new BS($this->plugin);
         $this->es = new ES($this->plugin);
     }
-    
+
     public function onJoin(PlayerJoinEvent $event) {
         $player = $event->getPlayer();
         $name = $player->getName();
@@ -55,5 +55,5 @@ class USListener implements Listener {
         $pk->gamerules["showcoordinates"] = [1, true];
         $player->dataPacket($pk);
     }
-    
+
 }
