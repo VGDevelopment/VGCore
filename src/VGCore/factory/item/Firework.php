@@ -29,13 +29,13 @@ use VGCore\factory\{
 };
 
 class Firework extends Item {
-    
+
     public $bdistance = 5.0;
-    
+
     public function __construct($meta = 0) {
         parent::__construct(self::FIREWORKS, $meta, "Fireworks");
     }
-    
+
     /**
      * Called when player touches ground with item.
      *
@@ -74,7 +74,7 @@ class Firework extends Item {
         }
         return false;
     }
-    
+
     // for custom fireworks if you want custom design Danik
     public static function sendToNBT(FireworkData $data): CompoundTag {
         $nbt = new CompoundTag();
@@ -99,8 +99,7 @@ class Firework extends Item {
             $flight
         ];
         $firework = new CompoundTag("Fireworks", $tarray);
-        $nbt->setTag($firework);
-        return $nbt;
+        return $firework;
     }
-    
+
 }

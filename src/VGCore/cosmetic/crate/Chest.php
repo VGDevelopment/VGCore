@@ -8,14 +8,16 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
 use pocketmine\item\Item;
-use pocketmine\network\mcpe\protocol\{BlockEventPacket, RemoveEntityPacket};
+use pocketmine\network\mcpe\protocol\{BlockEventPacket, RemoveEntityPacket, AddPlayerPacket};
 use pocketmine\utils\UUID;
-use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\entity\Item as ItemEntity;
 use pocketmine\entity\Entity;
 use pocketmine\math\Vector3;
+use pocketmine\level\sound\{
+  ClickSound
+};
 use pocketmine\nbt\{
     NBT,
     tag\ByteTag,
@@ -65,6 +67,26 @@ class Chest {
       }
     }
 
+    public static function firework(Block $block): void {
+      $random = new Random();
+      $yaw = $random->nextBoundedInt(360);
+      $f = $random->nextFloat();
+      $d = 5.0;
+      $vectorcalc = 90 + ($f * $d - $d / 2);
+      $pitch = -1 * (float)$vectorcalc;
+      $nbt = Entity::createBaseNBT($block->asVector3()->add(.5,0,.5), null, $yaw, $pitch);
+      $color = [4];
+      $fade = [5];
+      $ex = new FE($color, $fade, true, false, 1);
+      $data = new FireworkData(2, [$ex]);
+      $firework = new FItem();
+      $customnbt = $firework::sendToNBT($data);
+      $nbt->setTag($customnbt);
+      $rocket = new FWR($block->level, $nbt, null, $firework, null);
+      $block->level->addEntity($rocket);
+      $rocket->spawnToAll();
+    }
+
     public static function resetCrate(Block $block): void {
       $pk = new BlockEventPacket();
   		$pk->x = $block->x;
@@ -76,23 +98,8 @@ class Chest {
         $player->dataPacket($pk);
       }
 
-      $random = new Random();
-      $yaw = $random->nextBoundedInt(360);
-      $f = $random->nextFloat();
-      $d = 5.0;
-      $vectorcalc = 90 + ($f * $d - $d / 2);
-      $pitch = -1 * (float)$vectorcalc;
-      $nbt = Entity::createBaseNBT($block, null, $yaw, $pitch);
-      $color = [4, 4, 4];
-      $fade = [5, 5, 5];
-      $ex = new FE($color, $fade, true, false, 4);
-      $data = new FireworkData(1, [$ex]);
-      $firework = new FItem();
-      $customnbt = $firework::sendToNBT($data);
-      $nbt->setNamedTag($customnbt);
-      $rocket = new FWR($block->level, $nbt, null, $firework, null);
-      $block->level->addEntity($rocket);
-      $rocket->spawnToAll();
+      
+
       self::despawnText($block);
       unset(SystemOS::$localdata[json_encode($block->asVector3())]);
       foreach(self::CRATES as $pos => $data){
@@ -126,6 +133,7 @@ class Chest {
             $blockdata[json_encode($pos)]["KeyType"] = $key;
             $blockdata[json_encode($pos)]["Tick"] = 0;
             $blockdata[json_encode($pos)]["Block"] = $block;
+            $blockdata[json_encode($pos)]["Text"] = "";
             SystemOS::$localdata = $blockdata;//to resave...
             $task = new CrateTask(self::$plugin, json_encode($pos));
             self::$plugin->getServer()->getScheduler()->scheduleRepeatingTask($task, 1);
@@ -136,6 +144,8 @@ class Chest {
 
     public static function spawnText(Block $block, string $text = null): void{
       if($text == null) $text = (new Prize())->prizes();
+      SystemOS::$localdata[json_encode($block->asVector3())]["Text"] = $text;
+      $block->getLevel()->addSound(new ClickSound($block));
       self::despawnText($block);
       $pk = new AddPlayerPacket();
       $pk->uuid = UUID::fromRandom();
