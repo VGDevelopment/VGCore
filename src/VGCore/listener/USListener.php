@@ -6,7 +6,7 @@ use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 
-use pocketmine\network\mcpe\protocol\GameRulesChangePacket;
+use pocketmine\network\mcpe\protocol\GameRulesChangedPacket as GMRCPacket;
 // >>>
 use VGCore\SystemOS;
 
@@ -51,7 +51,7 @@ class USListener implements Listener {
         /*
         Sets show Coordinates to true in GameRules.
         */
-        $pk = new GameRulesChangePacket();
+        $pk = new GMRCPacket();
         $pk->gamerules["showcoordinates"] = [1, true];
         $player->dataPacket($pk);
     }
