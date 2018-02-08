@@ -42,7 +42,7 @@ class NPCListener implements Listener{
     self::$npc = [
       $npcfaction => [
         "command" => "transfer i.vgpe.me 29838",
-        "position" => "162:7:192",
+        "position" => "161:7:137",
         "world" => "Sam2",
         "skin" => null
       ]
