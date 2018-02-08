@@ -11,7 +11,7 @@ use pocketmine\utils\Config;
 // >>>
 use VGCore\factory\item\{
     SpawnEgg,
-    EnderPearl,
+    projectile\EnderPearl,
     Firework
 };
 

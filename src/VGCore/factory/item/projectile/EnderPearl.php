@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\factory\item;
+namespace VGCore\factory\item\projectile;
 
 use pocketmine\item\Item;
 use pocketmine\item\ProjectileItem;

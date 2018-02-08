@@ -47,7 +47,7 @@ class Firework extends Item {
      * @param Vector3 $cv
      * @return boolean
      */
-    public function onActivate(Level $level, Player $player, Block $br, Block $bc, int $f, Vector3 $cv): bool {
+    public function onActivate(Player $player, Block $br, Block $bc, int $f, Vector3 $cv): bool {
         $random = new Random();
         $yaw = $random->nextBoundedInt(360);
         $f = $random->nextFloat();

@@ -18,7 +18,7 @@ use VGCore\factory\block\MonsterSpawner;
 
 class SpawnEgg extends SE {
 
-    public function onActivate(Level $level, Player $player, Block $br, Block $bc, int $f, Vector3 $cv): bool {
+    public function onActivate(Player $player, Block $br, Block $bc, int $f, Vector3 $cv): bool {
         if (!($bc instanceof MonsterSpawner)) {
             $bradd = $br->add(0.5, 0, 0.5);
             $lcgvalue =  lcg_value() * 360;
