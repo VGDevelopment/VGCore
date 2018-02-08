@@ -39,7 +39,6 @@ class Firework extends Item {
     /**
      * Called when player touches ground with item.
      *
-     * @param Level $level
      * @param Player $player
      * @param Block $br
      * @param Block $bc
