@@ -7,7 +7,7 @@ use pocketmine\scheduler\ServerScheduler as Scheduler;
 use VGCore\SystemOS;
 
 use VGCore\task\{
-    faction\WarTimeTask
+    faction\WarTimerTask
 };
 
 class TaskManager {
@@ -105,8 +105,8 @@ class TaskManager {
     public static function startTask(string $task): bool {
         switch ($task) {
             case "WarTimerTask": {
-                $task = new WarTimeTask();
-                self::$scheduler->scheduleRepeatingTask($task);
+                $task = new WarTimerTask();
+                self::$scheduler->scheduleRepeatingTask($task, 20); // 20t = s
                 return true;
             }
         }

@@ -12,6 +12,8 @@ use VGCore\listener\event\FactionEvent;
 class PreWarEvent extends FactionEvent {
 
     private $player;
+    
+    public static $handlerList = null;
 
     public function __construct(Player $player) {
         $os = self::$os;

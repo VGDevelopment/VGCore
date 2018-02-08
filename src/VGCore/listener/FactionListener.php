@@ -7,6 +7,7 @@ use pocketmine\event\{
     block\BlockPlaceEvent,
     player\PlayerChatEvent,
     player\PlayerJoinEvent,
+    player\PlayerMoveEvent,
     entity\EntityDamageEvent
 };
 
@@ -54,6 +55,7 @@ class FactionListener implements Listener {
     private static $ptp = [];
     private static $fp = 1;
     private static $timerun;
+    private static $p = 0;
     
     public function __construct(SystemOS $os) {
         self::$os = $os;
@@ -66,7 +68,7 @@ class FactionListener implements Listener {
      * @return void
      */
     public function onBuild(BlockPlaceEvent $event) {
-        $check = VGS::checkServer(self::$os);
+        $check = VGS::checkServer();
         if ($check !== 1) {
             return;
         }
@@ -134,6 +136,10 @@ class FactionListener implements Listener {
      * @return void
      */
     public function onWarMove(PlayerMoveEvent $event) {
+        $check = VGS::checkServer();
+        if ($check !== 2) {
+            return;
+        }
         if (self::$timerun !== 2) {
             $player = $event->getPlayer();
             $player->sendMessage(Chat::RED . "Sorry, the war hasn't started yet. We'll let you know when it does.");
@@ -143,12 +149,16 @@ class FactionListener implements Listener {
     }
 
     /**
-     * To teleport players to correct locations to make a balanced war.
+     * To teleport players to correct locations to make a balanced war and check maxed out war players.
      *
      * @param PreWarEvent $event
      * @return void
      */
     public function onPreWar(PreWarEvent $event) {
+        $max = FW::getMaxPlayer();
+        if (self::$p >= $max) {
+            return;
+        }
         $location = array_rand(self::RANDOM_LOCATION, 1);
         if (count(self::$playertp > 0)) {
             foreach(self::$playertp as $s) {
@@ -166,6 +176,7 @@ class FactionListener implements Listener {
             self::$fp = 0;
             TaskManager::startTask("WarTimerTask");
         }
+        self::$p = self::$p + 1;
         return;
     }
     

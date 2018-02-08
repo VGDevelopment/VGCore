@@ -8,6 +8,8 @@ use VGCore\faction\FactionSystem;
 
 use VGCore\user\UserSystem as US;
 
+use VGCore\network\VGServer as VGS;
+
 class FactionWar extends FactionSystem {
     
     private static $warip = [
@@ -94,9 +96,13 @@ class FactionWar extends FactionSystem {
             implode(":", $ut1),
             implode(":", $ut2)
         ];
+        $param = [
+            "t1",
+            "t2"
+        ];
         $checklist = [];
-        foreach($string as $param) {
-            $query = self::$db->query("UPDATE wars SET t1 = '" . self::$db->real_escape_string($param) . "' WHERE serverip='" . self::$db->real_escape_string($serverip) . "'");
+        foreach($string as $i => $v) {
+            $query = self::$db->query("UPDATE wars SET . " . $param[$i] . " = '" . self::$db->real_escape_string($param) . "' WHERE serverip='" . self::$db->real_escape_string($serverip) . "'");
             if ($query === true) {
                 $checklist[] = true;
                 continue;
@@ -202,6 +208,49 @@ class FactionWar extends FactionSystem {
             $i + 1;
         }
         return [$f1player, $f2player];
+    }
+
+    /**
+     * Returns an integer display of the max players allowed on the server. Once this number has been equalised, no more players may be able to join. Kind of like a check-sum. 
+     *
+     * @return integer
+     */
+    public static function getMaxPlayer(): int {
+        $arg = [
+            "t1",
+            "t2"
+        ];
+        $result = [];
+        $checkserver = VGS::checkServer();
+        if ($checkserver !== 2) {
+            return 999;
+        }
+        $ip = VGS::selectWarServer();
+        foreach ($arg as $v) {
+            $query = self::$db->qeury("SELECT " . $v . " FROM wars WHERE serverip='" . self::$db->real_escape_string($ip) . "'");
+            $result[] = $query->fetchArray()[0];
+            $query->free();
+        }
+        $boolresult = [];
+        foreach ($result as $i => $v) {
+            $boolresult[$i] = self::formatBool($v);
+        }
+        $truecount = 0;
+        foreach ($boolresult as $v) {
+            if ($v === false) {
+                continue;
+            }
+            $truecount = $truecount + 1;
+        }
+        return $truecount;
+    }
+
+    public static function formatBool(string $bool): bool {
+        if ($string === "true" || $string === "TRUE" || $string === "True") {
+            return true;
+        } else if ($string === "false" || $string === "FALSE" || $string === "False") {
+            return false;
+        }
     }
     
 }

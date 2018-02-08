@@ -82,12 +82,7 @@ use VGCore\listener\{
 };
 
 use VGCore\network\{
-    ModalFormRequestPacket,
-    ModalFormResponsePacket,
-    ServerSettingsRequestPacket,
-    ServerSettingsResponsePacket,
-    VGServer,
-    Database as DB,
+    NetworkManager as NM,
     Slack
 };
 
@@ -259,26 +254,28 @@ class SystemOS extends PluginBase {
         $c = $this->loadVanillaEnchant();
         $d = $this->loadCustomEnchant();
         $e = $this->loadUserSystem();
-        $f = $this->loadDatabaseAPI();
-        $g = $this->loadPet();
-        $h = $this->loadFactory();
-        $i = $this->loadSpawner();
-        $j = $this->loadFaction();
-        $k = $this->loadCrate();
-        $l = $this->loadNPC();
+        $f = $this->loadPet();
+        $g = $this->loadFactory();
+        $h = $this->loadSpawner();
+        $i = $this->loadFaction();
+        $j = $this->loadCrate();
+        $k = $this->loadNPC();
+        $l = $this->loadTaskManager();
+        $m = $this->loadNetwork(); 
         $dep = [
             "UI" => $a,
             "Command" => $b,
             "VE" => $c,
             "CE" => $d,
             "US" => $e,
-            "DB" => $f,
-            "PS" => $g,
-            "Factory" => $h,
-            "Spawner" => $i,
-            "FS" => $j,
-            "CS" => $k,
-            "NPC" => $l
+            "PS" => $f,
+            "Factory" => $g,
+            "Spawner" => $h,
+            "FS" => $i,
+            "CS" => $j,
+            "NPC" => $k,
+            "TM" => $l,
+            "NM" => $m
         ];
         foreach ($dep as $i => $v) {
             if ($v === true) {
@@ -306,15 +303,6 @@ class SystemOS extends PluginBase {
 
     private function loadUI(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new GUIListener($this), $this);
-        $packet = [
-            new ModalFormRequestPacket(),
-            new ModalFormResponsePacket(),
-            new ServerSettingsRequestPacket(),
-            new ServerSettingsResponsePacket()
-        ];
-        foreach ($packet as $p) {
-            PacketPool::registerPacket($p);
-        }
         UIDriver::resetUIs($this); // reset all the uis to scratch
         UIBuilder::makeUI($this); // Creates all Dynamic Forms.
         return true;
@@ -350,11 +338,6 @@ class SystemOS extends PluginBase {
 
     private function loadUserSystem(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this);
-        return true;
-    }
-
-    private function loadDatabaseAPI(): bool {
-        DB::createRecord($this);
         return true;
     }
 
@@ -404,6 +387,11 @@ class SystemOS extends PluginBase {
 
     private function loadTaskManager(): bool {
         TaskManager::start($this);
+        return true;
+    }
+
+    private function loadNetwork(): bool {
+        NM::start($this);
         return true;
     }
 

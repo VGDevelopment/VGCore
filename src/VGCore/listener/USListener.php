@@ -52,7 +52,7 @@ class USListener implements Listener {
         Sets show Coordinates to true in GameRules.
         */
         $pk = new GMRCPacket();
-        $pk->gamerules["showcoordinates"] = [1, true];
+        $pk->gameRules["showcoordinates"] = [1, true]; // really? at least keep variables lowercase.... now I'm pissed @dktapps. Cases in variables create confusion!
         $player->dataPacket($pk);
     }
 
