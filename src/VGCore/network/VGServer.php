@@ -5,6 +5,18 @@ namespace VGCore\network;
 use VGCore\SystemOS;
 
 class VGServer {
+
+    /**
+     * @package MOTD
+     */
+    const MOTD = [
+        "Lobby" => "§aVirtualGalaxy §c[ALPHA]",
+        "Faction" => "§aImage 001",
+        "War" => [
+            0 => "§aImage 002",
+            1 => "§aImage 003"
+        ]
+    ];
     
     private static $lobby = [19132];
     private static $faction = [19283];
@@ -13,9 +25,17 @@ class VGServer {
         2 => 19833
     ];
     private static $os;
+    private static $raklibnetwork;
 
-    public static function start(SystemOS $os): void {
+    public static function start(SystemOS $os): bool {
         self::$os = $os;
+        self::$raklibnetwork = $os->getServer()->getNetwork();
+        $motd = self::setMOTD();
+        if ($motd === true) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public static function getLobby(): array {
@@ -49,17 +69,38 @@ class VGServer {
         }
     }
 
-    public static function selectWarServer(): string {
+    public static function selectWarServer(): int {
         $check = self::checkServer();
         if ($check === 2) {
             $port = self::$os->getServer()->getPort();
             $key = array_search($port, self::$factionwar);
             if ($key === 1) {
-                return "iwar1.vgpe.me";
+                return 0;
             } else if ($key === 2) {
-                return "iwar2.vgpe.me";
+                return 1;
             }
         }
+    }
+
+    /**
+     * Sets the server MOTD and returns how it went.
+     *
+     * @return boolean
+     */
+    private static function setMOTD(): bool {
+        $server = self::checkServer();
+        if ($server === 0) {
+            self::$raklibnetwork->setName(self::MOTD["Lobby"]);
+            return true;
+        } else if ($server === 1) {
+            self::$raklibnetwork->setName(self::MOTD["Faction"]);
+            return true;
+        } else if ($server === 2) {
+            $server = self::selectWarServer();
+            self::$raklibnetwork->setName(self::MOTD["War"][$server]);
+            return true;
+        }
+        return false;
     }
     
 }

@@ -81,8 +81,7 @@ class NetworkManager {
      * @return boolean
      */
     private static function loadServerHandler(): bool {
-        VGServer::start(self::$os);
-        return true;
+        return VGServer::start(self::$os);
     }
 
     /**
