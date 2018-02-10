@@ -3,6 +3,8 @@
 namespace VGCore\network;
 
 use VGCore\SystemOS;
+// >>>
+use mysqli; // php object 
 
 class Database {
 

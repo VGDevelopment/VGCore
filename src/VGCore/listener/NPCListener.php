@@ -42,7 +42,7 @@ class NPCListener implements Listener{
     self::$npc = [
       $npcfaction => [
         "command" => "transferserver i.vgpe.me 29838",
-        "position" => "161:7:137",
+        "position" => "161.5:7:137.5",
         "world" => "Sam2",
         "skin" => null
       ]
@@ -73,7 +73,7 @@ class NPCListener implements Listener{
   }
 
   public static function spawnNPC(Vector3 $position, string $name, string $command, Player $player){
-    //if(isset(self::$spawned[$name])) return;
+    if(isset(self::$spawned[$name])) return;
     self::$spawned[$name]["eid"] = Entity::$entityCount++;
     self::$spawned[$name]["command"] = $command;
     $pk = new AddPlayerPacket();
@@ -96,7 +96,8 @@ class NPCListener implements Listener{
     if($player instanceof Player) {
       foreach(self::$npc as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
-          $position = explode(":", $data["position"]); $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
+          $position = explode(":", $data["position"]); 
+          $position = new Vector3((float)$position[0], (float)$position[1], (float)$position[2]);
           $this->spawnNPC($position, $name, $data["command"], $player);
         }
       }
@@ -108,7 +109,8 @@ class NPCListener implements Listener{
     if($player instanceof Player) {
       foreach(self::$npc as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
-          $position = explode(":", $data["position"]); $position = new Vector3((int) $position[0], (int) $position[1], (int) $position[2]);
+          $position = explode(":", $data["position"]); 
+          $position = new Vector3((float)$position[0], (float)$position[1], (float)$position[2]);
           $this->spawnNPC($position, $name, $data["command"], $player);
         }
       }
