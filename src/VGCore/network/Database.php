@@ -68,8 +68,13 @@ class Database {
 		}
     }
 
-    public static function getDatabase() {
-		return mysqli_connect("184.95.55.26", "db_1", "048bda35cb", "db_1");
+	/**
+	 * Returns a database connection object.
+	 *
+	 * @return mysqli
+	 */
+    public static function getDatabase(): mysqli {
+		return mysqli_connect("185.62.36.114", "db_1", "048bda35cb", "db_1"); // alias of mysql::__construct()
     }
 
     public static function checkUser(string $username): bool {
