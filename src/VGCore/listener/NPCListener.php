@@ -41,7 +41,7 @@ class NPCListener implements Listener{
     $npcfaction = TF::YELLOW . "Click me to play" . TF::EOL . TF::BOLD . TF::GREEN . "FACTIONS " . TF::RED . "[ALPHA] v0.0.1";
     self::$npc = [
       $npcfaction => [
-        "command" => "transfer i.vgpe.me 29838",
+        "command" => "transferserver i.vgpe.me 29838",
         "position" => "161:7:137",
         "world" => "Sam2",
         "skin" => null
