@@ -3,7 +3,8 @@
 namespace VGCore\network;
 
 use pocketmine\network\mcpe\protocol\{
-    PacketPool
+    PacketPool,
+    ClientboundMapItemDataPacket as MapItemDataPacket
 };
 // >>>
 use VGCore\SystemOS;
@@ -17,7 +18,11 @@ use VGCore\network\{
     VGServer
 };
 
+use VGCore\factory\item\Map;
+
 class NetworkManager {
+
+    const MAP_PACKET_ID = 0x00;
 
     private static $packet = [];
     private static $os;
@@ -78,6 +83,30 @@ class NetworkManager {
     private static function loadServerHandler(): bool {
         VGServer::start(self::$os);
         return true;
+    }
+
+    /**
+     * Handling the map packet. [INCOMPLETE]
+     *
+     * @param Map $map
+     * @param integer $pkt
+     * @return void
+     */
+    public static function handleMapPacket(Map $map, int $pkt = self::MAP_PACKET_ID): void {
+        $pk = new MapItemDataPacket();
+        $pk->mapId = $map->getID();
+        $pk->type = $pkt;
+        $pk->scale = $map->getSize();
+        $pk->width = $map->getWidth();
+        $pk->height = $map->getHeight();
+        $xy = $map->getXY();
+        $pk->xOffset = $xy["x"];
+        $pk->yOffset = $xy["y"];
+        $pk->color = $map->getColor();
+        $pk->decorations = $map->getExtra();
+        $server = self::$os->getServer();
+        $playeronline = $server->getAllOnlinePlayers();
+        $server->broadcastPacket($playeronline, $pk);
     }
 
 }
