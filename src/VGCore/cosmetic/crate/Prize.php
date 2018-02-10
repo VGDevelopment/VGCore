@@ -11,45 +11,45 @@ class Prize {
     const COMMON_PRIZES = [
       'pet' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ],
       'wing' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ],
       'cosmetic' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ]
     ];
 
     const RARE_PRIZES = [
       'pet' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ],
       'wing' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ],
       'cosmetic' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ]
     ];
 
     const LEGENARY_PRIZES = [
       'pet' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ],
       'wing' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ],
       'cosmetic' => [
         'command' => 'givepet {player} {type} {amount}',
-        'prizes' = ['whatver']
+        'prizes' => ['whatver']
       ]
     ];
 
