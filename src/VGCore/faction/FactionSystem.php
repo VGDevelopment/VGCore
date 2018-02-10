@@ -388,7 +388,7 @@ class FactionSystem {
 		if ($check === true) {
 			$data = self::getLand();
 			$pos = [];
-			$size = 8 * self::CHUNK;
+			$size = 16 * self::CHUNK;
 			$vectorcalc = $size / 2;
 			$round = [
 				round($player->x),
