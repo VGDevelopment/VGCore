@@ -1,0 +1,23 @@
+language: php
+
+php:
+  - 7.2.2
+
+before_script:
+  - cd /home/travis/build/
+  - phpenv config-rm xdebug.ini
+  - pecl install channel://pecl.php.net/pthreads-3.1.6 # pthreads installation
+  - pecl install channel://pecl.php.net/weakref-0.3.2 # weak-ref installation
+  - echo | pecl install channel://pecl.php.net/yaml-2.0.0 # yaml installation
+  - git clone --branch=master https://github.com/VGDevelopment/PocketNET.git
+  - mkdir -p PocketMine-MP/plugins/VGCore-src
+  - cp -rf VGDevelopment/VGCore/src PocketMine-MP/plugins/VGCore-src
+  - cp -rf VGDevelopment/VGCore/plugin.yml PocketMine-MP/plugins/VGCore-src
+  - cp -rf VGDevelopment/VGCore/ci/DeployScript.php PocketMine-MP/
+  - git clone https://github.com/VGDevelopment/DevTools.git
+  - cp -rf VGDevelopment/VGCore/ci/Devtools.php home/travis/build/
+  - php DevTools.php
+  - cd PocketMine-MP/
+
+script:
+  - php DeployScript.php
