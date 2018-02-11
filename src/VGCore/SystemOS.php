@@ -83,7 +83,8 @@ use VGCore\listener\{
 
 use VGCore\network\{
     NetworkManager as NM,
-    Slack
+    Slack,
+    VGServer
 };
 
 use VGCore\command\{
@@ -739,8 +740,7 @@ class SystemOS extends PluginBase {
      * @return BasicPet|null
      */
     public function makePet(string $entityname, Player $player, string $petname, float $scale = 1.0, bool $baby = false): ?BasicPet {
-        $server = new VGServer($this);
-        $servercheck = $server->checkServer();
+        $servercheck = VGServer::checkServer();
         if ($servercheck !== "Lobby") {
             return null;
         }

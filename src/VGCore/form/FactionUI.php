@@ -94,12 +94,12 @@ class FactionUI extends UIBuilder {
         $info = new Button('§cClick to view info about' . Chat::EOL . 'your faction.');
         $request = new Button('§cClick to accept some' . Chat::EOL . 'join requests.');
         $invite = new Button('§cClick to invite a player' . Chat::EOL . 'into your faction.');
-        $advanced = new Button('§c[CRITICAL SETTINGS]' . Chat::EOL . 'Advanced Settings');
+        $delete = new Button('§c[DELETE]' . Chat::EOL . 'Faction');
         $type = [
             $info,
             $request,
             $invite,
-            $advanced
+            $delete
         ];
         $package = self::makePackage($ui, $type);
         SystemOS::$uis['fSettingsUI'] = UIDriver::addUI(self::$os, $package);

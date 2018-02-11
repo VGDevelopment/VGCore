@@ -339,7 +339,22 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($p, SystemOS::$uis['fInfoUI'], $player);
 						break;
 					}
-					case '§c[CRITICAL SETTINGS]' . Chat::EOL . 'Advanced Settings': {
+					case '§c[DELETE]' . Chat::EOL . 'Faction': {
+						$faction = FS::getPlayerFaction($player);
+						$query = FS::factionStat($faction);
+						$name = $player->getName();
+						$lowername = strtolower($name);
+						if ($query[3] !== $lowername) {
+							return;
+						}
+						$query = FS::disbandFaction($faction, $name);
+						if ($query === true) {
+							$player->sendMessage(Chat::YELLOW . "We've deleted your faction - so sad to see you go!");
+							return;
+						} else if ($query === false) {
+							$player->sendMessage(Chat::RED . "An unknown error occured with the API. Please notify support.");
+							return;
+						}
 						break;
 					}
 				}
