@@ -31,13 +31,19 @@ class SpawnerAPI {
         //DO YOU KNOW DA WAE IN DIS FUCTION
     }
 
-    public static function giveSpawner(Player $player, int $id): void {
-        $item = Item::get(52, 0, 1);
+    public static function giveSpawner(Player $player, int $id, int $amount): bool {
+        $item = Item::get(52, 0, $amount);
         $item->setCustomName(TF::RESET . self::$mobtype[$id] . " Spawner");
         $nbt = $item->getNamedTag() ?? new CompoundTag("", []);
         $nbt->entityid = new IntTag("entityid", $id);
         $item->setNamedTag($nbt);
+        $check = $player->getInventory()->canAddItem($item);
+        if ($check !== true) {
+            $player->sendMessage(TF::RED . "Sorry, your inventory doesn't have space to add this item.");
+            return false;
+        }
         $player->getInventory()->addItem($item);
+        return true;
     }
 
 }

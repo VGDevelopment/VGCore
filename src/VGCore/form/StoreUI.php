@@ -36,17 +36,21 @@ class StoreUI extends UIBuilder {
         self::createStoreItemMenu();
         self::createStoreBlockMenu();
         self::createBuyOffer();
+        self::createSpawnerBuyOffer();
     }
     
     private static function createStoreMenu(): void {
         $ui = new SimpleForm('§a§lSHOP', '§ePlease select a category :');
         $itemcategory = new Button('§c§lITEMS');
         $blockcategory = new Button('§c§lBLOCKS');
-        $itemcategory->addImage(Button::IMAGE_TYPE_URL, 'http://image.ibb.co/cfqD0G/2_Swords_Blue.png');
-        $blockcategory->addImage(Button::IMAGE_TYPE_URL, 'http://image.ibb.co/mktSSw/Block_Blue.png');
+        $spawnercategory = new Button('§c§clSPAWNERS');
+        $itemcategory->addImage(Button::IMAGE_TYPE_URL, 'https://minecraft.gamepedia.com/Sword');
+        $blockcategory->addImage(Button::IMAGE_TYPE_URL, 'http://www.blocksandgold.com/en/minecraft-diamond-block.html');
+        $spawnercategory->addImage(Button::IMAGE_TYPE_URL, 'https://minecraft.gamepedia.com/Monster_Spawner');
         $type = [
             $itemcategory,
-            $blockcategory
+            $blockcategory,
+            $spawnercategory
         ];
         $package = self::makePackage($ui, $type);
         SystemOS::$uis['shopMainMenuUI'] = UIDriver::addUI(self::$os, $package);
@@ -101,7 +105,7 @@ class StoreUI extends UIBuilder {
     }
     
     private static function createStoreBlockMenu(): void {
-        $ui = new SimpleForm('§c§lITEMS', '§ePlease select an item to buy :');
+        $ui = new SimpleForm('§c§lBLOCKS', '§ePlease select an block to buy :');
         $list = IL::getAllBlock();
         $type = [];
         foreach ($list as $l) {
@@ -109,6 +113,17 @@ class StoreUI extends UIBuilder {
         }
         $package = self::makePackage($ui, $type);
         SystemOS::$uis['shopBlockMenuUI'] = UIDriver::addUI(self::$os, $package);
+    }
+
+    private static function createStoreSpawnerMenu(): void {
+        $ui = new SimpleForm('§c§lSPAWNERS', '§ePlease select a spawner to buy :');
+        $list = IL::SPAWNER;
+        $type = [];
+        foreach ($list as $i => $v) {
+            $type[] = new Buttom('§c§l' . $i);
+        }
+        $package = self::makePackage($ui, $type);
+        SystemOS::$uis['shopSpawnerMenuUI'] = UIDriver::addUI(self::$os, $package);
     }
     
     private static function createBuyOffer(): void {
@@ -346,6 +361,20 @@ class StoreUI extends UIBuilder {
         $amount = new Slider('§aPlease select how many you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
         $ui->addElement($amount);
         SystemOS::$uis['shopDShovelUI'] = UIDriver::addUI(self::$os, $ui);
+    }
+
+    public static function createSpawnerBuyOffer(string $spawnertype = null): void {
+        // to load it on start as well.
+        if ($spawnertype = null) {
+            $spawnertype = "";
+            $price = "";
+        } else {
+            $price = IL::SPAWNER[$spawnertype][2];
+        }
+        $ui = new CustomForm($spawnertype);
+        $amount = new Slider('§aPlease select how many of you want. Each costs §e[C]' . $price . '§a - You are about to buy', 1, 100, 1);
+        $ui->addElement($amount);
+        SystemOS::$uis['shopSpawnerBuyOffer'] = UIDriver::addUI(self::$os, $ui);
     }
     
 }

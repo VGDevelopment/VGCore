@@ -40,6 +40,74 @@ class ItemList {
     public static $diamondpickaxe = [278, 0, 2370];
     public static $diamondaxe = [279, 0, 1620];
     public static $diamondsword = [276, 0, 2400];
+
+    /**
+     * Spawner Array
+     * 
+     * @global array
+     */
+    const SPAWNER = [
+        "Chicken" => [
+            10,
+            null,
+            500
+        ],
+        "Cow" => [
+            11,
+            null,
+            750
+        ],
+        "Pig" => [
+            12,
+            null,
+            900
+        ],
+        "Sheep" => [
+            13,
+            null,
+            1200
+        ],
+        "Mooshroom" => [
+            16,
+            null,
+            1250
+        ],
+        "IronGolem" => [
+            20,
+            null,
+            1600
+        ],
+        "Ocelot" => [
+            22,
+            null,
+            2000
+        ],
+        "Zombie" => [
+            32,
+            null,
+            2500
+        ],
+        "Skeleton" => [
+            34,
+            null,
+            2800
+        ],
+        "Spider" => [
+            35,
+            null,
+            3200
+        ],
+        "ZombiePigman" => [
+            36,
+            null,
+            4000
+        ],
+        "Blaze" => [
+            43,
+            null,
+            5000
+        ]
+    ];
     
     public static function getAllBlock(): array {
         return [

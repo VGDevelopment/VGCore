@@ -35,14 +35,19 @@ use VGCore\lobby\music\MusicPlayer;
 
 use VGCore\form\{
 	EconomyUI,
-	FactionUI
+	FactionUI,
+	StoreUI
 };
+
+use VGCore\spawner\SpawnerAPI;
 
 class GUIListener implements Listener {
 
     public $plugin;
 
-    public static $coindata;
+	public static $coindata;
+	
+	private static $cachedresponse = [];
 
     public function __construct(SystemOS $plugin) {
 		$this->os = $plugin;
@@ -443,6 +448,10 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopBlockMenuUI'], $event->getPlayer());
 						break;
 					}
+					case '§c§clSPAWNERS': {
+						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopSpawnerMenuUI'], $event->getPlayer());
+						break;
+					}
 				}
 				break;
 			}
@@ -582,6 +591,58 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopDShovelUI'], $event->getPlayer());
 						break;
 					}
+				}
+				break;
+			}
+			case SystemOS::$uis['shopSpawnerMenuUI']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$check = array_key_exists($response, IL::SPAWNER);
+				if ($check === true) {
+					$name = $player->getName();
+					$lowername = strtolower($name);
+					self::$cachedresponse[$lowername] = $response;
+					StoreUI::createSpawnerBuyOffer($response);
+					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopSpawnerBuyOffer'], $event->getPlayer());
+					return;
+				} else {
+					$player->sendMessage(Chat::RED . "An unrecoverable error occured with the Store System. Please contact support.");
+					return;
+				}
+				break;
+			}
+			case SystemOS::$uis['shopSpawnerBuyOffer']: {
+				$data = $event->getData();
+				$ui = UIDriver::getPluginUI($this->os, $id);
+				$response = $ui->handle($data, $event->getPlayer());
+				$name = $player->getName();
+				$lowername = strtolower($name);
+				$check = array_key_exists($lowername, self::$cachedresponse);
+				if ($check === true) {
+					$stype = self::$cachedresponse[$lowername];
+					$amount = (int)$response[0];
+					$list = IL::SPAWNER;
+					$totalprice = $amount * $list[$stype][2];
+					$check = DB::checkUser($name);
+					if ($check === false) {
+						$player->sendMessage(Chat::RED . "Please rejoin the server, we were unable to get the details of your account sadly.");
+						return;
+					}
+					$coin = $economy->getCoin($player);
+					if ($coin >= $totalprice) {
+						$give = SpawnerAPI::giveSpawner($player, $list[$stype][0]);
+						if ($give === true) {
+							$economy->reduceCoin($player, $totalprice);
+							UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());
+							return;
+						} else if ($give !== true && $give !== false) {
+							UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['errorUI'], $event->getPlayer());
+							return;
+						}
+						return;
+					}
+					return;
 				}
 				break;
 			}
