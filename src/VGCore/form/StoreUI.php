@@ -35,6 +35,7 @@ class StoreUI extends UIBuilder {
         self::createStoreMenu();
         self::createStoreItemMenu();
         self::createStoreBlockMenu();
+        self::createStoreSpawnerMenu();
         self::createBuyOffer();
         self::createSpawnerBuyOffer();
     }
@@ -43,7 +44,7 @@ class StoreUI extends UIBuilder {
         $ui = new SimpleForm('§a§lSHOP', '§ePlease select a category :');
         $itemcategory = new Button('§c§lITEMS');
         $blockcategory = new Button('§c§lBLOCKS');
-        $spawnercategory = new Button('§c§clSPAWNERS');
+        $spawnercategory = new Button('§c§lSPAWNERS');
         $itemcategory->addImage(Button::IMAGE_TYPE_URL, 'https://minecraft.gamepedia.com/Sword');
         $blockcategory->addImage(Button::IMAGE_TYPE_URL, 'http://www.blocksandgold.com/en/minecraft-diamond-block.html');
         $spawnercategory->addImage(Button::IMAGE_TYPE_URL, 'https://minecraft.gamepedia.com/Monster_Spawner');
@@ -120,7 +121,7 @@ class StoreUI extends UIBuilder {
         $list = IL::SPAWNER;
         $type = [];
         foreach ($list as $i => $v) {
-            $type[] = new Buttom('§c§l' . $i);
+            $type[] = new Button('§c§l' . $i);
         }
         $package = self::makePackage($ui, $type);
         SystemOS::$uis['shopSpawnerMenuUI'] = UIDriver::addUI(self::$os, $package);
@@ -365,10 +366,10 @@ class StoreUI extends UIBuilder {
 
     public static function createSpawnerBuyOffer(string $spawnertype = null): void {
         // to load it on start as well.
-        if ($spawnertype = null) {
+        if ($spawnertype === null) {
             $spawnertype = "";
             $price = "";
-        } else {
+        } else if ($spawnertype !== null) {
             $price = IL::SPAWNER[$spawnertype][2];
         }
         $ui = new CustomForm($spawnertype);

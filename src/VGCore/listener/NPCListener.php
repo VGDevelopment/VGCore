@@ -73,7 +73,7 @@ class NPCListener implements Listener{
   }
 
   public static function spawnNPC(Vector3 $position, string $name, string $command, Player $player){
-    if(isset(self::$spawned[$name])) return;
+    // if(isset(self::$spawned[$name])) return;
     self::$spawned[$name]["eid"] = Entity::$entityCount++;
     self::$spawned[$name]["command"] = $command;
     $pk = new AddPlayerPacket();

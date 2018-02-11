@@ -448,7 +448,7 @@ class GUIListener implements Listener {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopBlockMenuUI'], $event->getPlayer());
 						break;
 					}
-					case '§c§clSPAWNERS': {
+					case '§c§lSPAWNERS': {
 						UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopSpawnerMenuUI'], $event->getPlayer());
 						break;
 					}
@@ -602,8 +602,9 @@ class GUIListener implements Listener {
 				if ($check === true) {
 					$name = $player->getName();
 					$lowername = strtolower($name);
-					self::$cachedresponse[$lowername] = $response;
-					StoreUI::createSpawnerBuyOffer($response);
+					$r = substr($response, 4);
+					self::$cachedresponse[$lowername] = $r;
+					StoreUI::createSpawnerBuyOffer($r);
 					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopSpawnerBuyOffer'], $event->getPlayer());
 					return;
 				} else {
