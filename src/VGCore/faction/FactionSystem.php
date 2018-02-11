@@ -646,21 +646,23 @@ class FactionSystem {
 	 * Deletes the faction.
 	 *
 	 * @param string $faction
-	 * @param string $leader
 	 * @return boolean
 	 */
-	public static function disbandFaction(string $faction, string $leader): bool {
+	public static function disbandFaction(string $faction): bool {
 		$check = self::validateFaction($faction);
 		if ($check === true) {
 			$lowerfaction = strtolower($faction);
 			$query = self::$db->query("DELETE FROM factions WHERE faction='" . self::$db->real_escape_string($lowerfaction) . "'");
 			if ($query) {
-				$lowerleader = strtolower($leader);
-				$query = self::$db->query("UPDATE users SET faction = NULL, factionrole = NULL WHERE username='" . self::$db->real_escape_string($lowerleader) . "'");
-				if ($query) {
-					return true;
+				$list = self::getAllFactionMember($faction);
+				foreach ($list as $name) {
+					$lowername = strtolower($name);
+					$query = self::$db->query("UPDATE users SET faction = NULL, factionrole = NULL WHERE username='" . self::$db->real_escape_string($lowername) . "'");
+					if ($query !== true) {
+						return false;
+					}
 				}
-				return false;
+				return true;
 			}
 			return false;
 		}

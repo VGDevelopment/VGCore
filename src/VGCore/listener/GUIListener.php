@@ -347,7 +347,7 @@ class GUIListener implements Listener {
 						if ($query[3] !== $lowername) {
 							return;
 						}
-						$query = FS::disbandFaction($faction, $name);
+						$query = FS::disbandFaction($faction);
 						if ($query === true) {
 							$player->sendMessage(Chat::YELLOW . "We've deleted your faction - so sad to see you go!");
 							return;
