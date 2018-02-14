@@ -81,6 +81,9 @@ class TaskManager {
         if (array_key_exists($id, self::task)) {
             return;
         }
+        if (array_key_exists($id, self::$taskend)) {
+            unset(self::$taskend[$id]);
+        }
         self::$task[$id] = $name;
     }
 
@@ -102,15 +105,15 @@ class TaskManager {
      * @param string $task
      * @return boolean
      */
-    public static function startTask(string $task): bool {
+    public static function startTask(string $task): string {
         switch ($task) {
             case "WarTimerTask": {
                 $task = new WarTimerTask();
                 self::$scheduler->scheduleRepeatingTask($task, 20); // 20t = s
-                return true;
+                return $task->sendTaskID();
             }
         }
-        return false;
+        return "ERROR";
     }
 
     /**
@@ -129,6 +132,16 @@ class TaskManager {
      */
     public static function showEndedTask(): array {
         return self::$taskend;
+    }
+
+    public static function isTaskRunning(string $taskid): bool {
+        $taskid = (int)$taskid;
+        if (array_key_exists($id, self::$task)) {
+            return true;
+        } else if (array_key_exists($id, self::$taskend)) {
+            return false;
+        }
+        return null;
     }
 
 }

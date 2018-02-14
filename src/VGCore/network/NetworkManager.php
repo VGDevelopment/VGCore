@@ -4,8 +4,12 @@ namespace VGCore\network;
 
 use pocketmine\network\mcpe\protocol\{
     PacketPool,
-    ClientboundMapItemDataPacket as MapItemDataPacket
+    ClientboundMapItemDataPacket as MapItemDataPacket,
+    GameRulesChangedPacket as GameRulePacket,
+    DataPacket
 };
+
+use pocketmine\Player;
 // >>>
 use VGCore\SystemOS;
 
@@ -106,6 +110,22 @@ class NetworkManager {
         $server = self::$os->getServer();
         $playeronline = $server->getAllOnlinePlayers();
         $server->broadcastPacket($playeronline, $pk);
+    }
+
+    /**
+     * Handles the Game Rules Packet.
+     *
+     * @param Player $player
+     * @param string $type
+     * @param integer $byte
+     * @param boolean $bool
+     * @return DataPacket
+     */
+    public static function handleGameRulePacket(Player $player, string $type, int $byte = 1, bool $bool = true): DataPacket {
+        $pk = new GameRulePacket();
+        $pk->gamerules[$type] = [$byte, $bool];
+        $player->dataPacket($pk);
+        return $pk;
     }
 
 }

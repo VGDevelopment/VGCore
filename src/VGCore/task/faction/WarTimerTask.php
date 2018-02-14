@@ -46,4 +46,8 @@ class WarTimerTask extends PluginTask {
         return;
     }
 
+    public function sendTaskID(): string {
+        return (string)$this->getTaskId();
+    }
+
 }

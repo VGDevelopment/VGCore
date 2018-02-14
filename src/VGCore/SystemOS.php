@@ -108,8 +108,6 @@ use VGCore\enchantment\{
     handler\Handler
 };
 
-use VGCore\user\UserSystem;
-
 use VGCore\sound\Sound;
 
 use VGCore\lobby\{
@@ -144,6 +142,8 @@ use VGCore\cosmetic\crate\{
     Chest as Crate,
     Prize
 };
+
+use VGCore\user\UserOS;
 
 use VGCore\task\TaskManager;
 
@@ -254,7 +254,7 @@ class SystemOS extends PluginBase {
         $b = $this->loadCommand();
         $c = $this->loadVanillaEnchant();
         $d = $this->loadCustomEnchant();
-        $e = $this->loadUserSystem();
+        $e = $this->loadUserManager();
         $f = $this->loadPet();
         $g = $this->loadFactory();
         $h = $this->loadSpawner();
@@ -268,7 +268,7 @@ class SystemOS extends PluginBase {
             "Command" => $b,
             "VE" => $c,
             "CE" => $d,
-            "US" => $e,
+            "UM" => $e,
             "PS" => $f,
             "Factory" => $g,
             "Spawner" => $h,
@@ -337,8 +337,9 @@ class SystemOS extends PluginBase {
         return true;
     }
 
-    private function loadUserSystem(): bool {
+    private function loadUserManager(): bool {
         $this->getServer()->getPluginManager()->registerEvents(new USListener($this), $this);
+        UserOS::load($this);
         return true;
     }
 

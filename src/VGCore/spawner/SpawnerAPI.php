@@ -31,7 +31,7 @@ class SpawnerAPI {
         //DO YOU KNOW DA WAE IN DIS FUCTION
     }
 
-    public static function giveSpawner(Player $player, int $id, int $amount): bool {
+    public static function giveSpawner(Player $player, int $id, int $amount = 1): bool {
         $item = Item::get(52, 0, $amount);
         $item->setCustomName(TF::RESET . self::$mobtype[$id] . " Spawner");
         $nbt = $item->getNamedTag() ?? new CompoundTag("", []);

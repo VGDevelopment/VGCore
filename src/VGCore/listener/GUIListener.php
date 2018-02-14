@@ -598,11 +598,11 @@ class GUIListener implements Listener {
 				$data = $event->getData();
 				$ui = UIDriver::getPluginUI($this->os, $id);
 				$response = $ui->handle($data, $event->getPlayer());
-				$check = array_key_exists($response, IL::SPAWNER);
+				$r = substr($response, 6);
+				$check = array_key_exists($r, IL::SPAWNER);
 				if ($check === true) {
 					$name = $player->getName();
 					$lowername = strtolower($name);
-					$r = substr($response, 4);
 					self::$cachedresponse[$lowername] = $r;
 					StoreUI::createSpawnerBuyOffer($r);
 					UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['shopSpawnerBuyOffer'], $event->getPlayer());
@@ -632,7 +632,7 @@ class GUIListener implements Listener {
 					}
 					$coin = $economy->getCoin($player);
 					if ($coin >= $totalprice) {
-						$give = SpawnerAPI::giveSpawner($player, $list[$stype][0]);
+						$give = SpawnerAPI::giveSpawner($player, $list[$stype][0], $amount);
 						if ($give === true) {
 							$economy->reduceCoin($player, $totalprice);
 							UIDriver::showUIbyID($event->getPlugin(), SystemOS::$uis['successUI'], $event->getPlayer());

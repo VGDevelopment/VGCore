@@ -56,6 +56,7 @@ class FactionListener implements Listener {
     private static $fp = 1;
     private static $timerun;
     private static $p = 0;
+    private $prewartaskid;
     
     public function __construct(SystemOS $os) {
         self::$os = $os;
@@ -174,7 +175,7 @@ class FactionListener implements Listener {
         $player->teleport($scaler);
         if (self::$fp !== 0) {
             self::$fp = 0;
-            TaskManager::startTask("WarTimerTask");
+            $this->prewartaskid = TaskManager::startTask("WarTimerTask");
         }
         self::$p = self::$p + 1;
         return;

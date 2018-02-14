@@ -51,7 +51,7 @@ class MonsterSpawner extends MS {
 		$itag[] = new IntTag("x", $block->x);
 		$itag[] = new IntTag("y", $block->y);
 		$itag[] = new IntTag("z", $block->z);
-		$spawnervalue = $item->getNamedTag()->spawner->getValue();
+		$spawnervalue = $item->getNamedTag()->entityid->getValue();
 		$itag[] = new IntTag("EntityId", $spawnervalue); // set the mob id in nbt because cant save anywhere else lmao
 		$mixtagarray = [
 		    $stag,
@@ -68,7 +68,7 @@ class MonsterSpawner extends MS {
 	public function getDrops(Item $item) : array {
 		return [Item::get(52, 0, 1)]; // TODO maybe do silk touch thing?
 	}
-	
+
     public function getName(): string {
         if (!(isset($this->entityid))) {
             return "";

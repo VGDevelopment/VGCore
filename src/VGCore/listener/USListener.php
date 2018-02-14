@@ -10,9 +10,10 @@ use pocketmine\network\mcpe\protocol\GameRulesChangedPacket as GMRCPacket;
 // >>>
 use VGCore\SystemOS;
 
-use VGCore\user\UserSystem as US;
-
-use VGCore\ban\BanSystem as BS;
+use VGCore\user\manager\{
+    UserSystem,
+    ban\BanSystem
+};
 
 use VGCore\economy\EconomySystem as ES;
 
@@ -22,38 +23,32 @@ use VGCore\lobby\crate\Crate;
 
 class USListener implements Listener {
 
-    public $plugin;
-    public $us;
-    public $bs;
-    public $es;
+    private static $plugin;
 
     public function __construct(SystemOS $plugin) {
-        $this->plugin = $plugin;
-        $this->us = new US($this->plugin);
-        $this->bs = new BS($this->plugin);
-        $this->es = new ES($this->plugin);
+        self::$plugin = $plugin;
     }
 
     public function onJoin(PlayerJoinEvent $event) {
         $player = $event->getPlayer();
         $name = $player->getName();
         $xuid = $player->getXuid();
-        if ($this->us->isUserNew($xuid) === false) {
-            $this->us->updateUserID($xuid, $name);
+        if (US::checkIfUserIDExist($xuid) === false) {
+            US::updateUserPerUserID($xuid, $name);
             return;
         }
-        DB::createUser($name, $xuid);
-        $bancheck = $this->bs->isBan($name);
+        UserSystem::createUser($name, $xuid);
+        $bancheck = BanSystem::banCheck($name);
         if ($bancheck === true) {
-            $banid = $this->bs->getBanID($name);
+            $banid = BanSystem::getBanID($name);
             $player->close("", "§cYou are banned from the §dVGNetwork§c. Appeal by emailing §asupport@vgpe.me§c - BAN ID : §e#" . $banid);
         }
         /*
         Sets show Coordinates to true in GameRules.
         */
-        $pk = new GMRCPacket();
-        $pk->gameRules["showcoordinates"] = [1, true]; // really? at least keep variables lowercase.... now I'm pissed @dktapps. Cases in variables create confusion!
-        $player->dataPacket($pk);
+        UserSystem::allowPositionView($player);
     }
+
+
 
 }

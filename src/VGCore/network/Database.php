@@ -8,6 +8,18 @@ use mysqli; // php object
 
 class Database {
 
+	const DB_IP = "185.62.36.114";
+	const USER_DB = "db_1";
+	const PASS = "048bda35cb";
+
+	private static $db;
+
+	/**
+	 * Creates necessary tables for database setup.
+	 *
+	 * @param SystemOS $plugin
+	 * @return void
+	 */
     public static function createRecord(SystemOS $plugin) {
     	$db = self::getDatabase();
         if ($db->connect_error) {
@@ -76,54 +88,30 @@ class Database {
 	 * @return mysqli
 	 */
     public static function getDatabase(): mysqli {
-		return mysqli_connect("185.62.36.114", "db_1", "048bda35cb", "db_1"); // alias of mysql::__construct()
+		$check = isset(self::$db);
+		if ($check === true) {
+			return self::$db;
+		}
+		self::$db = mysqli_connect(self::DB_IP, self::USER_DB, self::PASS, self::USER_DB); // alias of mysql::__construct()
+		return self::$db;
     }
 
+	/**
+	 * Checks the database on whether user exists or not.
+	 *
+	 * @param string $username
+	 * @return boolean
+	 */
     public static function checkUser(string $username): bool {
     	$db = self::getDatabase();
         $lowusername = strtolower($username);
 		$query = $db->query("SELECT * FROM users WHERE username='" . $db->real_escape_string($lowusername) . "'");
-		return $query->num_rows > 0 ? true:false;
-    }
-
-    public static function createUser(string $user, string $userid): bool {
-		$check = self::checkUser($user);
-        if ($check === false) {
-        	$db = self::getDatabase();
-            $lowuser = strtolower($user);
-            $q = $db->query("INSERT INTO users (username, rank, kills, deaths, ban, coins, dollars, gems, userid) VALUES ('"
-            . $db->real_escape_string($lowuser) .
-            "',
-            'Player',
-            '0',
-            '0',
-            '0',
-            '5000',
-            '0',
-            '10',
-            '" . $db->real_escape_string($userid) . "'
-            );");
-			if ($q === true) {
-				return true;
-			} else {
-			    return false;
-			}
-        } else {
-            return false;
-        }
-    }
-
-    public static function deleteUser(string $user): bool {
-        if ($check === true) {
-        	$db = self::getDatabase();
-            $lowuser = strtolower($user);
-            $query = $db->query("DELETE FROM users WHERE username='" . $db->real_escape_string($lowuser) . "'");
-            if ($query === true) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+		$check = $query->num_rows > 0 ? true : false;
+		$query->free();
+		if ($check === true) {
+			return true;
+		}
+		return false;
     }
 
 }
