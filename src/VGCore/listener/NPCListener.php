@@ -86,7 +86,7 @@ class NPCListener implements Listener{
 		$skinPk->uuid = $pk->uuid;
 		//$skinPk->skin = new Skin("Standard_Custom", $skindata);
 
-    self::$plugin->getServer()->broadcastPacket(self::$plugin->getServer()->getOnlinePlayers(), $pk);
+    self::$plugin->getServer()->broadcastPacket([$player], $pk);
     //self::$plugin->getServer()->broadcastPacket(self::$plugin->getServer()->getOnlinePlayers(), $skinPk);
     self::lookAtSpawn(self::$spawned[$name]["eid"], $position, $player);
   }
@@ -96,7 +96,7 @@ class NPCListener implements Listener{
     if($player instanceof Player) {
       foreach(self::$npc as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
-          $position = explode(":", $data["position"]); 
+          $position = explode(":", $data["position"]);
           $position = new Vector3((float)$position[0], (float)$position[1], (float)$position[2]);
           $this->spawnNPC($position, $name, $data["command"], $player);
         }
@@ -109,7 +109,7 @@ class NPCListener implements Listener{
     if($player instanceof Player) {
       foreach(self::$npc as $name => $data){
         if($player->getLevel()->getName() == $data["world"]){
-          $position = explode(":", $data["position"]); 
+          $position = explode(":", $data["position"]);
           $position = new Vector3((float)$position[0], (float)$position[1], (float)$position[2]);
           $this->spawnNPC($position, $name, $data["command"], $player);
         }
