@@ -6,10 +6,20 @@ use pocketmine\network\mcpe\protocol\{
     PacketPool,
     ClientboundMapItemDataPacket as MapItemDataPacket,
     GameRulesChangedPacket as GameRulePacket,
-    DataPacket
+    DataPacket,
+    AddPlayerPacket as BotPacket,
+    PlayerSkinPacket as BotSkinPacket,
+    MoveEntityPacket
 };
 
 use pocketmine\Player;
+
+use pocketmine\utils\Vector3 as Scalar;
+
+use pocketmine\level\{
+    Level, 
+    format\Chunk
+};
 // >>>
 use VGCore\SystemOS;
 
@@ -22,7 +32,10 @@ use VGCore\network\{
     VGServer
 };
 
-use VGCore\factory\item\Map;
+use VGCore\factory\{
+    ItemAPI,
+    item\Map
+};
 
 class NetworkManager {
 
@@ -30,6 +43,7 @@ class NetworkManager {
 
     private static $packet = [];
     private static $os;
+    private static $handledpacket = [];
 
     /**
      * Loads :
@@ -110,6 +124,7 @@ class NetworkManager {
         $server = self::$os->getServer();
         $playeronline = $server->getAllOnlinePlayers();
         $server->broadcastPacket($playeronline, $pk);
+        self::$handledpacket[] = $pk;
     }
 
     /**
@@ -125,7 +140,62 @@ class NetworkManager {
         $pk = new GameRulePacket();
         $pk->gamerules[$type] = [$byte, $bool];
         $player->dataPacket($pk);
+        self::$handledpacket[] = $pk;
         return $pk;
+    }
+
+    /**
+     * Handles the bot packet.
+     *
+     * @param Player $player
+     * @param string $nametag
+     * @param string $uuid
+     * @param integer $eid
+     * @param Scalar $location
+     * @param array $itemdata
+     * @return boolean
+     */
+    public static function handleBotPacket(Player $player, string $nametag, string $uuid, int $eid, Scalar $location, array $itemdata = []): bool {
+        $pk = new BotPacket();
+        $pk->entityRuntimeId = $eid;
+        $pk->username = $nametag;
+        $pk->position = $location;
+        $pk->item = ItemAPI::makeItem($itemdata);
+        $skinpk = new BotSkinPacket();
+        /* Set UUID */
+        $skinpk->uuid = $pk->uuid = $uuid;
+        $server = self::$os->getServer();
+        $playerarray = [
+            $player
+        ];
+        $server->broadcastPacket($playerarray, $pk);
+        return true;
+    }
+
+    /**
+     * Handle the bot movement.
+     *
+     * @param Level $level
+     * @param Chunk $chunk
+     * @param integer $eid
+     * @param Scalar $location
+     * @param float $yaw
+     * @param float $pitch
+     * @return boolean
+     */
+    public static function handleBotAimPacket(Level $level, Chunk $chunk, int $eid, Scalar $location, float $yaw, float $pitch): bool {
+        $chunkdata = [
+            "x" => $chunk->getX(),
+            "z" => $chunk->getZ()
+        ];
+        $pk = new MoveEntityPacket();
+        $pk->entityRuntimeId = $eid;
+        $pk->position = $location;
+        $pk->yaw = $yaw;
+        $pk->headYaw = $yaw;
+        $pk->pitch = $pitch;
+        $level->addChunkPacket($chunkdata["x"], $chunkdata["z"], $pk);
+        return true;
     }
 
 }

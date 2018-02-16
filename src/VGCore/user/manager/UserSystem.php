@@ -19,12 +19,29 @@ use VGCore\user\{
 
 class UserSystem extends UserOS implements Staff {
 
-    // Rank consts.
+    /**
+     * Player
+     */
     const R1 = "Player";
+    /**
+     * Lunar
+     */
     const R2 = "Lunar";
+    /**
+     * Warrior
+     */
     const R3 = "Warrior";
+    /**
+     * Giant
+     */
     const R4 = "Giant";
+    /**
+     * Dwarf
+     */
     const R5 = "Dwarf";
+    /**
+     * Admin
+     */
     const R6 = "ADMIN";
     const POS_SHOW = "showcoordinates";
     

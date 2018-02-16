@@ -47,7 +47,18 @@ class BanSystem extends UserOS implements Staff {
         if ($check === true) {
             $lowername = strtolower($name);
             if ($check === true) {
-                
+                $query = [
+                    "ban" => self::setBan($lowername),
+                    "id" => self::setBanID($lowername, $banid),
+                    "admin" => self::setAdmin($lowername, $admin),
+                    "reason" => self::setReason($lowername, $reason)
+                ];
+                foreach ($query as $i => $v) {
+                    if ($v === false || $v === null) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }
@@ -106,8 +117,9 @@ class BanSystem extends UserOS implements Staff {
             "name" => strtolower($name),
             "admin" => strtolower($adname)
         ];
+        $highreason = strtoupper($reason);
         $id = self::generateBanID();
-        self::banUser($lowarray["name"], $reason, $lowarray["admin"], $id);
+        self::banUser($lowarray["name"], $highreason, $lowarray["admin"], $id);
     }
 
     /**
@@ -137,6 +149,21 @@ class BanSystem extends UserOS implements Staff {
     private static function setBan(string $name, bool $pointer = true): bool {
         $bit = $pointer ? 1 : 0;
         self::$db->query("UPDATE users SET ban = " . $bit . " WHERE username='" . self::$db->real_escape_string($name) . "'");
+        return true;
+    }
+
+    private static function setBanID(string $name, string $id): bool {
+        self::$db->query("UPDATE users SET banid = '" . $id . "' WHERE username='" . self::$db->real_escape_string($name) . "'");
+        return true;
+    }
+
+    private static function setAdmin(string $name, string $admin): bool {
+        self::$db->query("UPDATE users SET admin = '" . self::$db->real_escape_string($admin) . "' WHERE username='" . self::$db->real_escape_string($name) . "'");
+        return true;
+    }
+
+    private static function setReason(string $name, string $reason): bool {
+        self::$db->query("UPDATE users SET reason = '" . self::$db->real_escape_string($reason) . "' WHERE username='" . self::$db->real_escape_string($name) . "'");
         return true;
     }
     

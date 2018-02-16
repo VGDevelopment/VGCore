@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\listener\data;
+namespace VGCore\data;
 
 class DeathMessage {
 

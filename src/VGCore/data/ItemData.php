@@ -1,6 +1,6 @@
 <?php
 
-namespace VGCore\factory\data;
+namespace VGCore\data;
 
 interface ItemData {
     

@@ -15,7 +15,7 @@ use VGCore\factory\item\{
     Firework
 };
 
-use VGCore\factory\data\{
+use VGCore\data\{
     ItemData
 };
 
@@ -25,7 +25,7 @@ class ItemAPI implements ItemData {
     private static $critemclass = [];
     private static $critem = [];
     
-    public static function setItem(): void {
+    private static function setItem(): void {
         self::$itemclass = [
             new SpawnEgg(),
             new EnderPearl(),
@@ -52,6 +52,20 @@ class ItemAPI implements ItemData {
         foreach (self::$critemclass as $item) {
             Item::addCreativeItem($item);
         }
+    }
+
+    public static function makeItem(array $data): Item {
+        $check = [
+            isset($data[0]),
+            isset($data[1]),
+            isset($data[2])
+        ];
+        foreach ($check as $bool) {
+            if ($bool !== true) {
+                return ItemFactory::get(Item::AIR, 0, 0);
+            }
+        }
+        return ItemFactory::get($data[0], $data[1], $data[2]);
     }
     
 }

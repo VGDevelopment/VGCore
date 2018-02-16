@@ -38,7 +38,7 @@ class Database {
 			factionrole VARCHAR(12),
 			ban FLOAT,
 			rank VARCHAR(12),
-			banid INT(5),
+			banid CHAR(5),
 			date DATE,
 			reason VARCHAR(50),
 			admin VARCHAR(20),

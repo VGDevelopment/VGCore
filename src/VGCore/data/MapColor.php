@@ -1,10 +1,10 @@
 <?php
 
-namespace VGCore\factory\data;
+namespace VGCore\data;
 
 use pocketmine\utils\Color;
 // >>>
-use VGCore\factory\data\ColorData;
+use VGCore\data\ColorData;
 
 class MapColor extends Color implements ColorData {
 

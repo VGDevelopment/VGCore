@@ -13,7 +13,7 @@ use pocketmine\Player;
 
 use pocketmine\utils\TextFormat as Chat;
 // >>>
-use VGCore\listener\data\DeathMessage;
+use VGCore\data\DeathMessage;
 
 use VGCore\user\manager\UserSystem;
 

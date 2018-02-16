@@ -19,7 +19,7 @@ use VGCore\economy\EconomySystem as ES;
 
 use VGCore\network\Database as DB;
 
-use VGCore\lobby\crate\Crate;
+use VGCore\user\Staff;
 
 class USListener implements Listener {
 
@@ -33,8 +33,8 @@ class USListener implements Listener {
         $player = $event->getPlayer();
         $name = $player->getName();
         $xuid = $player->getXuid();
-        if (US::checkIfUserIDExist($xuid) === false) {
-            US::updateUserPerUserID($xuid, $name);
+        if (UserSystem::checkIfUserIDExist($xuid) === false) {
+            UserSystem::updateUserPerUserID($xuid, $name);
             return;
         }
         UserSystem::createUser($name, $xuid);
@@ -42,6 +42,13 @@ class USListener implements Listener {
         if ($bancheck === true) {
             $banid = BanSystem::getBanID($name);
             $player->close("", "§cYou are banned from the §dVGNetwork§c. Appeal by emailing §asupport@vgpe.me§c - BAN ID : §e#" . $banid);
+        }
+        /*
+        Set player rank to staff if he belongs in staff.
+        */
+        $lname = strtolower($name);
+        if (in_array($lname, Staff::STAFF)) {
+            UserSystem::setRank($name, UserSystem::R6);
         }
         /*
         Sets show Coordinates to true in GameRules.

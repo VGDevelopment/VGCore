@@ -73,7 +73,7 @@ use VGCore\listener\{
     PetListener,
     RidingListener,
     CrateListener,
-    NPCListener,
+    BotListener,
     FactionListener,
     event\PetEvent,
     event\MakePetEvent,
@@ -111,7 +111,7 @@ use VGCore\enchantment\{
 use VGCore\sound\Sound;
 
 use VGCore\lobby\{
-    music\MusicPlayer as MP,
+    LobbyLoader,
     pet\BasicPet
 };
 use VGCore\lobby\pet\entity\{
@@ -187,7 +187,7 @@ class SystemOS extends PluginBase {
     // @var string [] array
     private $badwords;
 
-    private $pet = [
+    public $pet = [
         "EnderDragon",
         "Polar Bear",
         "Chicken",
@@ -199,7 +199,7 @@ class SystemOS extends PluginBase {
         "Cow"
     ];
 
-    private $petclass = [
+    public $petclass = [
         EnderDragonPet::class,
         PolarBearPet::class,
         ChickenPet::class,
@@ -260,7 +260,7 @@ class SystemOS extends PluginBase {
         $h = $this->loadSpawner();
         $i = $this->loadFaction();
         $j = $this->loadCrate();
-        $k = $this->loadNPC();
+        $k = $this->loadBot();
         $l = $this->loadTaskManager();
         $m = $this->loadNetwork(); 
         $dep = [
@@ -343,15 +343,6 @@ class SystemOS extends PluginBase {
         return true;
     }
 
-    private function loadPet(): bool {
-        foreach($this->petclass as $class) {
-            Entity::registerEntity($class, true);
-        }
-        $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
-        $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
-        return true;
-    }
-
     private function loadMusic(): bool {
         MP::start($this);
         return true;
@@ -381,10 +372,11 @@ class SystemOS extends PluginBase {
         return true;
     }
 
-    private function loadNPC(): bool {
-        $this->getServer()->getPluginManager()->registerEvents(new NPCListener($this), $this);
-        NPCListener::start();
-        return true;
+    private function loadLobby(): bool {
+        $this->getServer()->getPluginManager()->registerEvents(new PetListener($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new RidingListener($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new BotListener($this), $this);
+        LobbyLoader::start();
     }
 
     private function loadTaskManager(): bool {
